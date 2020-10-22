@@ -1,9 +1,6 @@
 const net = require('net');
 const readline = require('readline');
-const EventEmitter = require('events');
-
-class MyEmitter extends EventEmitter {};
-const myEmitter = new MyEmitter();
+const myEmitter = require('./utils/emitter');
 
 interface IrcMessage {
   prefix?: string;
@@ -36,6 +33,8 @@ const client =
     })
 const rl = readline.createInterface({input : client, crlfDelay : Infinity});
 
+const names: string[] = [];
+
 rl.on('line', line => {
   // for some reason the chunks arent always parsed as lines by \r\n
   // so we force it by splitting our selves then loop over each line
@@ -45,10 +44,30 @@ rl.on('line', line => {
     console.log("PONG " + line.params[0] + "\r\n");
   } else if (line.command == 'MODE') {
     client.write("JOIN #aboftytest\r\n");
+    client.write("NAMES #aboftytest\r\n");
     console.log("TRYING TO JOIN #ABOFTYTEST");
+  } else if (line.command == 'JOIN') {
+    console.log(line);
+    const nick = line.prefix.split('!')[0].slice(1);
+    myEmitter.emit('join', line.params[0].split(1), nick);
+  } else if (line.command == '353') {
+    line.params.slice(3).forEach(name => {
+      name = name.replace(':', '').trim();
+      if (name && !names.includes(name))
+        names.push(name);
+    });
+    console.log(line.params.slice(3));
   } else {
     console.log(line)
     // console.log(data.toString())
   }
 })
+
+myEmitter.on(
+    'join', (server: string,
+             nick: string) => { 
+		     console.log(`${nick} has joined ${server}`);
+		     if (!names.includes(nick)) names.push(nick);
+		     console.log(names);
+	     });
 client.on('end', () => { console.log('disconnected from server'); })
