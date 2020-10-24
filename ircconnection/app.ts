@@ -1,6 +1,6 @@
-const net = require('net');
-const readline = require('readline');
-const myEmitter = require('./utils/emitter');
+import {createConnection} from 'net';
+import {createInterface} from 'readline';
+import {myEmitter} from './utils/emitter';
 
 interface IrcMessage {
   prefix?: string;
@@ -8,8 +8,7 @@ interface IrcMessage {
   params: string[];
 }
 
-const parseMessage = (line: string):
-    IrcMessage => {
+const parseMessage = (line: string): IrcMessage => {
       if (line[0] == ":") {
         let input = line.split(' ');
         let msg = {
@@ -26,37 +25,37 @@ const parseMessage = (line: string):
     }
 
 const client =
-    net.createConnection({port : 6667, host : "irc.snoonet.org"}, () => {
+    createConnection({port : 6667, host : "irc.snoonet.org"}, () => {
       console.log('connected to server!');
       client.write("USER tsbottest localhost * :TypeScript Socket Test\r\n");
       client.write("NICK tsbottest\r\n");
     })
-const rl = readline.createInterface({input : client, crlfDelay : Infinity});
+const rl = createInterface({input : client, crlfDelay : Infinity});
 
 const names: string[] = [];
 
 rl.on('line', line => {
   // for some reason the chunks arent always parsed as lines by \r\n
   // so we force it by splitting our selves then loop over each line
-  line = parseMessage(line);
-  if (line.command == 'PING') {
-    client.write("PONG " + line.params[0] + "\r\n");
-    console.log("PONG " + line.params[0] + "\r\n");
-  } else if (line.command == 'MODE') {
+  const ircMessage: IrcMessage = parseMessage(line);
+  if (ircMessage.command == 'PING') {
+    client.write("PONG " + ircMessage.params[0] + "\r\n");
+    console.log("PONG " + ircMessage.params[0] + "\r\n");
+  } else if (ircMessage.command == 'MODE') {
     client.write("JOIN #aboftytest\r\n");
     client.write("NAMES #aboftytest\r\n");
     console.log("TRYING TO JOIN #ABOFTYTEST");
-  } else if (line.command == 'JOIN') {
+  } else if (ircMessage.command == 'JOIN') {
     console.log(line);
-    const nick = line.prefix.split('!')[0].slice(1);
-    myEmitter.emit('join', line.params[0].split(1), nick);
-  } else if (line.command == '353') {
-    line.params.slice(3).forEach(name => {
+    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+    myEmitter.emit('join', ircMessage.params[0].split(" ", 1), nick);
+  } else if (ircMessage.command == '353') {
+    ircMessage.params.slice(3).forEach(name => {
       name = name.replace(':', '').trim();
       if (name && !names.includes(name))
         names.push(name);
     });
-    console.log(line.params.slice(3));
+    console.log(ircMessage.params.slice(3));
   } else {
     console.log(line)
     // console.log(data.toString())
