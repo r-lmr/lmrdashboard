@@ -1,0 +1,12 @@
+{
+    "users": [
+        {"nick": "aboft", "role": "HOP"},
+        {"nick": "SBL", "role": "OP"},
+        {"nick": "Asmodean", "role": "LOP"},
+        {"nick": "audron"},
+        {"nick": "cmj"},
+        {"nick": "Alexendoo"},
+        {"nick": "materiyolo"},
+        {"nick": "shamyt"}
+    ]
+}
