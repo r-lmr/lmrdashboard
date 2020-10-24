@@ -1,4 +1,4 @@
-import User from './User'
+import User, { IUser } from './User'
 export default function UserList(props: IProps) {
 
     return (
@@ -12,11 +12,6 @@ export default function UserList(props: IProps) {
                     role={user.role} />)}
         </div>
     )
-}
-
-interface IUser {
-    nick: string;
-    role?: string;
 }
 
 interface IProps {

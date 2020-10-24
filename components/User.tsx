@@ -1,4 +1,4 @@
-export default function User(props: IProps) {
+export default function User(props: IUser) {
     const roleMap: Map<string, string> = new Map<string, string>([
         ["OP", "@"],
         ["HOP", "%"],
@@ -8,7 +8,7 @@ export default function User(props: IProps) {
     return <div>{props.role && roleMap.get(props.role)}{props.nick}</div>;
 }
 
-interface IProps {
+export interface IUser {
     nick: string;
     role?: string;
 }

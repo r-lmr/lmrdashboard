@@ -8,5 +8,12 @@
         {"nick": "Alexendoo"},
         {"nick": "materiyolo"},
         {"nick": "shamyt"}
+    ],
+    "messages": [
+        {"text": "This is a message", "time": "1603551704"},
+        {"text": "This is another message", "time": "1603551705"},
+        {"text": "This is yet another message", "time": "1603551706"},
+        {"text": "This is still another message", "time": "1603551707"},
+        {"text": "Believe it or not this is also a message", "time": "1603551708"}
     ]
 }
