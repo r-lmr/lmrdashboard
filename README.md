@@ -1,3 +1,5 @@
+The only readme with merge conflicts!
+
 <<<<<<< HEAD
 ```bash
 yarn install
