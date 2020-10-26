@@ -1,6 +1,7 @@
 import {createConnection} from 'net';
 import {createInterface} from 'readline';
 import {myEmitter} from './utils/emitter';
+import knex from './utils/db/dbConn';
 
 interface IrcMessage {
   prefix?: string;
@@ -54,6 +55,7 @@ rl.on('line', line => {
       name = name.replace(':', '').trim();
       if (name && !names.includes(name))
         names.push(name);
+	knex('online_users').insert({user: name, server: '#aboftytest'});
     });
     console.log(ircMessage.params.slice(3));
   } else {
@@ -67,6 +69,6 @@ myEmitter.on(
              nick: string) => { 
 		     console.log(`${nick} has joined ${server}`);
 		     if (!names.includes(nick)) names.push(nick);
-		     console.log(names);
+		     console.log('NAMES', names);
 	     });
 client.on('end', () => { console.log('disconnected from server'); })
