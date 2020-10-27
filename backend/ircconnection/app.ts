@@ -3,7 +3,7 @@ import {createInterface} from 'readline';
 import dotenv from 'dotenv';
 dotenv.config();
 import myEmitter from './utils/emitter';
-import {getUsers, addUser, deleteUser} from './utils/db/Users';
+import {addUser} from './utils/db/Users';
 import {saveLine} from './utils/db/Messages';
 
 
@@ -29,11 +29,12 @@ const parseMessage = (line: string): IrcMessage => {
       }
     }
 
+
 const client =
-    createConnection({port : 6667, host : "irc.snoonet.org"}, () => {
+    createConnection({port : 6667, host : "irc.snoonet.org"}, async () => {
       console.log('connected to server!');
       client.write("USER tsbottest localhost * :TypeScript Socket Test\r\n");
-      client.write("NICK tsbottest\r\n");
+      client.write("NICK tsbotaboft\r\n");
     })
 const rl = createInterface({input : client, crlfDelay : Infinity});
 
@@ -45,13 +46,13 @@ rl.on('line', line => {
   const ircMessage: IrcMessage = parseMessage(line);
   if (ircMessage.command == 'PING') {
     client.write("PONG " + ircMessage.params[0] + "\r\n");
-    console.log("PONG " + ircMessage.params[0] + "\r\n");
+    //console.log("PONG " + ircMessage.params[0] + "\r\n");
   } else if (ircMessage.command == 'MODE') {
     client.write("JOIN #aboftytest\r\n");
     client.write("NAMES #aboftytest\r\n");
     console.log("TRYING TO JOIN #ABOFTYTEST");
   } else if (ircMessage.command == 'JOIN' ) {
-    console.log(line);
+    //console.log(line);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != 'tstestbot') myEmitter.emit('join', ircMessage.params[0].split(" ", 1)[0].replace(':',''), nick);
   } else if (ircMessage.command == '353') {
@@ -60,33 +61,23 @@ rl.on('line', line => {
       if (name.length > 0  && !names.includes(name)){
         names.push(name);
 	await addUser(name, "#" + ircMessage.params[2].slice(1));
-	console.log(name.length, '#aboftytest');
+	//console.log(name.length, '#aboftytest');
       }
     });
-    console.log(ircMessage.params.slice(3));
   } else if (ircMessage.command == 'PART') {
 	const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
   	myEmitter.emit('part', ircMessage.params[0].split(" ", 1)[0].replace(':',''), nick);
   } else if (ircMessage.command == 'PRIVMSG' && !ircMessage.prefix?.toLowerCase().includes('bot@')) {
-	console.log(ircMessage);
+	//console.log(ircMessage);
 	const server = ircMessage.params[0];
-	const msg = ircMessage.params.slice(1).join(' ').substring(1);
+	const msg = ircMessage.params.slice(1).join(' ').substring(1,256);
 	const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
        	myEmitter.emit('line', nick, server, msg);
   } else {
-    console.log(line)
-    // console.log(data.toString())
+    //console.log(line);
   }
 })
 
-myEmitter.on('join', async (server: string, nick: string) => {
-       console.log(nick, server);	
-     if (!names.includes(nick) && nick != 'tstestbot') await addUser(nick, server);
-});
-myEmitter.on('part', async (server: string, nick: string) => {
-	console.log(server,nick);
-	await deleteUser(nick, server);
-});
 myEmitter.on('line', async (nick: string, server: string, msg: string) => {
 	await saveLine(nick, server, msg);
 });
