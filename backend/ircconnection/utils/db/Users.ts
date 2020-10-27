@@ -15,13 +15,28 @@ export async function deleteUser(nick: string, server: string) {
 };
 
 export async function addUser(nick: string, server: string) {
-	await knex('online_users').insert({user: nick, server});
+	await knex('online_users').insert({user: nick, server}).catch(e => {
+		//ignore any duplicate users that may be in table
+		//example: disconnecting from IRC 
+		if (e.errno != 1062) console.log(e)
+	});
 	console.log(`${nick} has come online.`);
 };
 
+export async function flushUserTable(server: string) {
+	try {
+		console.log("ATTEMPTING TO CLEAR USER TABLE ON START");
+		await knex('online_users').where({server}).del();
+	} catch(e) {
+		console.log("UNABLE TO DELETE USERS");
+		console.log(e);
+	} 
+};
+
+//flushUserTable('#aboftytest');
 //getUsers('aboftytest');
 //deleteUser('aboft','aboftytest');
 //addUser('fuckboi','#aboftytest');
 //getUsers('#aboftytest');
 
-export default { getUsers, deleteUser, addUser };
+export default { getUsers, deleteUser, addUser, flushUserTable };
