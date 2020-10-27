@@ -1,7 +1,11 @@
 import {createConnection} from 'net';
 import {createInterface} from 'readline';
-import {myEmitter} from './utils/emitter';
-import knex from './utils/db/dbConn';
+import dotenv from 'dotenv';
+dotenv.config();
+import myEmitter from './utils/emitter';
+import {getUsers, addUser, deleteUser} from './utils/db/Users';
+import {saveLine} from './utils/db/Messages';
+
 
 interface IrcMessage {
   prefix?: string;
@@ -46,29 +50,45 @@ rl.on('line', line => {
     client.write("JOIN #aboftytest\r\n");
     client.write("NAMES #aboftytest\r\n");
     console.log("TRYING TO JOIN #ABOFTYTEST");
-  } else if (ircMessage.command == 'JOIN') {
+  } else if (ircMessage.command == 'JOIN' ) {
     console.log(line);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
-    myEmitter.emit('join', ircMessage.params[0].split(" ", 1), nick);
+    if (nick != 'tstestbot') myEmitter.emit('join', ircMessage.params[0].split(" ", 1)[0].replace(':',''), nick);
   } else if (ircMessage.command == '353') {
-    ircMessage.params.slice(3).forEach(name => {
+    ircMessage.params.slice(3).forEach(async name => {
       name = name.replace(':', '').trim();
-      if (name && !names.includes(name))
+      if (name.length > 0  && !names.includes(name)){
         names.push(name);
-	knex('online_users').insert({user: name, server: '#aboftytest'});
+	await addUser(name, "#" + ircMessage.params[2].slice(1));
+	console.log(name.length, '#aboftytest');
+      }
     });
     console.log(ircMessage.params.slice(3));
+  } else if (ircMessage.command == 'PART') {
+	const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+  	myEmitter.emit('part', ircMessage.params[0].split(" ", 1)[0].replace(':',''), nick);
+  } else if (ircMessage.command == 'PRIVMSG' && !ircMessage.prefix?.toLowerCase().includes('bot@')) {
+	console.log(ircMessage);
+	const server = ircMessage.params[0];
+	const msg = ircMessage.params.slice(1).join(' ').substring(1);
+	const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+       	myEmitter.emit('line', nick, server, msg);
   } else {
     console.log(line)
     // console.log(data.toString())
   }
 })
 
-myEmitter.on(
-    'join', (server: string,
-             nick: string) => { 
-		     console.log(`${nick} has joined ${server}`);
-		     if (!names.includes(nick)) names.push(nick);
-		     console.log('NAMES', names);
-	     });
+myEmitter.on('join', async (server: string, nick: string) => {
+       console.log(nick, server);	
+     if (!names.includes(nick) && nick != 'tstestbot') await addUser(nick, server);
+});
+myEmitter.on('part', async (server: string, nick: string) => {
+	console.log(server,nick);
+	await deleteUser(nick, server);
+});
+myEmitter.on('line', async (nick: string, server: string, msg: string) => {
+	await saveLine(nick, server, msg);
+});
+
 client.on('end', () => { console.log('disconnected from server'); })
