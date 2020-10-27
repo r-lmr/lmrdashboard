@@ -13,14 +13,12 @@ app.get('/', async (req, res) => {
 		const users = await getUsers(server);
 		res.write(`${JSON.stringify({user: users})}\n\n`);
 		console.log("FROM GET ROUTE", server, nick);
-		res.end();
 	});
 	myEmitter.on('part', async (server: string, nick: string) => {
                 await deleteUser(nick, server);
 		const users = await getUsers(server);
               res.write(`${JSON.stringify({user: users})}\n\n`);
 		console.log("FROM GET ROUTE", server, nick);
-		res.end()
        });
 })
 
