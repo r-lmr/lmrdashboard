@@ -14,7 +14,6 @@ export default function UserList() {
                     console.error(error);
                 }
             )
-
     }, [])
 
     return (

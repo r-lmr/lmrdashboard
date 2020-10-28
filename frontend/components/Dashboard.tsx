@@ -10,7 +10,7 @@ export default function Dashboard() {
             <Container>
                 <Row>
                     <Col xs={"auto"}>
-                        <UserList users={MockData.users}></UserList>
+                        <UserList></UserList>
                     </Col>
                     <Col xs={"auto"}>
                         <MessageList messages={MockData.messages}></MessageList>
