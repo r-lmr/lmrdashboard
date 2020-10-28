@@ -1,10 +1,12 @@
 import Express from 'express';
+import cors from 'cors';
 import './ircconnection/app';
 import myEmitter from './ircconnection/utils/emitter';
 import { getUsers, deleteUser, addUser, flushUserTable } from './ircconnection/utils/db/Users';
 
 //const emitter = myEmitter();
 const app = Express();
+app.use(cors())
 
 
 app.get('/', async (req, res) => {

@@ -6,6 +6,8 @@
     "ircconnection": "tsc --outDir /tmp ircconnection/app.ts && node /tmp/app.js"
   },
   "dependencies": {
+    "@types/cors": "^2.8.8",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.21.7",
