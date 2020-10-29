@@ -9,7 +9,7 @@ export default function UserList() {
     		console.log('onmessage');
     		console.log(e);
   	}
-  	eventSource.addEventListener('join', e => {
+  	eventSource.addEventListener('join', (e: any) => {
     		console.log(e.data, e)
 		setFetchedUsers(JSON.parse(e.data));
 	});
