@@ -21,7 +21,7 @@ export default function MessageList() {
             <div className={"messagelist-header"}>
                 Last 5 messages:
             </div>
-            {fetchedMessages.map((message) =>
+            {fetchedMessages.map((message: any) =>
                 <Message key={message.dateCreated}
                     text={message.message}
                     user={message.nick}

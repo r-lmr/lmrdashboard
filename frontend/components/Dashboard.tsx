@@ -1,5 +1,4 @@
 import UserList from "../components/UserList";
-import MockData from "../data/mock.json";
 import { Container, Row, Col } from 'reactstrap';
 import MessageList from "./MessageList";
 
@@ -13,7 +12,7 @@ export default function Dashboard() {
                         <UserList></UserList>
                     </Col>
                     <Col xs={"auto"}>
-                        <MessageList messages={MockData.messages}></MessageList>
+                        <MessageList></MessageList>
                     </Col>
                 </Row>
             </Container>
