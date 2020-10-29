@@ -8,7 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@types/eventsource": "^1.1.5",
     "bootstrap": "^4.5.3",
+    "eventsource": "^1.0.7",
     "isomorphic-unfetch": "^3.1.0",
     "next": "9.5.5",
     "react": "17.0.1",

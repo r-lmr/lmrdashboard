@@ -34,7 +34,7 @@ const client =
     createConnection({port : 6667, host : "irc.snoonet.org"}, async () => {
       console.log('connected to server!');
       client.write("USER tsbottest localhost * :TypeScript Socket Test\r\n");
-      client.write("NICK tsbotaboft\r\n");
+      client.write("NICK tsbotSTOPUSINGMYNAME\r\n");
     })
 const rl = createInterface({input : client, crlfDelay : Infinity});
 

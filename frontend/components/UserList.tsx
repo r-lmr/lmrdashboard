@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react'
 import User, { IUser } from './User'
+import eventSource from "../data/EventSource";
+
 export default function UserList() {
     const [fetchedUsers, setFetchedUsers] = useState<string[]>([]);
 
     useEffect(() => {
-      	const eventSource = new EventSource("http://localhost:4000/test");
   	eventSource.onmessage = e => {
     		console.log('onmessage');
     		console.log(e);
   	}
   	eventSource.addEventListener('join', (e: any) => {
-    		console.log(e.data, e)
-		setFetchedUsers(JSON.parse(e.data));
+    		const data = JSON.parse(e.data);
+		console.log(data)
+		setFetchedUsers(data.users);
 	});
     }, [])
 

@@ -1,18 +1,31 @@
 import Message from './Message'
 import { IMessage } from './Message'
+import { useEffect, useState } from "react";
+import eventSource from "../data/EventSource";
 
-export default function MessageList(props: IProps) {
+export default function MessageList() {
+    const [fetchedMessages, setFetchedMessages] = useState<string[]>([]);
 
+    useEffect(() => {
+        eventSource.onmessage = e => {
+                console.log('onmessage');
+                console.log(e);
+        }
+        eventSource.addEventListener('join', (e: any) => {
+                const data = JSON.parse(e.data);
+		setFetchedMessages(data.messages);
+        });
+    }, [])
     return (
         <div>
             <div className={"messagelist-header"}>
                 Last 5 messages:
             </div>
-            {props.messages.map((message) =>
-                <Message key={message.time}
-                    text={message.text}
-                    user={message.user}
-                    time={message.time}
+            {fetchedMessages.map((message) =>
+                <Message key={message.dateCreated}
+                    text={message.message}
+                    user={message.nick}
+                    time={message.dateCreated}
                      />)}
         </div>
     )
