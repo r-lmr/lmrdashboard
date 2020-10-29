@@ -1,10 +1,10 @@
 import Message from './Message'
-import { IMessage } from './Message'
 import { useEffect, useState } from "react";
 import eventSource from "../data/EventSource";
+import { IMessage }  from "./Message";
 
 export default function MessageList() {
-    const [fetchedMessages, setFetchedMessages] = useState<string[]>([]);
+    const [fetchedMessages, setFetchedMessages] = useState<IMessage[]>([]);
 
     useEffect(() => {
         eventSource.onmessage = e => {
@@ -21,16 +21,13 @@ export default function MessageList() {
             <div className={"messagelist-header"}>
                 Last 5 messages:
             </div>
-            {fetchedMessages.map((message: any) =>
+            {fetchedMessages.map((message) =>
                 <Message key={message.dateCreated}
-                    text={message.message}
-                    user={message.nick}
-                    time={message.dateCreated}
+                    message={message.message}
+                    nick={message.nick}
+                    dateCreated={message.dateCreated}
                      />)}
         </div>
     )
 }
 
-interface IProps {
-    messages: IMessage[]
-}
