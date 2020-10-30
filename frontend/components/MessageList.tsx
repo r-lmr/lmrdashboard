@@ -4,7 +4,7 @@ import eventSource from "../data/EventSource";
 import { IMessage }  from "./Message";
 
 export default function MessageList() {
-    const [fetchedMessages, setFetchedMessages] = useState<IMessage[]>([]);
+    const [fetchedMessages, setFetchedMessages] = useState<IMessage[]>([{message: "Loading..."}]);
 
     useEffect(() => {
         eventSource.onmessage = e => {
@@ -13,7 +13,7 @@ export default function MessageList() {
         }
         eventSource.addEventListener('join', (e: any) => {
                 const data = JSON.parse(e.data);
-		setFetchedMessages(data.messages);
+		setFetchedMessages(data.messages.reverse());
         });
     }, [])
     return (
@@ -22,7 +22,7 @@ export default function MessageList() {
                 Last 5 messages:
             </div>
             {fetchedMessages.map((message) =>
-                <Message key={message.dateCreated}
+                <Message key={message.dateCreated || Date.now()}
                     message={message.message}
                     nick={message.nick}
                     dateCreated={message.dateCreated}

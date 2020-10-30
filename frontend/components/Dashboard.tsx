@@ -1,6 +1,7 @@
 import UserList from "../components/UserList";
 import { Container, Row, Col } from 'reactstrap';
 import MessageList from "./MessageList";
+import LineCountList from "./LineCountList";
 
 export default function Dashboard() {
 
@@ -8,10 +9,15 @@ export default function Dashboard() {
         <div className={"dashboard-container"}>
             <Container>
                 <Row>
-                    <Col xs={"auto"}>
-                        <UserList></UserList>
-                    </Col>
-                    <Col xs={"auto"}>
+                    <Col md>
+                        <UserList/>
+		    </Col>
+		    <Col md>
+			<LineCountList/>
+		    </Col>
+		</Row>
+		<Row >
+                    <Col md >
                         <MessageList></MessageList>
                     </Col>
                 </Row>

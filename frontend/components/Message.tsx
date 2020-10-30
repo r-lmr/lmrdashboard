@@ -3,8 +3,8 @@ export default function Message(props: IMessage) {
 }
 
 export interface IMessage {
-    nick: string
+    nick?: string
     message: string
-    dateCreated: string
+    dateCreated?: string
 }
 

@@ -3,7 +3,7 @@ import User, { IUser } from './User'
 import eventSource from "../data/EventSource";
 
 export default function UserList() {
-    const [fetchedUsers, setFetchedUsers] = useState<string[]>([]);
+    const [fetchedUsers, setFetchedUsers] = useState<string[]>(["Loading..."]);
 
     useEffect(() => {
   	eventSource.onmessage = e => {
