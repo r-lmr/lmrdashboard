@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Collapse,
   Navbar,
@@ -11,8 +11,8 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  NavbarText
-} from 'reactstrap';
+  NavbarText,
+} from "reactstrap";
 
 const Navigation = (props: IProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,16 +34,10 @@ const Navigation = (props: IProps) => {
                 Options
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>
-                  Option 1
-                </DropdownItem>
-                <DropdownItem>
-                  Option 2
-                </DropdownItem>
+                <DropdownItem>Option 1</DropdownItem>
+                <DropdownItem>Option 2</DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem>
-                  Reset
-                </DropdownItem>
+                <DropdownItem>Reset</DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
@@ -52,10 +46,10 @@ const Navigation = (props: IProps) => {
       </Navbar>
     </div>
   );
-}
+};
 
 export default Navigation;
 
 interface IProps {
-    title?: string;
+  title?: string;
 }
