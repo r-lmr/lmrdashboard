@@ -41,6 +41,29 @@ INSERT INTO `last_messages` VALUES ('aboft','#aboftytest','this is a test line',
 UNLOCK TABLES;
 
 --
+-- Table structure for table `line_counts`
+--
+
+DROP TABLE IF EXISTS `line_counts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `line_counts` (
+  `count` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `line_counts`
+--
+
+LOCK TABLES `line_counts` WRITE;
+/*!40000 ALTER TABLE `line_counts` DISABLE KEYS */;
+INSERT INTO `line_counts` VALUES (69,'2020-11-03'),(420,'2020-11-04'),(1337,'2020-11-05');
+/*!40000 ALTER TABLE `line_counts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `online_users`
 --
 
@@ -61,7 +84,7 @@ CREATE TABLE `online_users` (
 
 LOCK TABLES `online_users` WRITE;
 /*!40000 ALTER TABLE `online_users` DISABLE KEYS */;
-INSERT INTO `online_users` VALUES ('tsbottest','#aboftytest','2020-10-26 18:43:54'),('audron','#aboftytest','2020-10-26 18:43:54'),('Asmodean','#aboftytest','2020-10-26 18:43:54'),('aboftybot','#aboftytest','2020-10-26 18:43:54'),('aboft','#aboftytest','2020-10-26 18:43:54');
+INSERT INTO `online_users` VALUES ('tsbotSTOPUSINGMYNAME','#aboftytest','2020-11-03 20:15:14'),('aboftybot','#aboftytest','2020-11-03 20:15:14'),('audron','#aboftytest','2020-11-03 20:15:14'),('Asmodean','#aboftytest','2020-11-03 20:15:14');
 /*!40000 ALTER TABLE `online_users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -74,4 +97,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-26 18:45:54
+-- Dump completed on 2020-11-03 20:35:19
