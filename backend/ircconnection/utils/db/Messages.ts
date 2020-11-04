@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import { Observable } from "rxjs";
 dotenv.config();
 import knex from "./dbConn";
 
