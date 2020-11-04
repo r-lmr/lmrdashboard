@@ -15,21 +15,18 @@ export default function LineCountList() {
     };
     eventSource.addEventListener("join", (e: any) => {
       const data = JSON.parse(e.data);
-      setFetchedLines([
-        { count: 2573, dateCreated: "2020-04-26" },
-        { count: 69, dateCreated: "2020-04-20" },
-        { count: 1337, dateCreated: "1969-12-31" },
-      ]);
+      console.log(data.lineCount);
+      setFetchedLines(data.lineCount);
     });
   }, []);
   return (
     <div>
-      <div className={"messagelist-header"}>Current Line Count:</div>
+      <div className={"messagelist-header"}> Current Line Count : </div>
       {fetchedLines.map((line) => (
         <LineCount
-          key={line.dateCreated || Date.now()}
-          count={line.count}
-          dateCreated={line.dateCreated}
+          key={line.date || Date.now()}
+          lineCount={line.lineCount}
+          date={line.date}
           message={line.message}
         />
       ))}
