@@ -20,15 +20,17 @@ export async function getLines(server: string, numOfLines: number) {
 }
 
 export async function getLineCountLastNDays(days: number): Promise<ILineCount[]> {
-  let lineCounts: ILineCount[] = [];
-  for (const dayOffset of Array.from(Array(days).keys())) {
-    const date = new Date(new Date().setDate(new Date().getDate() - dayOffset));
-    const dateStr =
-      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    const lineCount = await getLineCount(dateStr);
-    lineCounts.push(lineCount);
-  }
-  return lineCounts;
+  const lineCount = await knex("line_counts")
+    .select()
+    .orderBy("date", "desc")
+    .limit(days);
+  const parsedLineCount = lineCount.map((entry) => {
+    return {
+      date: entry["date"],
+      lineCount: entry["count"],
+    };
+  });
+  return parsedLineCount;
 }
 
 async function getLineCount(date: string): Promise<ILineCount> {
