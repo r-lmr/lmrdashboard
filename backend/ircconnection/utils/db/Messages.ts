@@ -19,6 +19,33 @@ export async function getLines(server: string, numOfLines: number) {
   return parsedMsg;
 }
 
+export async function getLineCountLastNDays(days: number): Promise<ILineCount[]> {
+  const lineCounts = await knex("line_counts")
+    .select()
+    .orderBy("date", "desc")
+    .limit(days);
+  const parsedLineCounts = lineCounts.map((entry) => {
+    return {
+      date: entry["date"],
+      lineCount: entry["count"],
+    };
+  });
+  return parsedLineCounts;
+}
+
+async function getLineCount(date: string): Promise<ILineCount> {
+  const lineCount = await knex("line_counts")
+    .select()
+    .where({ date });
+  const parsedLineCount = lineCount.map((entry) => {
+    return {
+      date: entry["date"],
+      lineCount: entry["count"],
+    };
+  });
+  return parsedLineCount[0];
+}
+
 export async function saveLine(nick: string, server: string, message: string) {
   await knex("last_messages").insert({ user: nick, server, message });
   console.log("Saving message to db.");
@@ -26,4 +53,7 @@ export async function saveLine(nick: string, server: string, message: string) {
 
 export default { getLines };
 
-//getLines('#aboftytest',2);
+interface ILineCount {
+  date: string;
+  lineCount: number;
+}
