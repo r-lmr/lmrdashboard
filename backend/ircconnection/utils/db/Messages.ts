@@ -19,7 +19,7 @@ export async function getLines(server: string, numOfLines: number) {
   return parsedMsg;
 }
 
-export async function getLineCountLastNDays( days: number): Promise<ILineCount[]> {
+export async function getLineCountLastNDays(days: number): Promise<ILineCount[]> {
   let lineCounts: ILineCount[] = [];
   for (const dayOffset of Array.from(Array(days).keys())) {
     const date = new Date(new Date().setDate(new Date().getDate() - dayOffset));
@@ -32,7 +32,9 @@ export async function getLineCountLastNDays( days: number): Promise<ILineCount[]
 }
 
 async function getLineCount(date: string): Promise<ILineCount> {
-  const lineCount = await knex("line_counts").select().where("date", "=", date);
+  const lineCount = await knex("line_counts")
+    .select()
+    .where({ date });
   const parsedLineCount = lineCount.map((entry) => {
     return {
       date: entry["date"],
