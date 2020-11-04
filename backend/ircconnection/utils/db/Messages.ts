@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { Observable } from "rxjs";
 dotenv.config();
 import knex from "./dbConn";
 
@@ -19,6 +20,30 @@ export async function getLines(server: string, numOfLines: number) {
   return parsedMsg;
 }
 
+export async function getLineCountLastNDays(days: number): Promise<ILineCount[]> {
+  let lineCounts: ILineCount[] = []
+  for (const dayOffset of Array.from(Array(days).keys())) {
+    const date = new Date(new Date().setDate(new Date().getDate() - dayOffset));
+    const dateStr = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    const lineCount = await getLineCount(dateStr);
+    lineCounts.push(lineCount);
+  }
+  return lineCounts;
+}
+
+async function getLineCount(date: string): Promise<ILineCount> {
+  const lineCount = await knex("line_counts")
+    .select()
+    .where("date", "=", date);
+  const parsedLineCount = lineCount.map((entry) => {
+    return {
+      date: entry["date"],
+      lineCount: entry["count"]
+    };
+  });
+  return parsedLineCount[0];
+}
+
 export async function saveLine(nick: string, server: string, message: string) {
   await knex("last_messages").insert({ user: nick, server, message });
   console.log("Saving message to db.");
@@ -26,4 +51,7 @@ export async function saveLine(nick: string, server: string, message: string) {
 
 export default { getLines };
 
-//getLines('#aboftytest',2);
+interface ILineCount {
+  date: string;
+  lineCount: number;
+}
