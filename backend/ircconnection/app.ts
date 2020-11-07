@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import myEmitter from './utils/emitter';
 import { addUser } from './utils/db/Users';
-import { saveLine } from './utils/db/Messages';
 
 interface IrcMessage {
   prefix?: string;
@@ -43,13 +42,11 @@ rl.on('line', (line) => {
   const ircMessage: IrcMessage = parseMessage(line);
   if (ircMessage.command == 'PING') {
     client.write('PONG ' + ircMessage.params[0] + '\r\n');
-    //console.log("PONG " + ircMessage.params[0] + "\r\n");
   } else if (ircMessage.command == 'MODE') {
     client.write('JOIN #aboftytest\r\n');
     client.write('NAMES #aboftytest\r\n');
     console.log('TRYING TO JOIN #ABOFTYTEST');
   } else if (ircMessage.command == 'JOIN') {
-    //console.log(line);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != 'tstestbot') myEmitter.emit('join', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);
   } else if (ircMessage.command == '353') {
@@ -58,26 +55,18 @@ rl.on('line', (line) => {
       if (name.length > 0 && !names.includes(name)) {
         names.push(name);
         await addUser(name, '#' + ircMessage.params[2].slice(1));
-        //console.log(name.length, '#aboftytest');
       }
     });
   } else if (ircMessage.command == 'PART') {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     myEmitter.emit('part', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);
   } else if (ircMessage.command == 'PRIVMSG' && !ircMessage.prefix?.toLowerCase().includes('bot@')) {
-    //console.log(ircMessage);
     const server = ircMessage.params[0];
     const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+    console.log("ircconnection emitting line", nick, server, msg);
     myEmitter.emit('line', nick, server, msg);
-  } else {
-    //console.log(line);
   }
-});
-
-myEmitter.on('line', async (nick: string, server: string, msg: string) => {
-  await saveLine(nick, server, msg);
-  console.log(nick, msg);
 });
 
 client.on('end', () => {
