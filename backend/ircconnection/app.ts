@@ -13,16 +13,16 @@ interface IrcMessage {
 
 const parseMessage = (line: string): IrcMessage => {
   if (line[0] == ':') {
-    let input = line.split(' ');
-    let msg = {
+    const input = line.split(' ');
+    const msg = {
       prefix: input[0],
       command: input[1],
       params: input.slice(2),
     };
     return msg;
   } else {
-    let input = line.split(' ');
-    let msg = { command: input[0], params: [input[1]] };
+    const input = line.split(' ');
+    const msg = { command: input[0], params: [input[1]] };
     return msg;
   }
 };
@@ -64,7 +64,6 @@ rl.on('line', (line) => {
     const server = ircMessage.params[0];
     const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
-    console.log("ircconnection emitting line", nick, server, msg);
     myEmitter.emit('line', nick, server, msg);
   }
 });
