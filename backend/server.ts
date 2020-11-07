@@ -6,11 +6,15 @@ import { getUsers, deleteUser, addUser, flushUserTable } from './ircconnection/u
 import { getLines, getLineCountLastNDays, saveLine } from './ircconnection/utils/db/Messages';
 import { Response } from 'express-serve-static-core';
 
-//const emitter = myEmitter();
 const app = Express();
 app.use(cors());
 
-app.get('/test', async (req, res) => {
+// Need a static response object which is overwritten for a new frontend connection
+// Otherwise multiple events handlers are added, if the same res is reused
+let globalRes: Response<any, number>;
+
+app.get('/test', async (req, res: Response<any, number>) => {
+  globalRes = res;
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -20,27 +24,27 @@ app.get('/test', async (req, res) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
   });
-  
+
   // Send initial data
   sendUsers(res)
   sendMessages(res)
   sendLineCounts(res)
+});
 
-  // Send additional data when new data arrives from the irc connection
-  myEmitter.on('join', async (server: string, nick: string) => {
-    await addUser(nick, server);
-    sendUsers(res)
-  });
-  myEmitter.on('part', async (server: string, nick: string) => {
-    await deleteUser(nick, server);
-    sendUsers(res)
-  });
-  myEmitter.on('line', async (nick: string, server: string, msg: string) => {
-    console.log(nick, msg);
-    await saveLine(nick, server, msg);
-    sendMessages(res)
-    sendLineCounts(res)
-  });
+// Send additional data when new data arrives from the irc connection
+myEmitter.on('join', async (server: string, nick: string) => {
+  await addUser(nick, server);
+  sendUsers(globalRes)
+});
+myEmitter.on('part', async (server: string, nick: string) => {
+  await deleteUser(nick, server);
+  sendUsers(globalRes)
+});
+myEmitter.on('line', async (nick: string, server: string, msg: string) => {
+  console.log(nick, msg);
+  await saveLine(nick, server, msg);
+  sendMessages(globalRes)
+  sendLineCounts(globalRes)
 });
 
 async function sendUsers(res: Response<any, number>) {
