@@ -1,8 +1,13 @@
+@use 'Bootstrap';
+
 .dashboard-container {
+  font-family: Roboto, 'Fira Sans', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1.5em;
-  background-color: lightgray;
+  color: white;
+  background-color: Bootstrap.$dark;
   padding-top: 2em;
   padding-bottom: 2em;
   padding-left: 4em;
   padding-right: 4em;
+  border-radius: 0.5em;
 }

@@ -21,25 +21,20 @@ const Navigation = (props: IProps) => {
 
   return (
     <div className={"navigation"}>
-      <Navbar color="light" light expand="md">
+      <Navbar className={"navbar"} color="dark" dark expand="md">
         <NavbarBrand href="/">lmrdashboard</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             <NavItem>
-              <NavLink href="/components/">Components</NavLink>
+              <NavLink href="https://www.reddit.com/r/linuxmasterrace/">Subreddit</NavLink>
             </NavItem>
-            <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                Options
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem>Option 1</DropdownItem>
-                <DropdownItem>Option 2</DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem>Reset</DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
+            <NavItem>
+              <NavLink href="https://kiwiirc.com/nextclient/irc.snoonet.org/#linuxmasterrace">Web IRC</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="https://github.com/aboft/lmrdashboard">Source</NavLink>
+            </NavItem>
           </Nav>
           <NavbarText>linux good windows bad</NavbarText>
         </Collapse>
