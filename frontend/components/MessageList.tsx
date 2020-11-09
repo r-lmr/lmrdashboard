@@ -10,12 +10,10 @@ export default function MessageList() {
 
   useEffect(() => {
     eventSource.onmessage = (e) => {
-      console.log("onmessage");
       console.log(e);
     };
     eventSource.addEventListener("messages", (e: any) => {
       const data = JSON.parse(e.data);
-      console.log("MessageList.tsx", data);
       setFetchedMessages(data.messages.reverse());
     });
   }, []);

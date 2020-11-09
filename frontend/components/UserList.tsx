@@ -7,12 +7,10 @@ export default function UserList() {
 
   useEffect(() => {
     eventSource.onmessage = (e) => {
-      console.log("onmessage");
       console.log(e);
     };
     eventSource.addEventListener("users", (e: any) => {
       const data = JSON.parse(e.data);
-      console.log("UserList.tsx", data);
       setFetchedUsers(data.users);
     });
   }, []);

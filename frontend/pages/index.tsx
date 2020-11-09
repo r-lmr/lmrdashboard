@@ -13,7 +13,9 @@ export default function Home() {
 
       <Navigation />
       <main className={styles.main}>
-        <DashBoard />
+        <div style={{width: "85%", height: "95%"}}>
+          <DashBoard />
+        </div>
       </main>
     </div>
   );
