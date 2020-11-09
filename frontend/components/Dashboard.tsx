@@ -17,7 +17,7 @@ export default function Dashboard() {
         </Row>
         <Row>
           <Col md>
-            <MessageList></MessageList>
+            <MessageList />
           </Col>
         </Row>
       </Container>

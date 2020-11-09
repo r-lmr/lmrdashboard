@@ -13,10 +13,10 @@ export default function LineCountList() {
       console.log("onmessage");
       console.log(e);
     };
-    eventSource.addEventListener("join", (e: any) => {
+    eventSource.addEventListener("lineCounts", (e: any) => {
       const data = JSON.parse(e.data);
-      console.log(data.lineCount);
-      setFetchedLines(data.lineCount);
+      console.log("LineCountList.tsx", data);
+      setFetchedLines(data.lineCounts);
     });
   }, []);
   return (

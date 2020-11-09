@@ -10,9 +10,9 @@ export default function UserList() {
       console.log("onmessage");
       console.log(e);
     };
-    eventSource.addEventListener("join", (e: any) => {
+    eventSource.addEventListener("users", (e: any) => {
       const data = JSON.parse(e.data);
-      console.log(data);
+      console.log("UserList.tsx", data);
       setFetchedUsers(data.users);
     });
   }, []);

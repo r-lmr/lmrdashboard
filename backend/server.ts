@@ -3,13 +3,18 @@ import cors from 'cors';
 import './ircconnection/app';
 import myEmitter from './ircconnection/utils/emitter';
 import { getUsers, deleteUser, addUser, flushUserTable } from './ircconnection/utils/db/Users';
-import { getLines, getLineCountLastNDays } from './ircconnection/utils/db/Messages';
+import { getLines, getLineCountLastNDays, saveLine } from './ircconnection/utils/db/Messages';
+import { Response } from 'express-serve-static-core';
 
-//const emitter = myEmitter();
 const app = Express();
 app.use(cors());
 
-app.get('/test', async (req, res) => {
+// Need a static response object which is overwritten for a new frontend connection
+// Otherwise multiple events handlers are added, if the same res is reused
+let globalRes: Response<any, number>;
+
+app.get('/test', async (req, res: Response<any, number>) => {
+  globalRes = res;
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -19,38 +24,55 @@ app.get('/test', async (req, res) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
   });
-  let users = await getUsers('#aboftytest');
-  let messages = await getLines('#aboftytest', 5);
-  let lineCount = await getLineCountLastNDays(5);
-  res.write('event: join\n'); // added these
-  res.write(`data: ${JSON.stringify({ users: users, messages: messages, lineCount: lineCount })}`);
-  res.write('\n\n');
-  console.log('request received');
-  setInterval(async () => {
-    users = await getUsers('#aboftytest');
-    messages = await getLines('#aboftytest', 5);
-    lineCount = await getLineCountLastNDays(5);
-    res.write('event: join\n'); // added these
-    res.write(`data: ${JSON.stringify({ users: users, messages: messages, lineCount: lineCount })}`);
-    res.write('\n\n');
-  }, 5000);
+
+  // Send initial data
+  await sendUsers(res);
+  await sendMessages(res);
+  await sendLineCounts(res);
 });
 
-app.get('/onlineUsers', async (req, res) => {
-  const onlineUsers = await getUsers('#aboftytest');
-  res.send({ users: onlineUsers });
-});
-
-myEmitter.on('users', (server: string, nick: string) => {
-  console.log('Hello there!');
-});
-
+// Send additional data when new data arrives from the irc connection
 myEmitter.on('join', async (server: string, nick: string) => {
   await addUser(nick, server);
+  sendUsers(globalRes);
 });
 myEmitter.on('part', async (server: string, nick: string) => {
   await deleteUser(nick, server);
+  sendUsers(globalRes);
 });
+myEmitter.on('line', async (nick: string, server: string, msg: string) => {
+  console.log(nick, msg);
+  await saveLine(nick, server, msg);
+  sendMessages(globalRes);
+  sendLineCounts(globalRes);
+});
+
+async function sendUsers(res: Response<any, number>) {
+  if (res) {
+    const users = await getUsers('#aboftytest');
+    res.write('event: users\n');
+    res.write(`data: ${JSON.stringify({ users: users })}`);
+    res.write('\n\n');
+  }
+}
+
+async function sendMessages(res: Response<any, number>) {
+  if (res) {
+    const messages = await getLines('#aboftytest', 5);
+    res.write('event: messages\n');
+    res.write(`data: ${JSON.stringify({ messages: messages })}`);
+    res.write('\n\n');
+  }
+}
+
+async function sendLineCounts(res: Response<any, number>) {
+  if (res) {
+    const lineCounts = await getLineCountLastNDays(5);
+    res.write('event: lineCounts\n');
+    res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
+    res.write('\n\n');
+  }
+}
 
 flushUserTable('#aboftytest');
 app.listen(4000, () => {

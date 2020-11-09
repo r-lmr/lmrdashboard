@@ -13,17 +13,19 @@ export default function MessageList() {
       console.log("onmessage");
       console.log(e);
     };
-    eventSource.addEventListener("join", (e: any) => {
+    eventSource.addEventListener("messages", (e: any) => {
       const data = JSON.parse(e.data);
+      console.log("MessageList.tsx", data);
       setFetchedMessages(data.messages.reverse());
     });
   }, []);
   return (
     <div>
       <div className={"messagelist-header"}>Last 5 messages:</div>
-      {fetchedMessages.map((message) => (
+      {fetchedMessages.map((message, index) => (
         <Message
-          key={message.dateCreated || Date.now()}
+          // Temporary key fix to make key unique if messages with the same date are sent
+          key={(message.dateCreated || Date.now()).toString().concat(index.toString())}
           message={message.message}
           nick={message.nick}
           dateCreated={message.dateCreated}
