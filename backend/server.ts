@@ -26,46 +26,52 @@ app.get('/test', async (req, res: Response<any, number>) => {
   });
 
   // Send initial data
-  sendUsers(res)
-  sendMessages(res)
-  sendLineCounts(res)
+  await sendUsers(res);
+  await sendMessages(res);
+  await sendLineCounts(res);
 });
 
 // Send additional data when new data arrives from the irc connection
 myEmitter.on('join', async (server: string, nick: string) => {
   await addUser(nick, server);
-  sendUsers(globalRes)
+  sendUsers(globalRes);
 });
 myEmitter.on('part', async (server: string, nick: string) => {
   await deleteUser(nick, server);
-  sendUsers(globalRes)
+  sendUsers(globalRes);
 });
 myEmitter.on('line', async (nick: string, server: string, msg: string) => {
   console.log(nick, msg);
   await saveLine(nick, server, msg);
-  sendMessages(globalRes)
-  sendLineCounts(globalRes)
+  sendMessages(globalRes);
+  sendLineCounts(globalRes);
 });
 
 async function sendUsers(res: Response<any, number>) {
-  const users = await getUsers('#aboftytest');
-  res.write('event: users\n');
-  res.write(`data: ${JSON.stringify({ users: users })}`);
-  res.write('\n\n');
+  if (res) {
+    const users = await getUsers('#aboftytest');
+    res.write('event: users\n');
+    res.write(`data: ${JSON.stringify({ users: users })}`);
+    res.write('\n\n');
+  }
 }
 
 async function sendMessages(res: Response<any, number>) {
-  const messages = await getLines('#aboftytest', 5);
-  res.write('event: messages\n');
-  res.write(`data: ${JSON.stringify({ messages: messages })}`);
-  res.write('\n\n');
+  if (res) {
+    const messages = await getLines('#aboftytest', 5);
+    res.write('event: messages\n');
+    res.write(`data: ${JSON.stringify({ messages: messages })}`);
+    res.write('\n\n');
+  }
 }
 
 async function sendLineCounts(res: Response<any, number>) {
-  const lineCounts = await getLineCountLastNDays(5);
-  res.write('event: lineCounts\n');
-  res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
-  res.write('\n\n');
+  if (res) {
+    const lineCounts = await getLineCountLastNDays(5);
+    res.write('event: lineCounts\n');
+    res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
+    res.write('\n\n');
+  }
 }
 
 flushUserTable('#aboftytest');
