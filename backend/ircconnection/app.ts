@@ -29,8 +29,8 @@ const parseMessage = (line: string): IrcMessage => {
 };
 
 const options = {
-  key: readFileSync('/home/aboft/lmrdashboard/backend/keys/key.pem'),
-  cert: readFileSync('/home/aboft/lmrdashboard/backend/keys/cert.pem'),
+  key: readFileSync('./keys/key.pem'),
+  cert: readFileSync('./keys/cert.pem'),
   host: 'irc.snoonet.org',
 };
 
@@ -44,6 +44,10 @@ const rl = createInterface({ input: client, crlfDelay: Infinity });
 
 const names: string[] = [];
 
+const joinConfig = {
+  channel: process.env.IRC_CHANNEL || '#linuxmasterrace'
+}
+
 rl.on('line', (line) => {
   // for some reason the chunks arent always parsed as lines by \r\n
   // so we force it by splitting our selves then loop over each line
@@ -51,9 +55,9 @@ rl.on('line', (line) => {
   if (ircMessage.command == 'PING') {
     client.write('PONG ' + ircMessage.params[0] + '\r\n');
   } else if (ircMessage.command == 'MODE') {
-    client.write('JOIN #linuxmasterrace\r\n');
-    client.write('NAMES #linuxmasterrace\r\n');
-    console.log('TRYING TO JOIN #ABOFTYTEST');
+    client.write(`JOIN ${joinConfig.channel}\r\n`);
+    client.write(`NAMES ${joinConfig.channel}\r\n`);
+    console.log(`TRYING TO JOIN ${joinConfig.channel}`);
   } else if (ircMessage.command == 'JOIN') {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != 'tstestbot') myEmitter.emit('join', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);

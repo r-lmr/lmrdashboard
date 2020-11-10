@@ -3,7 +3,7 @@ import cors from 'cors';
 import './ircconnection/app';
 import myEmitter from './ircconnection/utils/emitter';
 import { getUsers, deleteUser, addUser, flushUserTable } from './ircconnection/utils/db/Users';
-import { getLines, getLineCountLastNDays, saveLine } from './ircconnection/utils/db/Messages';
+import { getLines, getLineCountLastNDays, saveLine, getLinesLastNDays, IMessage } from './ircconnection/utils/db/Messages';
 import { Response } from 'express-serve-static-core';
 
 const app = Express();
@@ -29,6 +29,7 @@ app.get('/test', async (req, res: Response<any, number>) => {
   await sendUsers(res);
   await sendMessages(res);
   await sendLineCounts(res);
+  await sendTopWords(res);
 });
 
 // Send additional data when new data arrives from the irc connection
@@ -72,6 +73,30 @@ async function sendLineCounts(res: Response<any, number>) {
     const lineCounts = await getLineCountLastNDays(5);
     res.write('event: lineCounts\n');
     res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
+    res.write('\n\n');
+  }
+}
+
+async function sendTopWords(res: Response<any, number>) {
+  if (res) {
+    const messages: IMessage[] = await getLinesLastNDays(7);
+    const messageTextCounts: Map<string, number> = new Map<string, number>();
+
+    for (const message of messages) {
+      const messageText: string = message.message;
+
+      if (!messageTextCounts.has(messageText))
+        messageTextCounts.set(messageText, 1);
+      else
+        messageTextCounts.set(messageText, messageTextCounts.get(messageText)! + 1);
+    }
+
+    const sortedMessageTextCounts = new
+      Map([...messageTextCounts.entries()].sort((a, b) => b[1] - a[1]));
+    console.log(sortedMessageTextCounts);
+
+    res.write('event: topWords\n');
+    res.write(`data: ${JSON.stringify({ topWords: sortedMessageTextCounts })}`);
     res.write('\n\n');
   }
 }
