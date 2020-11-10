@@ -80,7 +80,7 @@ async function sendLineCounts(res: Response<any, number>) {
 async function sendTopWords(res: Response<any, number>) {
   if (res) {
     const messages: IMessage[] = await getLinesLastNDays(7);
-    let messageTextCounts: Map<string, number> = new Map<string, number>();
+    const messageTextCounts: Map<string, number> = new Map<string, number>();
 
     for (const message of messages) {
       const messageText: string = message.message;
@@ -95,7 +95,9 @@ async function sendTopWords(res: Response<any, number>) {
       Map([...messageTextCounts.entries()].sort((a, b) => b[1] - a[1]));
     console.log(sortedMessageTextCounts);
 
-    // TODO: Send
+    res.write('event: topWords\n');
+    res.write(`data: ${JSON.stringify({ topWords: sortedMessageTextCounts })}`);
+    res.write('\n\n');
   }
 }
 
