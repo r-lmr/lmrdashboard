@@ -35,24 +35,24 @@ app.get('/test', async (req, res: Response<any, number>) => {
 // Send additional data when new data arrives from the irc connection
 myEmitter.on('join', async (server: string, nick: string) => {
   await addUser(nick, server);
-  sendUsers(globalRes);
+  await sendUsers(globalRes);
 });
 
 myEmitter.on('part', async (server: string, nick: string) => {
   await deleteUser(nick, server);
-  sendUsers(globalRes);
+  await sendUsers(globalRes);
 });
 
 myEmitter.on('line', async (nick: string, server: string, msg: string) => {
   console.log(nick, msg);
   await saveLine(nick, server, msg);
-  sendMessages(globalRes);
-  sendLineCounts(globalRes);
+  await sendMessages(globalRes);
+  await sendLineCounts(globalRes);
 });
 
 async function sendUsers(res: Response<any, number>) {
   if (res) {
-    const users = await getUsers('#aboftytest');
+    const users = await getUsers(process.env.IRC_CHANNEL || '#linuxmasterrace');
     res.write('event: users\n');
     res.write(`data: ${JSON.stringify({ users: users })}`);
     res.write('\n\n');
@@ -61,7 +61,7 @@ async function sendUsers(res: Response<any, number>) {
 
 async function sendMessages(res: Response<any, number>) {
   if (res) {
-    const messages = await getLines('#aboftytest', 5);
+    const messages = await getLines(process.env.IRC_CHANNEL || '#linuxmasterrace', 5);
     res.write('event: messages\n');
     res.write(`data: ${JSON.stringify({ messages: messages })}`);
     res.write('\n\n');
@@ -99,7 +99,7 @@ async function sendTopWords(res: Response<any, number>) {
   }
 }
 
-flushUserTable('#aboftytest');
+flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');
 app.listen(4000, () => {
   console.log('listening on 4000');
 });
