@@ -1,4 +1,5 @@
-import { createConnection } from 'net';
+import { connect } from 'tls';
+import { readFileSync } from 'fs';
 import { createInterface } from 'readline';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -27,10 +28,17 @@ const parseMessage = (line: string): IrcMessage => {
   }
 };
 
-const client = createConnection({ port: 6667, host: 'irc.snoonet.org' }, async () => {
+const options = {
+  key: readFileSync('/home/aboft/lmrdashboard/backend/keys/key.pem'),
+  cert: readFileSync('/home/aboft/lmrdashboard/backend/keys/cert.pem'),
+  host: 'irc.snoonet.org',
+};
+
+const client = connect(6697, options, async () => {
   console.log('connected to server!');
-  client.write('USER tsbottest localhost * :TypeScript Socket Test\r\n');
-  client.write('NICK tsbotSTOPUSINGMYNAME\r\n');
+  client.write(`USER ${process.env.IRC_USER} localhost * :LMR Dashboard Connection\r\n`);
+  client.write(`NICK ${process.env.IRC_USER} \r\n`);
+  client.write(`PRIVMSG nickserv IDENTIFY ${process.env.IRC_PASS}\r\n`);
 });
 const rl = createInterface({ input: client, crlfDelay: Infinity });
 
@@ -43,8 +51,8 @@ rl.on('line', (line) => {
   if (ircMessage.command == 'PING') {
     client.write('PONG ' + ircMessage.params[0] + '\r\n');
   } else if (ircMessage.command == 'MODE') {
-    client.write('JOIN #aboftytest\r\n');
-    client.write('NAMES #aboftytest\r\n');
+    client.write('JOIN #linuxmasterrace\r\n');
+    client.write('NAMES #linuxmasterrace\r\n');
     console.log('TRYING TO JOIN #ABOFTYTEST');
   } else if (ircMessage.command == 'JOIN') {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);

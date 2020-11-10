@@ -27,13 +27,19 @@ const Navigation = (props: IProps) => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             <NavItem>
-              <NavLink href="https://www.reddit.com/r/linuxmasterrace/">Subreddit</NavLink>
+              <NavLink href="https://www.reddit.com/r/linuxmasterrace/">
+                Subreddit
+              </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="https://kiwiirc.com/nextclient/irc.snoonet.org/#linuxmasterrace">Web IRC</NavLink>
+              <NavLink href="https://kiwiirc.com/nextclient/irc.snoonet.org/#linuxmasterrace">
+                Web IRC
+              </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="https://github.com/aboft/lmrdashboard">Source</NavLink>
+              <NavLink href="https://github.com/aboft/lmrdashboard">
+                Source
+              </NavLink>
             </NavItem>
           </Nav>
           <NavbarText>linux good windows bad</NavbarText>
