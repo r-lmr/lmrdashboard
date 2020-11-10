@@ -25,7 +25,9 @@ export default function MessageList() {
       {fetchedMessages.map((message, index) => (
         <Message
           // Temporary key fix to make key unique if messages with the same date are sent
-          key={(message.dateCreated || Date.now()).toString().concat(index.toString())}
+          key={(message.dateCreated || Date.now())
+            .toString()
+            .concat(index.toString())}
           message={message.message}
           nick={message.nick}
           dateCreated={message.dateCreated}
