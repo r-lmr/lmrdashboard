@@ -93,7 +93,6 @@ async function sendTopWords(res: Response<any, number>) {
 
     const sortedMessageTextCounts = new
       Map([...messageTextCounts.entries()].sort((a, b) => b[1] - a[1]));
-    console.log(sortedMessageTextCounts);
 
     res.write('event: topWords\n');
     res.write(`data: ${JSON.stringify({ topWords: sortedMessageTextCounts })}`);
