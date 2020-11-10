@@ -30,6 +30,25 @@ export async function getLines(server: string, numOfLines: number) {
   return parsedMsg;
 }
 
+export async function getLinesLastNDays(days: number): Promise<IMessage[]> {
+  const today = new Date();
+  const from = new Date();
+  from.setDate(today.getDate() - days);
+
+  const lines = await knex('last_messages')
+    .select()
+    .whereBetween('dateCreated', [formatDate(from), formatDate(today)])
+  const parsedLines = lines.map((entry) => {
+    return {
+      nick: entry['user'],
+      server: entry['server'],
+      message: entry['message'],
+      dateCreated: entry['dateCreated'],
+    };
+  });
+  return parsedLines;
+}
+
 export async function getLineCountLastNDays(days: number): Promise<ILineCount[]> {
   const lineCounts = await knex('line_counts').select().orderBy('date', 'desc').limit(days);
   const parsedLineCounts = lineCounts.map((entry) => {
@@ -68,4 +87,11 @@ export default { getLines };
 interface ILineCount {
   date: string;
   lineCount: number;
+}
+
+export interface IMessage {
+  nick: string;
+  server: string;
+  message: string;
+  dateCreated: string;
 }
