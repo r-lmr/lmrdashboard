@@ -36,10 +36,12 @@ myEmitter.on('join', async (server: string, nick: string) => {
   await addUser(nick, server);
   sendUsers(globalRes);
 });
+
 myEmitter.on('part', async (server: string, nick: string) => {
   await deleteUser(nick, server);
   sendUsers(globalRes);
 });
+
 myEmitter.on('line', async (nick: string, server: string, msg: string) => {
   console.log(nick, msg);
   await saveLine(nick, server, msg);
