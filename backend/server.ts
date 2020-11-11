@@ -84,8 +84,6 @@ async function sendLineCounts(res: Response<any, number>) {
 }
 
 async function sendTopWords(res: Response<any, number>) {
-  // TODO: This actually counts top messages
-  // Need to split up the messages into words as well
   if (res) {
     console.log(`sendTopWords at ${new Date()}`);
     
