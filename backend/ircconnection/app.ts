@@ -6,8 +6,6 @@ dotenv.config();
 import myEmitter from './utils/emitter';
 import { addUser } from './utils/db/Users';
 
-const bufferTime: Date = new Date();
-
 interface IrcMessage {
   prefix?: string;
   command: string;
@@ -49,6 +47,7 @@ const names: string[] = [];
 const joinConfig = {
   channel: process.env.IRC_CHANNEL || '#linuxmasterrace',
   user: process.env.IRC_USER || 'lmrdashboard',
+  bufferTime: new Date()
 }
 
 rl.on('line', (line) => {
@@ -76,7 +75,7 @@ rl.on('line', (line) => {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     myEmitter.emit('part', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);
   } else if (ircMessage.command == 'PRIVMSG' && !ircMessage.prefix?.toLowerCase().includes('bot@')) {
-    if ((Date.now() - bufferTime.getTime()) < 5000) { return }
+    if ((Date.now() - joinConfig.bufferTime.getTime()) < 5000) { return }
     const server = ircMessage.params[0];
     const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
