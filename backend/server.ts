@@ -30,6 +30,11 @@ app.get('/test', async (req, res: Response<any, number>) => {
   await sendMessages(res);
   await sendLineCounts(res);
   await sendTopWords(res);
+
+  // Daily
+  setInterval(async _ => {
+    await sendTopWords(res);
+  }, 24 * 60 * 60 * 1000);
 });
 
 // Send additional data when new data arrives from the irc connection
@@ -81,7 +86,7 @@ async function sendTopWords(res: Response<any, number>) {
   // TODO: This actually counts top messages
   // Need to split up the messages into words as well
   if (res) {
-    console.log("sendTopWords");
+    console.log(`sendTopWords at ${new Date()}`);
     
     const messages: IMessage[] = await getLinesLastNDays(7);
     const messageTextCounts: Map<string, number> = new Map<string, number>();

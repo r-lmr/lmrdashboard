@@ -12,8 +12,6 @@ export default function TopWords() {
     eventSource.addEventListener("topWords", (e: any) => {
       const data = JSON.parse(e.data);
       const topWords = new Map<string, number>(data.topWords);
-      console.log("TopWords", topWords);
-      
       setFetchedTopWords(topWords);
     });
   }, []);
