@@ -17,6 +17,7 @@ export default function MessageList() {
       setFetchedMessages(data.messages.reverse());
     });
   }, []);
+
   return (
     <div>
       <div className={"messagelist-header"}>Last 5 messages:</div>
