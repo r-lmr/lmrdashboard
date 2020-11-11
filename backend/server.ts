@@ -5,6 +5,7 @@ import myEmitter from './ircconnection/utils/emitter';
 import { getUsers, deleteUser, addUser, flushUserTable } from './ircconnection/utils/db/Users';
 import { getLines, getLineCountLastNDays, saveLine, getLinesLastNDays, IMessage } from './ircconnection/utils/db/Messages';
 import { Response } from 'express-serve-static-core';
+import sw from 'stopword';
 
 const app = Express();
 app.use(cors());
@@ -89,22 +90,24 @@ async function sendTopWords(res: Response<any, number>) {
     console.log(`sendTopWords at ${new Date()}`);
     
     const messages: IMessage[] = await getLinesLastNDays(7);
-    const messageTextCounts: Map<string, number> = new Map<string, number>();
+    const wordCounts: Map<string, number> = new Map<string, number>();
 
     for (const message of messages) {
-      const messageText: string = message.message;
-
-      if (!messageTextCounts.has(messageText))
-        messageTextCounts.set(messageText, 1);
-      else
-        messageTextCounts.set(messageText, messageTextCounts.get(messageText)! + 1);
+      const messageText: string = message.message.toLowerCase();
+      const words = sw.removeStopwords(messageText.split(/\s+/));
+      for (const word of words) {
+        if (!wordCounts.has(word))
+          wordCounts.set(word, 1);
+        else
+          wordCounts.set(word, wordCounts.get(word)! + 1);
+      }
     }
 
-    const sortedMessageTextCounts: Map<string, number> = new
-      Map([...messageTextCounts.entries()].sort((a, b) => b[1] - a[1]));
+    const sortedWordCounts: Map<string, number> = new
+      Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
 
     res.write('event: topWords\n');
-    res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedMessageTextCounts.entries()).slice(0, 10) }) }`);
+    res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 10) }) }`);
     res.write('\n\n');
   }
 }
