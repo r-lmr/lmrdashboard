@@ -1,5 +1,6 @@
 import eventSource from "../data/EventSource";
 import { useEffect, useState } from "react";
+import TopWord from "./TopWord";
 export default function TopWords() {
 
   const [fetchedTopWords, setFetchedTopWords] = useState<Map<string, number>>(new Map<string, number>());
@@ -11,17 +12,23 @@ export default function TopWords() {
     eventSource.addEventListener("topWords", (e: any) => {
       const data = JSON.parse(e.data);
       const topWords = new Map<string, number>(data.topWords);
+      console.log("TopWords", topWords);
+      
       setFetchedTopWords(topWords);
     });
   }, []);
 
   return (
     <>
-      <div className={"topwords-header"}>Top words of the week:</div>
-      <span>Placeholder</span>
-      <div>Linux</div>
-      <div>Open-source</div>
-      <div>...</div>
+      <div className={"topwords-header"}>Current top words:</div>
+      {/* TODO: Maybe split this up into two colums if we display 10 words */}
+      {Array.from(fetchedTopWords.keys()).map((word, index) => (
+        <TopWord
+          key={word.concat(index.toString())}
+          word={word}
+          count={fetchedTopWords.get(word)!}
+        />
+      ))}
     </>
   )
 }
