@@ -47,7 +47,8 @@ const rl = createInterface({ input: client, crlfDelay: Infinity });
 const names: string[] = [];
 
 const joinConfig = {
-  channel: process.env.IRC_CHANNEL || '#linuxmasterrace'
+  channel: process.env.IRC_CHANNEL || '#linuxmasterrace',
+  user: process.env.IRC_USER || 'lmrdashboard',
 }
 
 rl.on('line', (line) => {
@@ -62,7 +63,7 @@ rl.on('line', (line) => {
     console.log(`TRYING TO JOIN ${joinConfig.channel}`);
   } else if (ircMessage.command == 'JOIN') {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
-    if (nick != 'lmrdashboard') myEmitter.emit('join', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);
+    if (nick != joinConfig.user) myEmitter.emit('join', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);
   } else if (ircMessage.command == '353') {
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
