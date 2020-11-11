@@ -17,10 +17,12 @@ export default function UserList() {
 
   return (
     <div>
-      <div className={"userlist-header"}>Online users:</div>
-      {fetchedUsers.map((user) => (
-        <User key={user} nick={user} />
-      ))}
+      <div className={"userlist-header"}>Online users: ({fetchedUsers.length})</div>
+      <div className={"userlist-content"}>
+        {fetchedUsers.map((user) => (
+          <User key={user} nick={user} />
+        ))}
+      </div>
     </div>
   );
 }

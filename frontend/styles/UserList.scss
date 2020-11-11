@@ -1,3 +1,8 @@
 .userlist-header {
   font-weight: bold;
 }
+
+.userlist-content {
+  height: 13em;
+  overflow-y: scroll;
+}
