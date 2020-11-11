@@ -38,14 +38,16 @@ const client = connect(6697, options, async () => {
   console.log('connected to server!');
   client.write(`USER ${process.env.IRC_USER} localhost * :LMR Dashboard Connection\r\n`);
   client.write(`NICK ${process.env.IRC_USER} \r\n`);
-  client.write(`PRIVMSG nickserv IDENTIFY ${process.env.IRC_PASS}\r\n`);
+  setTimeout(() => {client.write(`PRIVMSG nickserv IDENTIFY ${process.env.IRC_PASS}\r\n`)}, 2000);
 });
 const rl = createInterface({ input: client, crlfDelay: Infinity });
 
 const names: string[] = [];
 
 const joinConfig = {
-  channel: process.env.IRC_CHANNEL || '#linuxmasterrace'
+  channel: process.env.IRC_CHANNEL || '#linuxmasterrace',
+  user: process.env.IRC_USER || 'lmrdashboard',
+  bufferTime: new Date()
 }
 
 rl.on('line', (line) => {
@@ -60,7 +62,7 @@ rl.on('line', (line) => {
     console.log(`TRYING TO JOIN ${joinConfig.channel}`);
   } else if (ircMessage.command == 'JOIN') {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
-    if (nick != 'tstestbot') myEmitter.emit('join', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);
+    if (nick != joinConfig.user) myEmitter.emit('join', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);
   } else if (ircMessage.command == '353') {
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
@@ -73,6 +75,7 @@ rl.on('line', (line) => {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     myEmitter.emit('part', ircMessage.params[0].split(' ', 1)[0].replace(':', ''), nick);
   } else if (ircMessage.command == 'PRIVMSG' && !ircMessage.prefix?.toLowerCase().includes('bot@')) {
+    if ((Date.now() - joinConfig.bufferTime.getTime()) < 5000) { return }
     const server = ircMessage.params[0];
     const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
