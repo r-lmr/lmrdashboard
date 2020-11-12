@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import TopWord from "./TopWord";
 export default function TopWords() {
 
-  const [fetchedTopWords, setFetchedTopWords] = useState<Map<string, number>>(new Map<string, number>());
+  const [fetchedTopWords, setFetchedTopWords] = useState<TTopWord[]>([]);
 
   useEffect(() => {
     eventSource.onmessage = (e) => {
@@ -11,7 +11,7 @@ export default function TopWords() {
     };
     eventSource.addEventListener("topWords", (e: any) => {
       const data = JSON.parse(e.data);
-      const topWords = new Map<string, number>(data.topWords);
+      const topWords: TTopWord[] = (data.topWords);
       setFetchedTopWords(topWords);
     });
   }, []);
@@ -20,13 +20,15 @@ export default function TopWords() {
     <>
       <div className={"topwords-header"}>Current top words:</div>
       {/* TODO: Maybe split this up into two colums if we display 10 words */}
-      {Array.from(fetchedTopWords.keys()).map((word, index) => (
+      {Array.from(fetchedTopWords).map((topWord, index) => (
         <TopWord
-          key={word.concat(index.toString())}
-          word={word}
-          count={fetchedTopWords.get(word)!}
+          key={topWord[0].concat(index.toString())}
+          word={topWord[0]}
+          count={topWord[1]}
         />
       ))}
     </>
   )
 }
+
+type TTopWord = [string, number];
