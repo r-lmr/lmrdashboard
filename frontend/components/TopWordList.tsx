@@ -12,7 +12,6 @@ export default function TopWordsList(props: IProps) {
           count={topWord[1]}
         />
       ))}
-
     </>
   )
 }
