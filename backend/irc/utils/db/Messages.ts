@@ -37,7 +37,7 @@ export async function getLinesLastNDays(days: number): Promise<IMessage[]> {
 
   const lines = await knex('last_messages')
     .select()
-    .whereBetween('dateCreated', [formatDate(from), formatDate(today)])
+    .whereBetween('dateCreated', [formatDate(from), formatDate(today)]);
   const parsedLines = lines.map((entry) => {
     return {
       nick: entry['user'],
@@ -50,7 +50,10 @@ export async function getLinesLastNDays(days: number): Promise<IMessage[]> {
 }
 
 export async function getLineCountLastNDays(days: number): Promise<ILineCount[]> {
-  const lineCounts = await knex('line_counts').select().orderBy('date', 'desc').limit(days);
+  const lineCounts = await knex('line_counts')
+    .select()
+    .orderBy('date', 'desc')
+    .limit(days);
   const parsedLineCounts = lineCounts.map((entry) => {
     return {
       date: formatDate(entry['date']),
@@ -61,7 +64,9 @@ export async function getLineCountLastNDays(days: number): Promise<ILineCount[]>
 }
 
 async function getLineCount(date: string): Promise<ILineCount> {
-  const lineCount = await knex('line_counts').select().where({ date });
+  const lineCount = await knex('line_counts')
+    .select()
+    .where({ date });
   const parsedLineCount = lineCount.map((entry) => {
     return {
       date: entry['date'],
@@ -73,11 +78,15 @@ async function getLineCount(date: string): Promise<ILineCount> {
 
 export async function saveLine(nick: string, server: string, message: string) {
   await knex('last_messages').insert({ user: nick, server, message });
-  const lineCountExists = await knex('line_counts').select().whereRaw('date = date(?)', [new Date()]);
+  const lineCountExists = await knex('line_counts')
+    .select()
+    .whereRaw('date = date(?)', [new Date()]);
   if (lineCountExists.length < 1) {
-    await knex('line_counts').insert({ count: 1, date: formatDate(new Date()) });
+    await knex('line_counts')
+      .insert({ count: 1, date: formatDate(new Date()) });
   } else {
-    await knex('line_counts').whereRaw('date = date(?)', [new Date()]).increment('count', 1);
+    await knex('line_counts')
+    .whereRaw('date = date(?)', [new Date()]).increment('count', 1);
   }
   console.log('Saving message to db.');
 }
