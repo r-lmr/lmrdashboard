@@ -29,8 +29,8 @@ const parseMessage = (line: string): IrcMessage => {
 };
 
 const options = {
-  // key: readFileSync('./keys/key.pem'),
-  // cert: readFileSync('./keys/cert.pem'),
+  key: readFileSync('./keys/key.pem'),
+  cert: readFileSync('./keys/cert.pem'),
   host: 'irc.snoonet.org',
 };
 
@@ -38,9 +38,9 @@ const client = connect(6697, options, async () => {
   console.log('connected to server!');
   client.write(`USER ${process.env.IRC_USER} localhost * :LMR Dashboard Connection\r\n`);
   client.write(`NICK ${process.env.IRC_USER} \r\n`);
-  // setTimeout(() => {
-  //   client.write(`PRIVMSG nickserv IDENTIFY ${process.env.IRC_PASS}\r\n`);
-  // }, 2000);
+  setTimeout(() => {
+    client.write(`PRIVMSG nickserv IDENTIFY ${process.env.IRC_PASS}\r\n`);
+  }, 2000);
 });
 const rl = createInterface({ input: client, crlfDelay: Infinity });
 
