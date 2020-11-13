@@ -23,7 +23,6 @@ export default function MessageList() {
       <div className={"messagelist-header"}>Last 5 messages:</div>
       {fetchedMessages.map((message, index) => (
         <Message
-          // Temporary key fix to make key unique if messages with the same date are sent
           key={(message.dateCreated || Date.now())
             .toString()
             .concat(index.toString())}

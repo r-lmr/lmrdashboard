@@ -1,6 +1,9 @@
 import eventSource from "../data/EventSource";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopWord from "./TopWord";
+import { Container, Row, Col } from "reactstrap";
+import TopWordsList from "./TopWordList";
+
 export default function TopWords() {
 
   const [fetchedTopWords, setFetchedTopWords] = useState<TTopWord[]>([]);
@@ -19,16 +22,22 @@ export default function TopWords() {
   return (
     <>
       <div className={"topwords-header"}>Current top words:</div>
-      {/* TODO: Maybe split this up into two colums if we display 10 words */}
-      {Array.from(fetchedTopWords).map((topWord, index) => (
-        <TopWord
-          key={topWord[0].concat(index.toString())}
-          word={topWord[0]}
-          count={topWord[1]}
-        />
-      ))}
+
+      <Container fluid={"nogutters"}>
+        <Row>
+          <Col>
+            <TopWordsList
+              topWords={fetchedTopWords.slice(0, Math.floor(fetchedTopWords.length / 2))} />
+          </Col>
+          <Col>
+            <TopWordsList
+              topWords={fetchedTopWords.slice(Math.floor(fetchedTopWords.length / 2), fetchedTopWords.length)} />
+          </Col>
+        </Row>
+
+      </Container>
     </>
   )
 }
 
-type TTopWord = [string, number];
+export type TTopWord = [string, number];
