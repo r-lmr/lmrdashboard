@@ -1,9 +1,12 @@
 import eventSource from "../data/EventSource";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopWord from "./TopWord";
+import { Container, Row, Col } from "reactstrap";
+import TopWordsList from "./TopWordList";
+
 export default function TopWords() {
 
-  const [fetchedTopWords, setFetchedTopWords] = useState<Map<string, number>>(new Map<string, number>());
+  const [fetchedTopWords, setFetchedTopWords] = useState<TTopWord[]>([]);
 
   useEffect(() => {
     eventSource.onmessage = (e) => {
@@ -11,7 +14,7 @@ export default function TopWords() {
     };
     eventSource.addEventListener("topWords", (e: any) => {
       const data = JSON.parse(e.data);
-      const topWords = new Map<string, number>(data.topWords);
+      const topWords: TTopWord[] = (data.topWords);
       setFetchedTopWords(topWords);
     });
   }, []);
@@ -19,14 +22,20 @@ export default function TopWords() {
   return (
     <>
       <div className={"topwords-header"}>Current top words:</div>
-      {/* TODO: Maybe split this up into two colums if we display 10 words */}
-      {Array.from(fetchedTopWords.keys()).map((word, index) => (
-        <TopWord
-          key={word.concat(index.toString())}
-          word={word}
-          count={fetchedTopWords.get(word)!}
-        />
-      ))}
+      <Container fluid={"nogutters"}>
+        <Row>
+          <Col>
+            <TopWordsList
+              topWords={fetchedTopWords.slice(0, Math.floor(fetchedTopWords.length / 2))} />
+          </Col>
+          <Col>
+            <TopWordsList
+              topWords={fetchedTopWords.slice(Math.floor(fetchedTopWords.length / 2), fetchedTopWords.length)} />
+          </Col>
+        </Row>
+      </Container>
     </>
   )
 }
+
+export type TTopWord = [string, number];
