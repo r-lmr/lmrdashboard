@@ -1,11 +1,11 @@
 import Express from 'express';
 import cors from 'cors';
-import './ircconnection/app';
-import myEmitter from './ircconnection/utils/emitter';
-import { getUsers, deleteUser, addUser, flushUserTable } from './ircconnection/utils/db/Users';
-import { getLines, getLineCountLastNDays, saveLine, getLinesLastNDays, IMessage } from './ircconnection/utils/db/Messages';
+import './irc/ircconnection';
+import { addUser, deleteUser, flushUserTable } from './irc/utils/db/Users';
 import { Response } from 'express-serve-static-core';
-import sw from 'stopword';
+import myEmitter from './irc/utils/emitter';
+import { Sender } from './Sender';
+import { saveLine } from './irc/utils/db/Messages';
 
 const app = Express();
 app.use(cors());
@@ -16,6 +16,7 @@ let globalRes: Response<any, number>;
 
 app.get('/test', async (req, res: Response<any, number>) => {
   globalRes = res;
+
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -27,88 +28,36 @@ app.get('/test', async (req, res: Response<any, number>) => {
   });
 
   // Send initial data
-  await sendUsers(res);
-  await sendMessages(res);
-  await sendLineCounts(res);
-  await sendTopWords(res);
+  await Sender.sendUsers(res);
+  await Sender.sendMessages(res);
+  await Sender.sendLineCounts(res);
+  await Sender.sendTopWords(res);
 
   // Daily
-  setInterval(async _ => {
-    await sendTopWords(res);
+  setInterval(async (_) => {
+    await Sender.sendTopWords(res);
   }, 24 * 60 * 60 * 1000);
+
 });
 
 // Send additional data when new data arrives from the irc connection
+// TODO: If possible move these to a file/class/namespace as well
 myEmitter.on('join', async (server: string, nick: string) => {
   await addUser(nick, server);
-  await sendUsers(globalRes);
+  await Sender.sendUsers(globalRes);
 });
 
 myEmitter.on('part', async (server: string, nick: string) => {
   await deleteUser(nick, server);
-  await sendUsers(globalRes);
+  await Sender.sendUsers(globalRes);
 });
 
 myEmitter.on('line', async (nick: string, server: string, msg: string) => {
   console.log(nick, msg);
   await saveLine(nick, server, msg);
-  await sendMessages(globalRes);
-  await sendLineCounts(globalRes);
+  await Sender.sendMessages(globalRes);
+  await Sender.sendLineCounts(globalRes);
 });
-
-async function sendUsers(res: Response<any, number>) {
-  if (res) {
-    const users = await getUsers(process.env.IRC_CHANNEL || '#linuxmasterrace');
-    res.write('event: users\n');
-    res.write(`data: ${JSON.stringify({ users: users })}`);
-    res.write('\n\n');
-  }
-}
-
-async function sendMessages(res: Response<any, number>) {
-  if (res) {
-    const messages = await getLines(process.env.IRC_CHANNEL || '#linuxmasterrace', 5);
-    res.write('event: messages\n');
-    res.write(`data: ${JSON.stringify({ messages: messages })}`);
-    res.write('\n\n');
-  }
-}
-
-async function sendLineCounts(res: Response<any, number>) {
-  if (res) {
-    const lineCounts = await getLineCountLastNDays(5);
-    res.write('event: lineCounts\n');
-    res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
-    res.write('\n\n');
-  }
-}
-
-async function sendTopWords(res: Response<any, number>) {
-  if (res) {
-    console.log(`sendTopWords at ${new Date()}`);
-    
-    const messages: IMessage[] = await getLinesLastNDays(7);
-    const wordCounts: Map<string, number> = new Map<string, number>();
-
-    for (const message of messages) {
-      const messageText: string = message.message.toLowerCase();
-      const words = sw.removeStopwords(messageText.split(/\s+/));
-      for (const word of words) {
-        if (!wordCounts.has(word))
-          wordCounts.set(word, 1);
-        else
-          wordCounts.set(word, wordCounts.get(word)! + 1);
-      }
-    }
-
-    const sortedWordCounts: Map<string, number> = new
-      Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
-
-    res.write('event: topWords\n');
-    res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 10) }) }`);
-    res.write('\n\n');
-  }
-}
 
 flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');
 app.listen(4000, () => {
