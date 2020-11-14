@@ -60,8 +60,10 @@ myEmitter.on('part', async (server: string, nick: string) => {
 
 myEmitter.on('line', async (nick: string, server: string, msg: string) => {
   console.log('server.ts myEmitter.on line', nick, msg);
-  resCollection.doForAllResInCollection(Sender.sendMessages);
-  resCollection.doForAllResInCollection(Sender.sendLineCounts);
+  resCollection.doMultipleForAllResInCollection([
+    Sender.sendMessages,
+    Sender.sendLineCounts
+  ]);
 });
 
 DatabaseUserUtils.flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');

@@ -38,9 +38,15 @@ class ResCollection {
   }
 
   public doForAllResInCollection(functionToExecute: (arg: Response<any, number>) => {}) {
+    this.doMultipleForAllResInCollection([functionToExecute]);
+  }
+
+  public doMultipleForAllResInCollection(functionsToExecute: ((arg: Response<any, number>) => {})[]) {
     this.collection.forEach(
       (res: Response<string, number>, resId: string) => {
-        functionToExecute(res);
+        for (const functionToExecute of functionsToExecute) {
+          functionToExecute(res);
+        }
       });
   }
 
