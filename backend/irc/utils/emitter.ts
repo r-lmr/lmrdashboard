@@ -1,4 +1,4 @@
 import { EventEmitter } from 'events';
 
 class MyEmitter extends EventEmitter {}
-export default new MyEmitter();
+export default new MyEmitter().setMaxListeners(1000);

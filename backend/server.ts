@@ -1,21 +1,21 @@
 import Express from 'express';
 import cors from 'cors';
 import './irc/ircconnection';
-import { addUser, deleteUser, flushUserTable } from './irc/utils/db/Users';
 import { Response } from 'express-serve-static-core';
-import myEmitter from './irc/utils/emitter';
 import { Sender } from './Sender';
-import { saveLine } from './irc/utils/db/Messages';
+import { DatabaseUserUtils } from './irc/utils/db/Users';
+import { ResCollection } from './ResCollection';
+import { v4 as uuidv4 } from 'uuid';
+import { Listener } from './Listener';
 
 const app = Express();
 app.use(cors());
 
-// Need a static response object which is overwritten for a new frontend connection
-// Otherwise multiple events handlers are added, if the same res is reused
-let globalRes: Response<any, number>;
+const resCollection = ResCollection.Instance;
 
 app.get('/test', async (req, res: Response<any, number>) => {
-  globalRes = res;
+  const resId = uuidv4();
+  resCollection.addToCollection(resId, res);
 
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -38,28 +38,21 @@ app.get('/test', async (req, res: Response<any, number>) => {
     await Sender.sendTopWords(res);
   }, 24 * 60 * 60 * 1000);
 
+  req.on('close', () => {
+    console.log("connection CLOSED");
+    resCollection.removeFromCollection(resId);
+  });
 });
 
 // Send additional data when new data arrives from the irc connection
-// TODO: If possible move these to a file/class/namespace as well
-myEmitter.on('join', async (server: string, nick: string) => {
-  await addUser(nick, server);
-  await Sender.sendUsers(globalRes);
-});
+Listener.addIrcListeners()
 
-myEmitter.on('part', async (server: string, nick: string) => {
-  await deleteUser(nick, server);
-  await Sender.sendUsers(globalRes);
-});
+// Debug output, can be removed
+setInterval(() => {
+  console.log('Size of resCollection', resCollection.getCollectionSize())
+}, 10000)
 
-myEmitter.on('line', async (nick: string, server: string, msg: string) => {
-  console.log(nick, msg);
-  await saveLine(nick, server, msg);
-  await Sender.sendMessages(globalRes);
-  await Sender.sendLineCounts(globalRes);
-});
-
-flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');
+DatabaseUserUtils.flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');
 app.listen(4000, () => {
   console.log('listening on 4000');
 });

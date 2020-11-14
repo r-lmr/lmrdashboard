@@ -1,12 +1,13 @@
 import { Response } from 'express-serve-static-core';
 import sw from 'stopword';
-import { getLines, getLineCountLastNDays, IMessage, getLinesLastNDays } from './irc/utils/db/Messages';
-import { getUsers } from './irc/utils/db/Users';
+import { DatabaseMessageUtils, IMessage } from './irc/utils/db/Messages';
+import { DatabaseUserUtils } from './irc/utils/db/Users';
 
 class Sender {
+
   static async sendUsers(res: Response<any, number>) {
     if (res) {
-      const users = await getUsers(process.env.IRC_CHANNEL || '#linuxmasterrace');
+      const users = await DatabaseUserUtils.getUsers(process.env.IRC_CHANNEL || '#linuxmasterrace');
       res.write('event: users\n');
       res.write(`data: ${JSON.stringify({ users: users })}`);
       res.write('\n\n');
@@ -15,7 +16,7 @@ class Sender {
 
   static async sendMessages(res: Response<any, number>) {
     if (res) {
-      const messages = await getLines(process.env.IRC_CHANNEL || '#linuxmasterrace', 5);
+      const messages = await DatabaseMessageUtils.getLines(process.env.IRC_CHANNEL || '#linuxmasterrace', 5);
       res.write('event: messages\n');
       res.write(`data: ${JSON.stringify({ messages: messages })}`);
       res.write('\n\n');
@@ -24,7 +25,7 @@ class Sender {
 
   static async sendLineCounts(res: Response<any, number>) {
     if (res) {
-      const lineCounts = await getLineCountLastNDays(5);
+      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDays(5);
       res.write('event: lineCounts\n');
       res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
       res.write('\n\n');
@@ -35,7 +36,7 @@ class Sender {
     if (res) {
       console.log(`sendTopWords at ${new Date()}`);
 
-      const messages: IMessage[] = await getLinesLastNDays(7);
+      const messages: IMessage[] = await DatabaseMessageUtils.getLinesLastNDays(7);
       const wordCounts: Map<string, number> = new Map<string, number>();
 
       for (const message of messages) {
