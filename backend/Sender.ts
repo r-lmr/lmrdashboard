@@ -4,10 +4,9 @@ import { DatabaseMessageUtils, IMessage } from './irc/utils/db/Messages';
 import { DatabaseUserUtils } from './irc/utils/db/Users';
 
 class Sender {
-
   static async sendUsers(res: Response<any, number>) {
     if (res) {
-      const users = await DatabaseUserUtils.getUsers(process.env.IRC_CHANNEL || '#linuxmasterrace');
+      const users = await DatabaseUserUtils.getUsers(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
       res.write('event: users\n');
       res.write(`data: ${JSON.stringify({ users: users })}`);
       res.write('\n\n');
@@ -16,7 +15,7 @@ class Sender {
 
   static async sendMessages(res: Response<any, number>) {
     if (res) {
-      const messages = await DatabaseMessageUtils.getLines(process.env.IRC_CHANNEL || '#linuxmasterrace', 5);
+      const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 5);
       res.write('event: messages\n');
       res.write(`data: ${JSON.stringify({ messages: messages })}`);
       res.write('\n\n');

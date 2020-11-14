@@ -39,20 +39,20 @@ app.get('/test', async (req, res: Response<any, number>) => {
   }, 24 * 60 * 60 * 1000);
 
   req.on('close', () => {
-    console.log("connection CLOSED");
+    console.log('connection CLOSED');
     resCollection.removeFromCollection(resId);
   });
 });
 
 // Send additional data when new data arrives from the irc connection
-Listener.addIrcListeners()
+Listener.addIrcListeners();
 
 // Debug output, can be removed
 setInterval(() => {
-  console.log('Size of resCollection', resCollection.getCollectionSize())
-}, 10000)
+  console.log('Size of resCollection', resCollection.getCollectionSize());
+}, 10000);
 
-DatabaseUserUtils.flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');
+DatabaseUserUtils.flushUserTable(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
 app.listen(4000, () => {
   console.log('listening on 4000');
 });

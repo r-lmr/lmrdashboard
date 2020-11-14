@@ -33,6 +33,7 @@ yarn-error.log*
 .env.production.local
 backend/.env
 */.env*/*
+!*/.env.dev
 # vercel
 .vercel
 =======
