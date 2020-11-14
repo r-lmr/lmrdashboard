@@ -44,31 +44,24 @@ app.get('/test', async (req, res: Response<any, number>) => {
   });
 });
 
-setInterval(() => { console.log(resCollection.getCollection().size) }, 10000)
+setInterval(() => {
+  console.log('Size of resCollection', resCollection.getCollection().size)
+}, 10000)
 
 // Send additional data when new data arrives from the irc connection
 // TODO: If possible move these to a file/class/namespace as well
 myEmitter.on('join', async (server: string, nick: string) => {
-  resCollection.getCollection().forEach(
-    async (res: Response<string, number>, resId: string) => {
-      await Sender.sendUsers(res);
-    });
+  resCollection.doForAllResInCollection(Sender.sendUsers);
 });
 
 myEmitter.on('part', async (server: string, nick: string) => {
-  resCollection.getCollection().forEach(
-    async (res: Response<string, number>, resId: string) => {
-      await Sender.sendUsers(res);
-    });
+  resCollection.doForAllResInCollection(Sender.sendUsers);
 });
 
 myEmitter.on('line', async (nick: string, server: string, msg: string) => {
   console.log('server.ts myEmitter.on line', nick, msg);
-  resCollection.getCollection().forEach(
-    async (res: Response<string, number>, resId: string) => {
-      await Sender.sendMessages(res);
-      await Sender.sendLineCounts(res);
-    });
+  resCollection.doForAllResInCollection(Sender.sendMessages);
+  resCollection.doForAllResInCollection(Sender.sendLineCounts);
 });
 
 DatabaseUserUtils.flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');

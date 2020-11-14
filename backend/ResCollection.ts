@@ -13,7 +13,7 @@ class ResCollection {
     return this._instance || (this._instance = new this());
   }
 
-  public getCollection(): Map<string, Response<any, number>> { 
+  public getCollection(): Map<string, Response<any, number>> {
     return this.collection;
   }
 
@@ -35,6 +35,13 @@ class ResCollection {
       console.warn('Response not found in Response collection when trying to delete')
     }
     this.collection.delete(id);
+  }
+
+  public doForAllResInCollection(functionToExecute: (arg: Response<any, number>) => {}) {
+    this.collection.forEach(
+      (res: Response<string, number>, resId: string) => {
+        functionToExecute(res);
+      });
   }
 
 }
