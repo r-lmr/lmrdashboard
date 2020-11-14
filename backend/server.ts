@@ -5,11 +5,17 @@ import { Response } from 'express-serve-static-core';
 import myEmitter from './irc/utils/emitter';
 import { Sender } from './Sender';
 import { DatabaseUserUtils } from './irc/utils/db/Users';
+import { ResCollection } from './ResCollection';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = Express();
 app.use(cors());
 
+const resCollection = ResCollection.Instance;
+
 app.get('/test', async (req, res: Response<any, number>) => {
+  const resId = uuidv4();
+  resCollection.addToCollection(resId, res);
 
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -32,27 +38,38 @@ app.get('/test', async (req, res: Response<any, number>) => {
     await Sender.sendTopWords(res);
   }, 24 * 60 * 60 * 1000);
 
-  // Send additional data when new data arrives from the irc connection
-  // TODO: If possible move these to a file/class/namespace as well
-  myEmitter.on('join', async (server: string, nick: string) => {
-    await Sender.sendUsers(res);
-  });
-
-  myEmitter.on('part', async (server: string, nick: string) => {
-    await Sender.sendUsers(res);
-  });
-
-  myEmitter.on('line', async (nick: string, server: string, msg: string) => {
-    console.log('server.ts myEmitter.on line', nick, msg);
-    await Sender.sendMessages(res);
-    await Sender.sendLineCounts(res);
-  });
-
   req.on('close', () => {
     console.log("connection CLOSED");
+    resCollection.removeFromCollection(resId);
   });
 });
 
+setInterval(() => { console.log(resCollection.getCollection().size) }, 10000)
+
+// Send additional data when new data arrives from the irc connection
+// TODO: If possible move these to a file/class/namespace as well
+myEmitter.on('join', async (server: string, nick: string) => {
+  resCollection.getCollection().forEach(
+    async (res: Response<string, number>, resId: string) => {
+      await Sender.sendUsers(res);
+    });
+});
+
+myEmitter.on('part', async (server: string, nick: string) => {
+  resCollection.getCollection().forEach(
+    async (res: Response<string, number>, resId: string) => {
+      await Sender.sendUsers(res);
+    });
+});
+
+myEmitter.on('line', async (nick: string, server: string, msg: string) => {
+  console.log('server.ts myEmitter.on line', nick, msg);
+  resCollection.getCollection().forEach(
+    async (res: Response<string, number>, resId: string) => {
+      await Sender.sendMessages(res);
+      await Sender.sendLineCounts(res);
+    });
+});
 
 DatabaseUserUtils.flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');
 app.listen(4000, () => {
