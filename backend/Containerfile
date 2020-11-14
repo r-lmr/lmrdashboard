@@ -1,0 +1,20 @@
+FROM node:15.1.0-alpine
+
+WORKDIR /lmrdashboard/backend
+COPY . .
+
+ENV NODE_ENV production
+RUN yarn install
+
+ENV LMRD_IRC_CHANNEL "#linuxmasterrace" \
+    LMRD_IRC_HOST "irc.snoonet.org" \
+    LMRD_IRC_PORT "6697" \
+    LMRD_IRC_USER \
+    LMRD_IRC_PASS \
+    LMRD_DB_HOST \
+    LMRD_DB_PORT "3306" \
+    LMRD_DB_NAME "lmrd" \
+    LMRD_DB_USER \
+    LMRD_DB_PASS
+
+CMD [ "yarn", "start" ]
