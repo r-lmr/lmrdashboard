@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint .",
-    "pretty": "prettier --write ."
+    "pretty": "prettier --write .",
+    "start": "ts-node server"
   },
   "dependencies": {
     "@types/cors": "^2.8.8",
