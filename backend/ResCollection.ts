@@ -37,11 +37,11 @@ class ResCollection {
     this.collection.delete(id);
   }
 
-  public doForAllResInCollection(functionToExecute: (arg: Response<any, number>) => {}) {
+  public doForAllResInCollection(functionToExecute: (arg: Response<any, number>) => void) {
     this.doMultipleForAllResInCollection([functionToExecute]);
   }
 
-  public doMultipleForAllResInCollection(functionsToExecute: ((arg: Response<any, number>) => {})[]) {
+  public doMultipleForAllResInCollection(functionsToExecute: ((arg: Response<any, number>) => void)[]) {
     this.collection.forEach(
       (res: Response<string, number>, resId: string) => {
         for (const functionToExecute of functionsToExecute) {
