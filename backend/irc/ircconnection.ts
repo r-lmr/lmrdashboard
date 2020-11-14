@@ -30,8 +30,6 @@ const parseMessage = (line: string): IrcMessage => {
 };
 
 const options = {
-  key: readFileSync('./keys/key.pem'),
-  cert: readFileSync('./keys/cert.pem'),
   host: 'irc.snoonet.org',
 };
 
