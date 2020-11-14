@@ -2,11 +2,11 @@ import Express from 'express';
 import cors from 'cors';
 import './irc/ircconnection';
 import { Response } from 'express-serve-static-core';
-import myEmitter from './irc/utils/emitter';
 import { Sender } from './Sender';
 import { DatabaseUserUtils } from './irc/utils/db/Users';
 import { ResCollection } from './ResCollection';
 import { v4 as uuidv4 } from 'uuid';
+import { Listener } from './Listener';
 
 const app = Express();
 app.use(cors());
@@ -44,27 +44,13 @@ app.get('/test', async (req, res: Response<any, number>) => {
   });
 });
 
+// Send additional data when new data arrives from the irc connection
+Listener.addIrcListeners()
+
+// Debug output, can be removed
 setInterval(() => {
   console.log('Size of resCollection', resCollection.getCollectionSize())
 }, 10000)
-
-// Send additional data when new data arrives from the irc connection
-// TODO: If possible move these to a file/class/namespace as well
-myEmitter.on('join', async (server: string, nick: string) => {
-  resCollection.doForAllResInCollection(Sender.sendUsers);
-});
-
-myEmitter.on('part', async (server: string, nick: string) => {
-  resCollection.doForAllResInCollection(Sender.sendUsers);
-});
-
-myEmitter.on('line', async (nick: string, server: string, msg: string) => {
-  console.log('server.ts myEmitter.on line', nick, msg);
-  resCollection.doMultipleForAllResInCollection([
-    Sender.sendMessages,
-    Sender.sendLineCounts
-  ]);
-});
 
 DatabaseUserUtils.flushUserTable(process.env.IRC_CHANNEL || '#linuxmasterrace');
 app.listen(4000, () => {
