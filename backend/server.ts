@@ -45,7 +45,7 @@ app.get('/test', async (req, res: Response<any, number>) => {
 });
 
 setInterval(() => {
-  console.log('Size of resCollection', resCollection.getCollection().size)
+  console.log('Size of resCollection', resCollection.getCollectionSize())
 }, 10000)
 
 // Send additional data when new data arrives from the irc connection

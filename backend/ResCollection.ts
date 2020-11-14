@@ -13,8 +13,8 @@ class ResCollection {
     return this._instance || (this._instance = new this());
   }
 
-  public getCollection(): Map<string, Response<any, number>> {
-    return this.collection;
+  public getCollectionSize(): number {
+    return this.collection.size;
   }
 
   public getEntryFromCollection(id: string): Response<any, number> | undefined {
