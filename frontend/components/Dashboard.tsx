@@ -3,8 +3,7 @@ import { Container, Row, Col } from "reactstrap";
 import MessageList from "./MessageList";
 import LineCountList from "./LineCountList";
 import TopWords from "./TopWords";
-import DuccKillersStatsList from "./DuccKillerStatsList";
-import DuccFriendStatsList from "./DuccFriendStatsList";
+import DuccStatsList, { ScoreType } from "./DuccStatsList";
 
 export default function Dashboard() {
   return (
@@ -12,10 +11,10 @@ export default function Dashboard() {
       <Container>
         <Row>
           <Col md>
-            <DuccFriendStatsList />
+            <DuccStatsList type={ScoreType.FRIENDS}/>
           </Col>
           <Col md>
-            <DuccKillersStatsList />
+            <DuccStatsList type={ScoreType.KILLERS}/>
           </Col>
         </Row>
         <Row>

@@ -1,4 +1,4 @@
-export default function DuccStats(props: IDucc) {
+export default function DuccStat(props: IDuccStat) {
   return (
     <div>
       {props.user} {props.duccs}
@@ -6,7 +6,7 @@ export default function DuccStats(props: IDucc) {
   );
 }
 
-export interface IDucc {
+export interface IDuccStat {
   user: string;
   duccs?: string;
 }
