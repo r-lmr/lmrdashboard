@@ -6,6 +6,7 @@ dotenv.config();
 import myEmitter from './utils/emitter';
 import { DatabaseUserUtils } from './utils/db/Users';
 import { DatabaseMessageUtils } from './utils/db/Messages';
+import { DatabaseDuccUtils } from './utils/db/DuccScores';
 
 interface IrcMessage {
   prefix?: string;
@@ -64,7 +65,7 @@ rl.on('line', async (line) => {
   } else if (ircMessage.command == 'JOIN') {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != joinConfig.user) {
-      const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '')
+      const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
       await addUserToDatabase(nick!, server);
       myEmitter.emit('join', server, nick);
     }
@@ -85,6 +86,21 @@ rl.on('line', async (line) => {
   } else if (ircMessage.command == 'PRIVMSG' && !ircMessage.prefix?.toLowerCase().includes('bot@')) {
     if (Date.now() - joinConfig.bufferTime.getTime() < 5000) {
       return;
+    } else if (ircMessage.command == 'PRIVMSG') {
+      const msg = ircMessage.params.slice(1).join(' ');
+      if (msg.match(/Duck \w{6} scores in #/i)) {
+        const splitMsgByBullet = msg.split('\u2022');
+        // fix the first split by removing the 'Duck ... scores in #channel'
+        const correctFirstScore = splitMsgByBullet[0].split(':');
+        splitMsgByBullet[0] = `${correctFirstScore[2]}: ${correctFirstScore[3]}`;
+        if (correctFirstScore[1].includes('friend')) {
+          await insertOrUpdateDuccScores(splitMsgByBullet, 'friend');
+          myEmitter.emit('friendScore', splitMsgByBullet);
+        } else if (correctFirstScore[1].includes('killer')) {
+          await insertOrUpdateDuccScores(splitMsgByBullet, 'killer');
+          myEmitter.emit('killedScore', splitMsgByBullet);
+        }
+      }
     }
     const server = ircMessage.params[0];
     const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
@@ -94,17 +110,21 @@ rl.on('line', async (line) => {
   }
 });
 
+const insertOrUpdateDuccScores = async (scores: string[], duccType: string) => {
+  await DatabaseDuccUtils.insertOrUpdateDuccScores(scores, duccType);
+};
+
 const addUserToDatabase = async (nick: string, server: string) => {
   await DatabaseUserUtils.addUser(nick, server);
-}
+};
 
 const deleteUserFromDatabase = async (nick: string, server: string) => {
   await DatabaseUserUtils.deleteUser(nick, server);
-}
+};
 
 const saveLineToDatabase = async (nick: string, server: string, msg: string) => {
   await DatabaseMessageUtils.saveLine(nick, server, msg);
-}
+};
 
 client.on('end', () => {
   console.log('disconnected from server');

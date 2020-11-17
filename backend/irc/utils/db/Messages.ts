@@ -3,7 +3,6 @@ dotenv.config();
 import knex from './dbConn';
 
 class DatabaseMessageUtils {
-
   static formatDate(date: Date): string {
     const d = new Date(date);
     let month = '' + (d.getMonth() + 1);
@@ -52,10 +51,7 @@ class DatabaseMessageUtils {
   }
 
   static async getLineCountLastNDays(days: number): Promise<ILineCount[]> {
-    const lineCounts = await knex('line_counts')
-      .select()
-      .orderBy('date', 'desc')
-      .limit(days);
+    const lineCounts = await knex('line_counts').select().orderBy('date', 'desc').limit(days);
     const parsedLineCounts = lineCounts.map((entry) => {
       return {
         date: this.formatDate(entry['date']),
@@ -66,9 +62,7 @@ class DatabaseMessageUtils {
   }
 
   static async getLineCount(date: string): Promise<ILineCount> {
-    const lineCount = await knex('line_counts')
-      .select()
-      .where({ date });
+    const lineCount = await knex('line_counts').select().where({ date });
     const parsedLineCount = lineCount.map((entry) => {
       return {
         date: entry['date'],
@@ -80,19 +74,14 @@ class DatabaseMessageUtils {
 
   static async saveLine(nick: string, server: string, message: string) {
     await knex('last_messages').insert({ user: nick, server, message });
-    const lineCountExists = await knex('line_counts')
-      .select()
-      .whereRaw('date = date(?)', [new Date()]);
+    const lineCountExists = await knex('line_counts').select().whereRaw('date = date(?)', [new Date()]);
     if (lineCountExists.length < 1) {
-      await knex('line_counts')
-        .insert({ count: 1, date: this.formatDate(new Date()) });
+      await knex('line_counts').insert({ count: 1, date: this.formatDate(new Date()) });
     } else {
-      await knex('line_counts')
-        .whereRaw('date = date(?)', [new Date()]).increment('count', 1);
+      await knex('line_counts').whereRaw('date = date(?)', [new Date()]).increment('count', 1);
     }
     console.log('Saving message to db.');
   }
-
 }
 
 export { DatabaseMessageUtils };

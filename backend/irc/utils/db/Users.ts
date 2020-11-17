@@ -1,22 +1,15 @@
 import knex from './dbConn';
 
 class DatabaseUserUtils {
-
   static async getUsers(server: string) {
-    const allUsersDB = await knex('online_users')
-      .select('user')
-      .where({ server });
+    const allUsersDB = await knex('online_users').select('user').where({ server });
     const allUsers = allUsersDB.map((user) => user['user']);
     return allUsers;
   }
 
   static async deleteUser(nick: string, server: string) {
-    await knex('online_users')
-      .del()
-      .where({ user: nick, server });
-    const user = await knex('online_users')
-      .select('user')
-      .where({ user: nick, server: server });
+    await knex('online_users').del().where({ user: nick, server });
+    const user = await knex('online_users').select('user').where({ user: nick, server: server });
     console.log(`User ${nick} has parted.`);
   }
 

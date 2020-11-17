@@ -2,7 +2,6 @@ import { TTopWord } from "./TopWords";
 import TopWord from "./TopWord";
 
 export default function TopWordsList(props: IProps) {
-
   return (
     <>
       {Array.from(props.topWords).map((topWord, index) => (
@@ -13,9 +12,9 @@ export default function TopWordsList(props: IProps) {
         />
       ))}
     </>
-  )
+  );
 }
 
 interface IProps {
-  topWords: TTopWord[]
+  topWords: TTopWord[];
 }

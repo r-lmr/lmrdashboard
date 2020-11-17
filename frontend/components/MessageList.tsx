@@ -5,7 +5,7 @@ import { IMessage } from "./Message";
 
 export default function MessageList() {
   const [fetchedMessages, setFetchedMessages] = useState<IMessage[]>([
-    { message: "Loading..." },
+    { message: "Loading...", nick: "", dateCreated: "1970-01-01" },
   ]);
 
   useEffect(() => {
@@ -20,7 +20,10 @@ export default function MessageList() {
 
   return (
     <div>
-      <div className={"messagelist-header"}>Last 5 messages:</div>
+      <div className={"messagelist-header"}>Last 5 messages ({
+        new Date(fetchedMessages[0].dateCreated).toISOString().split('T')[0]
+      }):
+      </div>
       {fetchedMessages.map((message, index) => (
         <Message
           key={(message.dateCreated || Date.now())
@@ -28,7 +31,7 @@ export default function MessageList() {
             .concat(index.toString())}
           message={message.message}
           nick={message.nick}
-          dateCreated={message.dateCreated}
+          dateCreated={new Date(message.dateCreated).toLocaleString().split(' ')[1]}
         />
       ))}
     </div>

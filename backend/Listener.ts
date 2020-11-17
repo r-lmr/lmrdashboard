@@ -3,7 +3,6 @@ import { ResCollection } from './ResCollection';
 import { Sender } from './Sender';
 
 class Listener {
-
   static addIrcListeners() {
     const resCollection = ResCollection.Instance;
 
@@ -17,13 +16,15 @@ class Listener {
 
     myEmitter.on('line', async (nick: string, server: string, msg: string) => {
       console.log('server.ts myEmitter.on line', nick, msg);
-      resCollection.doMultipleForAllResInCollection([
-        Sender.sendMessages,
-        Sender.sendLineCounts
-      ]);
+      resCollection.doMultipleForAllResInCollection([Sender.sendMessages, Sender.sendLineCounts]);
+    });
+    myEmitter.on('friendScore', async (scores: string[]) => {
+      resCollection.doForAllResInCollection(Sender.sendDuccScores);
+    });
+    myEmitter.on('killedScore', async (scores: string[]) => {
+      resCollection.doForAllResInCollection(Sender.sendDuccScores);
     });
   }
-
 }
 
 export { Listener };
