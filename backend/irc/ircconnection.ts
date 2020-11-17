@@ -88,21 +88,18 @@ rl.on('line', async (line) => {
       return;
     } else if (ircMessage.command == 'PRIVMSG') {
       const msg = ircMessage.params.slice(1).join(' ');
-      if (msg.match(/Duck friend scores in #/i)) {
+      if (msg.match(/Duck \w{6} scores in #/i)) {
         const splitMsgByBullet = msg.split('\u2022');
         // fix the first split by removing the 'Duck ... scores in #channel'
         const correctFirstScore = splitMsgByBullet[0].split(':');
         splitMsgByBullet[0] = `${correctFirstScore[2]}: ${correctFirstScore[3]}`;
-        await insertOrUpdateFriendScores(splitMsgByBullet);
-        myEmitter.emit('friendScore', splitMsgByBullet);
-        await DatabaseDuccUtils.retrieveAllDuccScores();
-      } else if (msg.match(/Duck killer scores in #/i)) {
-        const splitMsgByBullet: string[] = msg.split('\u2022');
-        // fix the first split by removing the 'Duck ... scores in #channel'
-        const correctFirstScore: string[] = splitMsgByBullet[0].split(':');
-        splitMsgByBullet[0] = `${correctFirstScore[2]}: ${correctFirstScore[3]}`;
-        await insertOrUpdateKillerScores(splitMsgByBullet);
-        myEmitter.emit('killedScore', splitMsgByBullet);
+        if (correctFirstScore[1].includes('friend')) {
+          await insertOrUpdateDuccScores(splitMsgByBullet, 'friend');
+          myEmitter.emit('friendScore', splitMsgByBullet);
+        } else if (correctFirstScore[1].includes('killer')) {
+          await insertOrUpdateDuccScores(splitMsgByBullet, 'killer');
+          myEmitter.emit('killedScore', splitMsgByBullet);
+        }
       }
     }
     const server = ircMessage.params[0];
@@ -113,12 +110,8 @@ rl.on('line', async (line) => {
   }
 });
 
-const insertOrUpdateFriendScores = async (scores: string[]) => {
-  await DatabaseDuccUtils.insertOrUpdateFriendScores(scores);
-};
-
-const insertOrUpdateKillerScores = async (scores: string[]) => {
-  await DatabaseDuccUtils.insertOrUpdateKillerScores(scores);
+const insertOrUpdateDuccScores = async (scores: string[], duccType: string) => {
+  await DatabaseDuccUtils.insertOrUpdateDuccScores(scores, duccType);
 };
 
 const addUserToDatabase = async (nick: string, server: string) => {
