@@ -2,6 +2,7 @@ import { Response } from 'express-serve-static-core';
 import sw from 'stopword';
 import { DatabaseMessageUtils, IMessage } from './irc/utils/db/Messages';
 import { DatabaseUserUtils } from './irc/utils/db/Users';
+import { DatabaseDuccUtils } from './irc/utils/db/DuccScores';
 
 class Sender {
   static async sendUsers(res: Response<any, number>) {
@@ -51,6 +52,14 @@ class Sender {
 
       res.write('event: topWords\n');
       res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 10) })}`);
+      res.write('\n\n');
+    }
+  }
+  static async sendDuccScores(res: Response<any, number>) {
+    if (res) {
+      const duccScores = await DatabaseDuccUtils.retrieveAllDuccScores();
+      res.write('event: duccScore\n');
+      res.write(`data: ${JSON.stringify({ duccScores })}`);
       res.write('\n\n');
     }
   }

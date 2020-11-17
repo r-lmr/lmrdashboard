@@ -5,7 +5,6 @@ import { Container, Row, Col } from "reactstrap";
 import TopWordsList from "./TopWordList";
 
 export default function TopWords() {
-
   const [fetchedTopWords, setFetchedTopWords] = useState<TTopWord[]>([]);
 
   useEffect(() => {
@@ -14,7 +13,7 @@ export default function TopWords() {
     };
     eventSource.addEventListener("topWords", (e: any) => {
       const data = JSON.parse(e.data);
-      const topWords: TTopWord[] = (data.topWords);
+      const topWords: TTopWord[] = data.topWords;
       setFetchedTopWords(topWords);
     });
   }, []);
@@ -26,16 +25,24 @@ export default function TopWords() {
         <Row>
           <Col>
             <TopWordsList
-              topWords={fetchedTopWords.slice(0, Math.floor(fetchedTopWords.length / 2))} />
+              topWords={fetchedTopWords.slice(
+                0,
+                Math.floor(fetchedTopWords.length / 2)
+              )}
+            />
           </Col>
           <Col>
             <TopWordsList
-              topWords={fetchedTopWords.slice(Math.floor(fetchedTopWords.length / 2), fetchedTopWords.length)} />
+              topWords={fetchedTopWords.slice(
+                Math.floor(fetchedTopWords.length / 2),
+                fetchedTopWords.length
+              )}
+            />
           </Col>
         </Row>
       </Container>
     </>
-  )
+  );
 }
 
 export type TTopWord = [string, number];

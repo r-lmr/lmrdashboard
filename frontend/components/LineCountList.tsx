@@ -22,9 +22,7 @@ export default function LineCountList() {
       <div className={"messagelist-header"}> Current Line Count : </div>
       {fetchedLines.map((line, index) => (
         <LineCount
-          key={(line.date || Date.now())
-            .toString()
-            .concat(index.toString())}
+          key={(line.date || Date.now()).toString().concat(index.toString())}
           lineCount={line.lineCount}
           date={line.date}
           message={line.message}
