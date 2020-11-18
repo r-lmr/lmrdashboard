@@ -1,5 +1,4 @@
 import { connect } from 'tls';
-import { readFileSync } from 'fs';
 import { createInterface } from 'readline';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -67,7 +66,7 @@ rl.on('line', async (line) => {
     if (nick != joinConfig.user) {
       const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
       await addUserToDatabase(nick!, server);
-      myEmitter.emit('join', server, nick);
+      myEmitter.emit('join');
     }
   } else if (ircMessage.command == '353') {
     ircMessage.params.slice(3).forEach(async (name) => {
@@ -82,7 +81,7 @@ rl.on('line', async (line) => {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     const server = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
     await deleteUserFromDatabase(nick!, server);
-    myEmitter.emit('part', server, nick);
+    myEmitter.emit('part');
   } else if (ircMessage.command == 'PRIVMSG') {
     if (Date.now() - joinConfig.bufferTime.getTime() < 5000)
       return;
@@ -95,7 +94,7 @@ rl.on('line', async (line) => {
     // Process non bot messages
     if (!ircMessage.prefix?.toLowerCase().split('@')[1].includes('/bot/')) {
       await saveLineToDatabase(nick!, server, msg);
-      myEmitter.emit('line', nick, server, msg);
+      myEmitter.emit('line');
     } else { // Process bot messages
       // Process ducc stats
       if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
@@ -106,10 +105,10 @@ rl.on('line', async (line) => {
         splitMsgByBullet[0] = `${correctFirstScore[2]}: ${correctFirstScore[3]}`;
         if (correctFirstScore[1].includes('friend')) {
           await insertOrUpdateDuccScores(splitMsgByBullet, 'friend');
-          myEmitter.emit('friendScore', splitMsgByBullet);
+          myEmitter.emit('friendScore');
         } else if (correctFirstScore[1].includes('killer')) {
           await insertOrUpdateDuccScores(splitMsgByBullet, 'killer');
-          myEmitter.emit('killedScore', splitMsgByBullet);
+          myEmitter.emit('killedScore');
         }
       }
     }

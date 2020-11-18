@@ -9,7 +9,6 @@ class DatabaseUserUtils {
 
   static async deleteUser(nick: string, server: string) {
     await knex('online_users').del().where({ user: nick, server });
-    const user = await knex('online_users').select('user').where({ user: nick, server: server });
     console.log(`User ${nick} has parted.`);
   }
 
