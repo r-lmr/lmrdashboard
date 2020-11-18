@@ -26,8 +26,6 @@ class IrcMessageProcessor {
   }
 
   public parseMessage(line: string): IrcMessage {
-    console.log("parseMessage");
-    
     if (line[0] == ':') {
       const input = line.split(' ');
       const msg = {
@@ -44,43 +42,36 @@ class IrcMessageProcessor {
   }
 
   public processPing(ircMessage: IrcMessage) {
-    console.log("processPing", ircMessage);
     this.client.write('PONG ' + ircMessage.params[0] + '\r\n');
   }
 
   public processMode() {
-    console.log("processMode");
     this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
     this.client.write(`NAMES ${this.joinConfig.channel}\r\n`);
     console.log(`TRYING TO JOIN ${this.joinConfig.channel}`);
   }
 
   public async processJoin(ircMessage: IrcMessage) {
-    console.log("processJoin", ircMessage);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != this.joinConfig.user) {
       const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
-      console.log("calling addUser");
       await DatabaseUserUtils.addUser(nick!, server);
       myEmitter.emit('join');
     }
   }
 
   public async process353(ircMessage: IrcMessage) {
-    console.log("process353", ircMessage);
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
       if (name.length > 0 && !this.names.includes(name)) {
         this.names.push(name);
         const server = '#' + ircMessage.params[2].slice(1);
-        console.log("calling addUser");
         await DatabaseUserUtils.addUser(name, server);
       }
     });
   }
 
   public async processPart(ircMessage: IrcMessage) {
-    console.log("processPart", ircMessage);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     const server = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
     await DatabaseUserUtils.deleteUser(nick!, server);
@@ -88,7 +79,6 @@ class IrcMessageProcessor {
   }
 
   public async processPrivMsg(ircMessage: IrcMessage) {
-    console.log("processPrivMsg", ircMessage);
     if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000)
       return;
 
