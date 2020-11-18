@@ -9,13 +9,10 @@ class Listener {
     myEmitter.on('join', async (server: string, nick: string) => {
       resCollection.doForAllResInCollection(Sender.sendUsers);
     });
-
     myEmitter.on('part', async (server: string, nick: string) => {
       resCollection.doForAllResInCollection(Sender.sendUsers);
     });
-
     myEmitter.on('line', async (nick: string, server: string, msg: string) => {
-      console.log('server.ts myEmitter.on line', nick, msg);
       resCollection.doMultipleForAllResInCollection([Sender.sendMessages, Sender.sendLineCounts]);
     });
     myEmitter.on('friendScore', async (scores: string[]) => {

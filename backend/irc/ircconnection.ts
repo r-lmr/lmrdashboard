@@ -83,13 +83,24 @@ rl.on('line', async (line) => {
     const server = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
     await deleteUserFromDatabase(nick!, server);
     myEmitter.emit('part', server, nick);
-  } else if (ircMessage.command == 'PRIVMSG' && !ircMessage.prefix?.toLowerCase().includes('bot@')) {
-    if (Date.now() - joinConfig.bufferTime.getTime() < 5000) {
+  } else if (ircMessage.command == 'PRIVMSG') {
+    if (Date.now() - joinConfig.bufferTime.getTime() < 5000)
       return;
-    } else if (ircMessage.command == 'PRIVMSG') {
-      const msg = ircMessage.params.slice(1).join(' ');
-      if (msg.match(/Duck \w{6} scores in #/i)) {
-        const splitMsgByBullet = msg.split('\u2022');
+
+    // Normal messages can only hold 256 chars in the database
+    const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
+    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+    const server = ircMessage.params[0];
+
+    // Process non bot messages
+    if (!ircMessage.prefix?.toLowerCase().split('@')[1].includes('/bot/')) {
+      await saveLineToDatabase(nick!, server, msg);
+      myEmitter.emit('line', nick, server, msg);
+    } else { // Process bot messages
+      // Process ducc stats
+      if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
+        const duccMsg = ircMessage.params.slice(1).join(' ');
+        const splitMsgByBullet = duccMsg.split('\u2022');
         // fix the first split by removing the 'Duck ... scores in #channel'
         const correctFirstScore = splitMsgByBullet[0].split(':');
         splitMsgByBullet[0] = `${correctFirstScore[2]}: ${correctFirstScore[3]}`;
@@ -102,11 +113,6 @@ rl.on('line', async (line) => {
         }
       }
     }
-    const server = ircMessage.params[0];
-    const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
-    await saveLineToDatabase(nick!, server, msg);
-    myEmitter.emit('line', nick, server, msg);
   }
 });
 
