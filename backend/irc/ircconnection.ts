@@ -54,4 +54,4 @@ export interface JoinConfig {
   channel: string;
   user: string;
   bufferTime: Date;
-};
+}

@@ -1,4 +1,3 @@
-import { join } from "path";
 import { TLSSocket } from "tls";
 import { JoinConfig } from "./ircconnection";
 import { DatabaseDuccUtils } from "./utils/db/DuccScores";
