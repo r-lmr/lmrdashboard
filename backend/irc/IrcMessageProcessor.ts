@@ -13,7 +13,7 @@ class IrcMessageProcessor {
   private static _instance: IrcMessageProcessor;
   private readonly client: TLSSocket;
   private readonly joinConfig: JoinConfig;
-  private readonly names: string[];
+  private names: string[];
 
   private constructor(client: TLSSocket, joinConfig: JoinConfig) {
     this.client = client;
@@ -60,6 +60,7 @@ class IrcMessageProcessor {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != this.joinConfig.user) {
       const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
+      console.log("calling addUser");
       await DatabaseUserUtils.addUser(nick!, server);
       myEmitter.emit('join');
     }
@@ -69,9 +70,10 @@ class IrcMessageProcessor {
     console.log("process353", ircMessage);
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
-      if (name.length > 0 && this.names.includes(name)) {
+      if (name.length > 0 && !this.names.includes(name)) {
         this.names.push(name);
         const server = '#' + ircMessage.params[2].slice(1);
+        console.log("calling addUser");
         await DatabaseUserUtils.addUser(name, server);
       }
     });
