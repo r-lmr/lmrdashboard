@@ -27,23 +27,8 @@ const joinConfig: JoinConfig = {
 const ircMessageProcessor = IrcMessageProcessor.Instance(client, joinConfig);
 
 rl.on('line', async (line: string) => {
-  // for some reason the chunks arent always parsed as lines by \r\n
-  // so we force it by splitting our selves then loop over each line
   const ircMessage: IrcMessage = ircMessageProcessor.parseMessage(line);
-
-  if (ircMessage.command == 'PING') {
-    ircMessageProcessor.processPing(ircMessage);
-  } else if (ircMessage.command == 'MODE') {
-    ircMessageProcessor.processMode();
-  } else if (ircMessage.command == 'JOIN') {
-    await ircMessageProcessor.processJoin(ircMessage);
-  } else if (ircMessage.command == '353') {
-    await ircMessageProcessor.process353(ircMessage);
-  } else if (ircMessage.command == 'PART') {
-    await ircMessageProcessor.processPart(ircMessage);
-  } else if (ircMessage.command == 'PRIVMSG') {
-    await ircMessageProcessor.processPrivMsg(ircMessage);
-  }
+  ircMessageProcessor.processIrcMessage(ircMessage);
 });
 
 client.on('end', () => {

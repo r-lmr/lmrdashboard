@@ -12,19 +12,34 @@ class IrcMessageProcessor {
   private static _instance: IrcMessageProcessor;
   private readonly client: TLSSocket;
   private readonly joinConfig: JoinConfig;
-  private names: string[];
+  private readonly names: string[];
+  private readonly parseCommands: Map<PossibleIrcCommand, (ircMessage: IrcMessage) => void>;
 
   private constructor(client: TLSSocket, joinConfig: JoinConfig) {
     this.client = client;
     this.joinConfig = joinConfig;
     this.names = [];
+    this.parseCommands = new Map<PossibleIrcCommand, (ircMessage: IrcMessage) => void>();
+    this.parseCommands.set('PING', this.processPing.bind(this));
+    this.parseCommands.set('MODE', this.processMode.bind(this));
+    this.parseCommands.set('JOIN', this.processJoin.bind(this));
+    this.parseCommands.set('353', this.process353.bind(this));
+    this.parseCommands.set('PART', this.processPart.bind(this));
+    this.parseCommands.set('PRIVMSG', this.processPrivMsg.bind(this));
   }
 
   public static Instance(client: TLSSocket, joinConfig: JoinConfig) {
     return this._instance || (this._instance = new this(client, joinConfig));
   }
 
+  public processIrcMessage(ircMessage: IrcMessage) {
+    if (this.parseCommands.has(ircMessage.command as PossibleIrcCommand))
+      this.parseCommands.get(ircMessage.command as PossibleIrcCommand)!(ircMessage);
+  }
+
   public parseMessage(line: string): IrcMessage {
+    // for some reason the chunks arent always parsed as lines by \r\n
+    // so we force it by splitting our selves then loop over each line
     if (line[0] == ':') {
       const input = line.split(' ');
       const msg = {
@@ -40,17 +55,17 @@ class IrcMessageProcessor {
     }
   }
 
-  public processPing(ircMessage: IrcMessage) {
+  private processPing(ircMessage: IrcMessage) {
     this.client.write('PONG ' + ircMessage.params[0] + '\r\n');
   }
 
-  public processMode() {
+  private processMode() {
     this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
     this.client.write(`NAMES ${this.joinConfig.channel}\r\n`);
     console.log(`TRYING TO JOIN ${this.joinConfig.channel}`);
   }
 
-  public async processJoin(ircMessage: IrcMessage) {
+  private async processJoin(ircMessage: IrcMessage) {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != this.joinConfig.user) {
       const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
@@ -59,7 +74,7 @@ class IrcMessageProcessor {
     }
   }
 
-  public async process353(ircMessage: IrcMessage) {
+  private async process353(ircMessage: IrcMessage) {
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
       if (name.length > 0 && !this.names.includes(name)) {
@@ -70,14 +85,14 @@ class IrcMessageProcessor {
     });
   }
 
-  public async processPart(ircMessage: IrcMessage) {
+  private async processPart(ircMessage: IrcMessage) {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     const server = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
     await DatabaseUserUtils.deleteUser(nick!, server);
     myEmitter.emit('part');
   }
 
-  public async processPrivMsg(ircMessage: IrcMessage) {
+  private async processPrivMsg(ircMessage: IrcMessage) {
     if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000)
       return;
 
@@ -108,7 +123,7 @@ class IrcMessageProcessor {
       }
     }
 
-  } 
+  }
 
 }
 
@@ -119,3 +134,5 @@ export interface IrcMessage {
   command: string;
   params: string[];
 }
+
+type PossibleIrcCommand = 'JOIN' | 'PART' | '353' | 'PING' | 'MODE' | 'PRIVMSG';
