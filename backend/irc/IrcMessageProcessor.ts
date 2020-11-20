@@ -6,7 +6,7 @@ import { DatabaseUserUtils } from "./utils/db/Users";
 import myEmitter from './utils/emitter';
 
 /*
- * Singleton
+ * Singleton that processes incoming IRC messages and relays related operations
  */
 class IrcMessageProcessor {
   private static _instance: IrcMessageProcessor;
