@@ -1,3 +1,5 @@
+import userHash from "../data/UserHash";
+
 export default function User(props: IUser) {
   const roleMap: Map<string, string> = new Map<string, string>([
     ["OP", "@"],
@@ -8,7 +10,7 @@ export default function User(props: IUser) {
   return (
     <div>
       {props.role && roleMap.get(props.role)}
-      {props.nick}
+      <span className={`nick-${userHash(props.nick) % 16}`}>{props.nick}</span>
     </div>
   );
 }

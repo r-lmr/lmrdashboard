@@ -20,9 +20,9 @@ export default function MessageList() {
 
   return (
     <div>
-      <div className={"messagelist-header"}>Last 5 messages ({
-        new Date(fetchedMessages[0].dateCreated).toISOString().split('T')[0]
-      }):
+      <div className={"messagelist-header"}>
+        Last 5 messages (
+        {new Date(fetchedMessages[0].dateCreated).toISOString().split("T")[0]}):
       </div>
       {fetchedMessages.map((message, index) => (
         <Message
@@ -31,7 +31,9 @@ export default function MessageList() {
             .concat(index.toString())}
           message={message.message}
           nick={message.nick}
-          dateCreated={new Date(message.dateCreated).toLocaleString().split(' ')[1]}
+          dateCreated={
+            new Date(message.dateCreated).toLocaleString().split(" ")[1]
+          }
         />
       ))}
     </div>
