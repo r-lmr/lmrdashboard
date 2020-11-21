@@ -1,0 +1,81 @@
+stages:
+  - lint
+  - build
+  - deploy
+
+include:
+  - project: 'cocainefarm/templates/ci'
+    file: '/container.base.yaml'
+
+##################################################
+# LINT
+
+variables:
+  BASE_IMAGE: node:15.1.0-alpine
+
+.lint:
+  image: $BASE_IMAGE
+  stage: lint
+  script:
+    - yarn install
+    - yarn lint
+  only:
+    refs:
+      - lmrdashboard
+      - tags
+      - merge_requests
+
+lint:backend:
+  extends: .lint
+  before_script:
+    - cd backend
+
+lint:frontend:
+  extends: .lint
+  before_script:
+    - cd frontend
+
+
+##################################################
+# BUILD
+
+build:backend:lmrdashboard:
+  extends: .container:base
+  stage: build
+  variables:
+    DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_SHORT_SHA}"
+    BUILD_PATH: "backend/"
+  only:
+    refs:
+      - lmrdashboard
+
+build:backend:tags:
+  extends: .container:base
+  stage: build
+  variables:
+    DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_TAG} kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:latest"
+    BUILD_PATH: "backend/"
+  only:
+    refs:
+      - tags
+
+
+build:frontend:lmrdashboard:
+  extends: .container:base
+  stage: build
+  variables:
+    DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_SHORT_SHA}"
+    BUILD_PATH: "frontend/"
+  only:
+    refs:
+      - lmrdashboard
+
+build:frontend:tags:
+  extends: .container:base
+  stage: build
+  variables:
+    DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_TAG} kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:latest"
+    BUILD_PATH: "frontend/"
+  only:
+    refs:
+      - tags

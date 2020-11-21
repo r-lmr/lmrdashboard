@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "export": "next build && next export",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint .",
+    "pretty": "prettier --write ."
   },
   "dependencies": {
     "@types/eventsource": "^1.1.5",
