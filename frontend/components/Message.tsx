@@ -1,7 +1,9 @@
+import userHash from "../data/UserHash";
+
 export default function Message(props: IMessage) {
   return (
     <div>
-      [{props.dateCreated}] {props.nick}: {props.message}
+      [{props.dateCreated}] <span className={`nick-${Math.abs(userHash(props.nick) % 16)}`}>{props.nick}</span>: {props.message}
     </div>
   );
 }

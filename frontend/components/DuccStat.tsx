@@ -1,7 +1,12 @@
+import userHash from "../data/UserHash";
+
 export default function DuccStat(props: IDuccStat) {
-  return (
+
+{console.log(props.user, props.user.length, props.user.trim().length)}
+
+return (
     <div>
-      {props.user} {props.duccs}
+      <span className={`nick-${Math.abs(userHash(props.user.replace(/[^a-zA-Z0-9]/g, "")) % 16)}`}>{props.user}</span>: {props.duccs}
     </div>
   );
 }
