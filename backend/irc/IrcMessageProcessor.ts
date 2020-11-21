@@ -1,8 +1,8 @@
-import { TLSSocket } from "tls";
-import { JoinConfig } from "./ircconnection";
-import { DatabaseDuccUtils } from "./utils/db/DuccScores";
-import { DatabaseMessageUtils } from "./utils/db/Messages";
-import { DatabaseUserUtils } from "./utils/db/Users";
+import { TLSSocket } from 'tls';
+import { JoinConfig } from './ircconnection';
+import { DatabaseDuccUtils } from './utils/db/DuccScores';
+import { DatabaseMessageUtils } from './utils/db/Messages';
+import { DatabaseUserUtils } from './utils/db/Users';
 import myEmitter from './utils/emitter';
 
 /*
@@ -93,8 +93,7 @@ class IrcMessageProcessor {
   }
 
   private async processPrivMsg(ircMessage: IrcMessage) {
-    if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000)
-      return;
+    if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000) return;
 
     // Normal messages can only hold 256 chars in the database
     const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
@@ -105,7 +104,8 @@ class IrcMessageProcessor {
     if (!ircMessage.prefix?.toLowerCase().split('@')[1].includes('/bot/')) {
       await DatabaseMessageUtils.saveLine(nick!, server, msg);
       myEmitter.emit('line');
-    } else { // Process bot messages
+    } else {
+      // Process bot messages
       // Process ducc stats
       if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
         const duccMsg = ircMessage.params.slice(1).join(' ');
@@ -122,9 +122,7 @@ class IrcMessageProcessor {
         }
       }
     }
-
   }
-
 }
 
 export { IrcMessageProcessor };

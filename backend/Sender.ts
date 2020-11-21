@@ -42,9 +42,13 @@ class Sender {
       for (const message of messages) {
         const messageText: string = message.message.toLowerCase();
         const words = sw.removeStopwords(messageText.split(/\s+/));
-        for (const word of words) {
-          if (!wordCounts.has(word)) wordCounts.set(word, 1);
-          else wordCounts.set(word, wordCounts.get(word)! + 1);
+        for (let word of words) {
+          // strip any non alpha chars to prevent odd render on screen
+          word = word.replace(/[^a-zA-Z0-9 ]/g, '').trim();
+          if (word) {
+            if (!wordCounts.has(word)) wordCounts.set(word, 1);
+            else wordCounts.set(word, wordCounts.get(word)! + 1);
+          }
         }
       }
 
