@@ -5,5 +5,5 @@ export default function userHash(str: string): number {
     hash = (hash << 5) - hash + char;
     hash |= 0;
   }
-  return hash;
+  return Math.abs(hash);
 }

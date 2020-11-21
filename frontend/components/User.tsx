@@ -10,9 +10,7 @@ export default function User(props: IUser) {
   return (
     <div>
       {props.role && roleMap.get(props.role)}
-      <span className={`nick-${Math.abs(userHash(props.nick) % 16)}`}>
-        {props.nick}
-      </span>
+      <span className={`nick-${userHash(props.nick) % 16}`}>{props.nick}</span>
     </div>
   );
 }

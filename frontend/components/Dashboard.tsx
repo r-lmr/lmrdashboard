@@ -7,7 +7,7 @@ import DuccStatsList, { ScoreType } from "./DuccStatsList";
 
 export default function Dashboard() {
   return (
-    <div className={"dashboard-container"} style={{ fontSize: "1.2em" }}>
+    <div className={"dashboard-container"}>
       <Container>
         <Row>
           <Col md>
