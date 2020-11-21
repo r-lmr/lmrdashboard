@@ -7,7 +7,7 @@ import DuccStatsList, { ScoreType } from "./DuccStatsList";
 
 export default function Dashboard() {
   return (
-    <div className={"dashboard-container"} style={{fontSize: '1.2em'}}>
+    <div className={"dashboard-container"} style={{ fontSize: "1.2em" }}>
       <Container>
         <Row>
           <Col md>
@@ -17,10 +17,10 @@ export default function Dashboard() {
             <LineCountList />
           </Col>
           <Col md>
-            <DuccStatsList type={ScoreType.FRIENDS}/>
+            <DuccStatsList type={ScoreType.FRIENDS} />
           </Col>
           <Col md>
-            <DuccStatsList type={ScoreType.KILLERS}/>
+            <DuccStatsList type={ScoreType.KILLERS} />
           </Col>
           <Col md>
             <TopWords />
