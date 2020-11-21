@@ -1,10 +1,13 @@
 import { Response } from 'express-serve-static-core';
 
+/*
+ * Singleton that holds the open connections to which to respond
+ */
 class ResCollection {
   private collection: Map<string, Response<any, number>>;
   private static _instance: ResCollection;
 
-  constructor() {
+  private constructor() {
     this.collection = new Map();
   }
 
@@ -41,7 +44,7 @@ class ResCollection {
   }
 
   public doMultipleForAllResInCollection(functionsToExecute: ((arg: Response<any, number>) => void)[]) {
-    this.collection.forEach((res: Response<string, number>, resId: string) => {
+    this.collection.forEach((res: Response<string, number>) => {
       for (const functionToExecute of functionsToExecute) {
         functionToExecute(res);
       }

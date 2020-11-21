@@ -35,7 +35,7 @@ app.get('/test', async (req, res: Response<any, number>) => {
   await Sender.sendDuccScores(res);
 
   // Daily
-  setInterval(async (_) => {
+  setInterval(async () => {
     await Sender.sendTopWords(res);
   }, 24 * 60 * 60 * 1000);
 
