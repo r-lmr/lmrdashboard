@@ -17,4 +17,6 @@ ENV LMRD_IRC_CHANNEL "#linuxmasterrace" \
     LMRD_DB_USER \
     LMRD_DB_PASS
 
+EXPOSE 4000
+
 CMD [ "yarn", "start" ]
