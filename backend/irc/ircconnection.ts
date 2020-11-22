@@ -10,11 +10,9 @@ const options = {
 
 const client: TLSSocket = connect(Number(process.env.LMRD_IRC_PORT) || 6697, options, async () => {
   console.log('connected to server!');
+  client.write(`PASS ${process.env.LMRD_IRC_PASS}\r\n`);
   client.write(`USER ${process.env.LMRD_IRC_USER} localhost * :LMR Dashboard Connection\r\n`);
   client.write(`NICK ${process.env.LMRD_IRC_USER} \r\n`);
-  setTimeout(() => {
-    client.write(`PRIVMSG nickserv IDENTIFY ${process.env.LMRD_IRC_PASS}\r\n`);
-  }, 2000);
 });
 const rl = createInterface({ input: client, crlfDelay: Infinity });
 

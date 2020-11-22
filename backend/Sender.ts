@@ -45,7 +45,7 @@ class Sender {
         for (let word of words) {
           // strip any non alpha chars to prevent odd render on screen
           word = word.replace(/[^a-zA-Z0-9 ]/g, '').trim();
-          if (word) {
+          if (word && !word.match(/^[0-9]*$/)) {
             if (!wordCounts.has(word)) wordCounts.set(word, 1);
             else wordCounts.set(word, wordCounts.get(word)! + 1);
           }
