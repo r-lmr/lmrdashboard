@@ -66,6 +66,7 @@ build:frontend:lmrdashboard:
   variables:
     DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_SHORT_SHA}"
     BUILD_PATH: "frontend/"
+    BUILD_ARGS: "LMRD_EVENT_SOURCE=https://lmrdev.cocaine.farm/api/test"
   only:
     refs:
       - lmrdashboard
@@ -76,6 +77,38 @@ build:frontend:tags:
   variables:
     DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_TAG} kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:latest"
     BUILD_PATH: "frontend/"
+    BUILD_ARGS: "LMRD_EVENT_SOURCE=https://lmr.cocaine.farm/api/test"
   only:
     refs:
       - tags
+
+##################################################
+# DEPLOY
+
+deploy:prod:
+  image: kube.cat/cocainefarm/helmfile:v0.135.0
+  stage: deploy
+  environment:
+    name: production
+    url: https://lmr.cocaine.farm
+  before_script:
+    - gpg --import "$COCAINEFARM_GPG_PRIVKEY"
+  script:
+    - helmfile apply
+  only:
+    refs:
+      - tags
+
+deploy:dev:
+  image: kube.cat/cocainefarm/helmfile:v0.135.0
+  stage: deploy
+  environment:
+    name: dev
+    url: https://lmrdev.cocaine.farm
+  before_script:
+    - gpg --import "$COCAINEFARM_GPG_PRIVKEY"
+  script:
+    - helmfile apply
+  only:
+    refs:
+      - lmrdashboard
