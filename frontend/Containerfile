@@ -3,8 +3,10 @@ FROM node:15.1.0-alpine as build
 WORKDIR /lmrdashboard/frontend
 COPY . .
 
-ARG LMRD_EVENT_SOURCE="http://localhost:4000/test"
-ENV LMRD_EVENT_SOURCE=$LMRD_EVENT_SOURCE
+ARG NEXT_PUBLIC_LMRD_EVENT_SOURCE="http://localhost:4000/test"
+ENV NEXT_PUBLIC_LMRD_EVENT_SOURCE=$NEXT_PUBLIC_LMRD_EVENT_SOURCE
+
+RUN echo $LMRD_EVENT_SOURCE
 
 RUN yarn install
 RUN npx next telemetry disable
