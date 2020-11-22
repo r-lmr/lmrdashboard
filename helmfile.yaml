@@ -7,11 +7,14 @@ environments:
     values:
       - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
 
+helmDefaults:
+  createNamespace: false
+
 releases:
   - name: lmrdashboard
     chart: ./chart
     version: 0.7.0
-    namespace: lmr-{{ requiredEnv "CI_ENVIRONMENT_NAME" }}
+    namespace: {{ requiredEnv "KUBE_NAMESPACE" }}
     secrets:
       - ./secrets/mariadb.yaml
       - ./secrets/irc_user.yaml

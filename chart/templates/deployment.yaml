@@ -1,12 +1,13 @@
 {{- $fullname := (include "lmrdashboard.fullname" .) -}}
 apiVersion: apps/v1
-kind: StatefullSet
+kind: StatefulSet
 metadata:
   name: {{ include "lmrdashboard.fullname" . }}-backend
   labels:
     {{- include "lmrdashboard.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  serviceName: {{ $fullname }}-backend
   selector:
     matchLabels:
       {{- include "lmrdashboard.selectorLabels" . | nindent 6 }}
