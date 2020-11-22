@@ -14,6 +14,12 @@ app.use(cors());
 
 const resCollection = ResCollection.Instance;
 
+app.get('/healthz', async (req, res, next) => {
+  ['/health', '/healthz'].indexOf(req.path.toLowerCase()) >= 0 && ['get', 'head'].indexOf(req.method.toLowerCase()) >= 0
+    ? res.status(200).end()
+    : next();
+});
+
 app.get('/test', async (req, res: Response<any, number>) => {
   const resId = uuidv4();
   resCollection.addToCollection(resId, res);

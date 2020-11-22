@@ -49,8 +49,9 @@ backend:
     enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
+
   livenessProbe:
-    enbaled: true
+    enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
 
@@ -93,8 +94,9 @@ frontend:
     enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
+
   livenessProbe:
-    enbaled: true
+    enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
 
