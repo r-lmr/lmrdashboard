@@ -28,12 +28,16 @@ services:
       LMRD_DB_PASS: "root"
       LMRD_DB_NAME: "lmrd"
       LMRD_IRC_CHANNEL: "#aboftytest"
+    ports:
+      - 4000:4000
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Containerfile
       args:
-        - NEXT_PUBLIC_LMRD_EVENT_SOURCE=http://backend:4000/test
+        # Frontend code runs in the browser, doesn't see the container hostname
+        # - NEXT_PUBLIC_LMRD_EVENT_SOURCE=http://backend:4000/test
+        - NEXT_PUBLIC_LMRD_EVENT_SOURCE=http://localhost:4000/test
     ports:
       - 3000:80
