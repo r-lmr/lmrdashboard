@@ -9,11 +9,23 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: lmrd
     volumes:
-      - ./backend/irc/utils/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - ./backend/irc/utils/db/data:/var/lib/mysql
+      - ./backend/irc/utils/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d  # Init the db if it is empty
+      - /opt/data:/var/lib/mysql  # Use data if it exists (ignores the init script)
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Containerfile
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Containerfile
+    ports:
+      - 3000:80
