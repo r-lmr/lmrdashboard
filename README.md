@@ -59,6 +59,7 @@ docker run --env-file .env --network="host" lmrd/backend
 ```
 
 #### docker-compose
+Instead of explicit containers, the `docker-compose.yml` file can be used.
 ```sh
 docker-compose up -d
 docker-compose logs -f
