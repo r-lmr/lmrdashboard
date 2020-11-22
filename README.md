@@ -59,7 +59,8 @@ docker run --env-file .env --network="host" lmrd/backend
 ```
 
 #### docker-compose
-Instead of explicit containers, the `docker-compose.yml` file can be used.
+Instead of explicit containers, the `docker-compose.yml` file can be used.  
+This also includes the database.
 ```sh
 docker-compose up -d
 docker-compose logs -f
