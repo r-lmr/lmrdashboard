@@ -1,4 +1,3 @@
-# Use root/example as user/password credentials
 version: '3.1'
 
 services:
@@ -10,8 +9,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: lmrd
     volumes:
-      - ./irc/utils/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - ./irc/utils/db/data:/var/lib/mysql
+      - ./backend/irc/utils/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./backend/irc/utils/db/data:/var/lib/mysql
 
   adminer:
     image: adminer
