@@ -1,3 +1,7 @@
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
 environments:
   default:
     values:
@@ -7,7 +11,7 @@ releases:
   - name: lmrdashboard
     chart: ./chart
     version: 0.7.0
-    namespace: lmr
+    namespace: lmr-{{ requiredEnv "CI_ENVIRONMENT_NAME" }}
     secrets:
       - ./secrets/mariadb.yaml
       - ./secrets/irc_user.yaml
