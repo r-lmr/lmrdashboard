@@ -1,0 +1,37 @@
+environments:
+  default:
+    values:
+      - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
+
+releases:
+  - name: lmrdashboard
+    chart: ./chart
+    version: 0.7.0
+    namespace: lmr
+    secrets:
+      - ./secrets/mariadb.yaml
+      - ./secrets/irc_user.yaml
+    values:
+      - image:
+          tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
+      - ingress:
+          enabled: true
+          hosts:
+            - host: {{ .Values.host }}
+              paths:
+                - /
+          tls:
+            - secretName: cocaine-farm-tls
+              hosts:
+                - {{ .Values.host }}
+      - mariadb:
+          architecture: standalone
+          auth:
+            database: lmrd
+          primary:
+            persistence:
+              enabled: true
+              storageClass: "ssd"
+              accessModes:
+                - ReadWriteOnce
+              size: 8Gi

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lmrdashboard.fullname" . }}
+  labels:
+    {{- include "lmrdashboard.labels" . | nindent 4 }}
+data:
+  LMRD_IRC_CHANNEL: {{ .Values.irc.channel | quote }}
+  LMRD_IRC_HOST: {{ .Values.irc.host | quote }}
+  LMRD_IRC_PORT: {{ .Values.irc.port | quote }}
+  LMRD_DB_HOST: {{ include "lmrdashboard.fullname" . }}-mariadb
+  LMRD_DB_PORT: "3306"
+  LMRD_DB_NAME: {{ .Values.mariadb.auth.database | quote }}
+  LMRD_DB_USER: {{ .Values.mariadb.auth.username | quote }}
