@@ -55,6 +55,14 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
+Common annotations
+*/}}
+{{- define "lmrdashboard.annotations" -}}
+app.gitlab.com/env: {{ .Values.gitlab.envSlug }}
+app.gitlab.com/app: {{ .Values.gitlab.projectSlug }}
+{{- end -}}
+
+{{/*
 Selector labels
 */}}
 {{- define "lmrdashboard.selectorLabels" -}}

@@ -30,6 +30,9 @@ releases:
           tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
       - irc:
           username: {{ .Values.irc.username }}
+      - gitlab:
+          envSlug: {{ requiredEnv "CI_ENVIRONMENT_SLUG" | quote }}
+          projectSlug: {{ requiredEnv "CI_PROJECT_PATH_SLUG" | quote }}
       - ingress:
           enabled: true
           hosts:
