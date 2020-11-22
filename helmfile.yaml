@@ -3,9 +3,16 @@ repositories:
     url: https://charts.bitnami.com/bitnami
 
 environments:
-  default:
+  production:
     values:
       - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
+      - irc:
+          username: lmrdashboard
+  staging:
+    values:
+      - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
+      - irc:
+          username: lmrstageboard
 
 helmDefaults:
   createNamespace: false
@@ -21,6 +28,8 @@ releases:
     values:
       - image:
           tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
+      - irc:
+          username: {{ .Values.irc.username }}
       - ingress:
           enabled: true
           hosts:
