@@ -33,5 +33,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Containerfile
+      args:
+        - NEXT_PUBLIC_LMRD_EVENT_SOURCE=http://backend:4000/test
     ports:
       - 3000:80
