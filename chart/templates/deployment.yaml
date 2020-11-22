@@ -59,7 +59,7 @@ spec:
           {{- if .Values.backend.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: backend
             initialDelaySeconds: {{ .Values.backend.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.backend.livenessProbe.periodSeconds }}
@@ -67,7 +67,7 @@ spec:
           {{- if .Values.backend.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: backend
             initialDelaySeconds: {{ .Values.backend.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.backend.readinessProbe.periodSeconds }}
