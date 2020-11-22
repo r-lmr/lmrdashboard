@@ -12,6 +12,10 @@ irc:
   username:
   password:
 
+gitlab:
+  envSlug:
+  projectSlug:
+
 backend:
   image:
     repository: kube.cat/cocainefarm/lmrdashboard-backend

@@ -3,6 +3,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "lmrdashboard.fullname" . }}-backend
+  annotations:
+    {{- include "lmrdashboard.annotations" . | nindent 4 }}
   labels:
     {{- include "lmrdashboard.labels" . | nindent 4 }}
 spec:
@@ -13,6 +15,8 @@ spec:
       {{- include "lmrdashboard.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        {{- include "lmrdashboard.annotations" . | nindent 8 }}
       labels:
         {{- include "lmrdashboard.selectorLabels" . | nindent 8 }}
     spec:
@@ -103,6 +107,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "lmrdashboard.fullname" . }}-frontend
+  annotations:
+    {{- include "lmrdashboard.annotations" . | nindent 4 }}
   labels:
     {{- include "lmrdashboard.labels" . | nindent 4 }}
 spec:
@@ -112,6 +118,8 @@ spec:
       {{- include "lmrdashboard.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        {{- include "lmrdashboard.annotations" . | nindent 8 }}
       labels:
         {{- include "lmrdashboard.selectorLabels" . | nindent 8 }}
     spec:
