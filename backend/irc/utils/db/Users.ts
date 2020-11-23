@@ -26,7 +26,8 @@ class DatabaseUserUtils {
   static async flushUserTable(server: string) {
     try {
       console.log('ATTEMPTING TO CLEAR USER TABLE ON START');
-      await knex('online_users').where({ server }).del();
+      const deleted = await knex('online_users').where({ server }).del();
+      if (deleted) console.log('DELETED ALL USERS');
     } catch (e) {
       console.log('UNABLE TO DELETE USERS');
     }
