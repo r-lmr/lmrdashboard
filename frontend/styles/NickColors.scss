@@ -1,53 +1,50 @@
-@use 'Bootstrap';
+@use 'Srcery';
 
 .nick-0 {
-  color: ivory;
+  color: Srcery.$white;
 }
 .nick-1 {
-  color: white;
+  color: Srcery.$red;
 }
 .nick-2 {
-  color: pink;
+  color: Srcery.$green;
 }
 .nick-3 {
-  color: firebrick;
+  color: Srcery.$yellow;
 }
 .nick-4 {
-  color: cyan;
+  color: Srcery.$blue;
 }
 .nick-5 {
-  color: violet;
+  color: Srcery.$magenta;
 }
 .nick-6 {
-  color: deeppink;
+  color: Srcery.$cyan;
 }
 .nick-7 {
-  color: yellowgreen;
+  color: Srcery.$brightblack;
 }
 .nick-8 {
-  color: gold;
+  color: Srcery.$brightred;
 }
 .nick-9 {
-  color: salmon;
+  color: Srcery.$brightgreen;
 }
 .nick-10 {
-  color: royalblue;
+  color: Srcery.$brightyellow;
 }
 .nick-11 {
-  color: orange;
+  color: Srcery.$brightblue;
 }
 .nick-12 {
-  color: steelblue;
+  color: Srcery.$brightmagenta;
 }
 .nick-13 {
-  color: tomato;
+  color: Srcery.$brightcyan;
 }
 .nick-14 {
-  color: lawngreen;
+  color: Srcery.$orange;
 }
 .nick-15 {
-  color: paleturquoise;
-}
-.nick-16 {
-  color: khaki;
+  color: Srcery.$brightorange;
 }
