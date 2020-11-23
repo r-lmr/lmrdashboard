@@ -13,6 +13,7 @@ metadata:
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
   {{- end }}
 spec:
 {{- if .Values.ingress.tls }}
@@ -31,11 +32,11 @@ spec:
       http:
         paths:
         {{- range .paths }}
-          - path: {{ . }}
+          - path: {{ . }}(.*)
             backend:
               serviceName: {{ $fullName }}-frontend
               servicePort: frontend
-          - path: {{ . }}api
+          - path: {{ . }}api/(.*)
             backend:
               serviceName: {{ $fullName }}-backend
               servicePort: backend
