@@ -29,7 +29,6 @@ class DatabaseUserUtils {
       await knex('online_users').where({ server }).del();
     } catch (e) {
       console.log('UNABLE TO DELETE USERS');
-      console.log(e);
     }
   }
 }
