@@ -8,11 +8,13 @@ environments:
       - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
       - irc:
           username: lmrdashboard
+          channel: "#linuxmasterrace"
   staging:
     values:
       - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
       - irc:
           username: lmrstageboard
+          channel: "#aboftytest"
 
 helmDefaults:
   createNamespace: false
@@ -29,6 +31,7 @@ releases:
       - image:
           tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
       - irc:
+          channel: {{ .Values.irc.channel }}
           username: {{ .Values.irc.username }}
       - gitlab:
           envSlug: {{ requiredEnv "CI_ENVIRONMENT_SLUG" | quote }}
