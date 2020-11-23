@@ -1,8 +1,33 @@
+@use 'Srcery';
+
 .navigation {
   width: 100%;
 
   .navbar {
     border-bottom-right-radius: 0.25em;
     border-bottom-left-radius: 0.25em;
+    color: Srcery.$white;
+
+    .navbar-brand {
+      color: Srcery.$white;
+    }
+
+    .navbar-nav {
+      .nav-link {
+        color: Srcery.$brightblack;
+        -o-transition:.5s;
+        -ms-transition:.5s;
+        -moz-transition:.5s;
+        -webkit-transition:.5s;
+        transition:.5s;
+      }
+      .nav-link:hover {
+        color: Srcery.$white;
+      }
+    }
+
+    .navbar-text {
+      color: Srcery.$brightblack;
+    }
   }
 }

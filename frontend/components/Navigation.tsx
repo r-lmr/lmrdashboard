@@ -17,8 +17,8 @@ const Navigation = (props: IProps) => {
 
   return (
     <div className="navigation">
-      <Navbar className={"navbar"} color="dark" dark expand="md">
-        <NavbarBrand href="/">lmrdashboard</NavbarBrand>
+      <Navbar className={"navbar"} expand="md" dark>
+        <NavbarBrand className={"navbar-brand"} href="/">lmrdashboard</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
