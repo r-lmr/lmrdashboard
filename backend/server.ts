@@ -11,7 +11,6 @@ import { Listener } from './Listener';
 
 const app = Express();
 app.use(cors());
-InitDatabase.CreateTablesIfNotExists();
 
 const resCollection = ResCollection.Instance;
 
@@ -55,8 +54,8 @@ setInterval(() => {
   console.log('Size of resCollection', resCollection.getCollectionSize());
 }, 10000);
 
-DatabaseUserUtils.flushUserTable(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
-
 app.listen(4000, () => {
   console.log('listening on 4000');
+  InitDatabase.CreateTablesIfNotExists();
+  DatabaseUserUtils.flushUserTable(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
 });
