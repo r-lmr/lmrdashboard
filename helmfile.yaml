@@ -31,8 +31,8 @@ releases:
       - image:
           tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
       - irc:
-          channel: {{ .Values.irc.channel }}
-          username: {{ .Values.irc.username }}
+          channel: {{ .Values.irc.channel | quote }}
+          username: {{ .Values.irc.username | quote }}
       - gitlab:
           envSlug: {{ requiredEnv "CI_ENVIRONMENT_SLUG" | quote }}
           projectSlug: {{ requiredEnv "CI_PROJECT_PATH_SLUG" | quote }}
