@@ -1,0 +1,59 @@
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
+environments:
+  production:
+    values:
+      - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
+      - irc:
+          username: lmrdashboard
+          channel: "#linuxmasterrace"
+  staging:
+    values:
+      - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
+      - irc:
+          username: lmrstageboard
+          channel: "#aboftytest"
+
+helmDefaults:
+  createNamespace: false
+
+releases:
+  - name: lmrdashboard
+    chart: ./chart
+    version: 0.7.0
+    namespace: {{ requiredEnv "KUBE_NAMESPACE" }}
+    secrets:
+      - ./secrets/mariadb.yaml
+      - ./secrets/irc_user.yaml
+    values:
+      - image:
+          tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
+      - irc:
+          channel: {{ .Values.irc.channel | quote }}
+          username: {{ .Values.irc.username | quote }}
+      - gitlab:
+          envSlug: {{ requiredEnv "CI_ENVIRONMENT_SLUG" | quote }}
+          projectSlug: {{ requiredEnv "CI_PROJECT_PATH_SLUG" | quote }}
+      - ingress:
+          enabled: true
+          hosts:
+            - host: {{ .Values.host }}
+              paths:
+                - /
+          tls:
+            - secretName: cocaine-farm-tls
+              hosts:
+                - {{ .Values.host }}
+      - mariadb:
+          architecture: standalone
+          auth:
+            database: lmrd
+          primary:
+            persistence:
+              enabled: true
+              storageClass: "ssd"
+              accessModes:
+                - ReadWriteOnce
+              size: 8Gi

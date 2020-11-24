@@ -4,7 +4,8 @@ WORKDIR /lmrdashboard/backend
 COPY . .
 
 ENV NODE_ENV production
-RUN yarn install
+RUN yarn install --production
+RUN yarn cache clean
 
 ENV LMRD_IRC_CHANNEL "#linuxmasterrace" \
     LMRD_IRC_HOST "irc.snoonet.org" \
@@ -16,5 +17,7 @@ ENV LMRD_IRC_CHANNEL "#linuxmasterrace" \
     LMRD_DB_NAME "lmrd" \
     LMRD_DB_USER \
     LMRD_DB_PASS
+
+EXPOSE 4000
 
 CMD [ "yarn", "start" ]
