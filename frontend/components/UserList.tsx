@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import User, { IUser } from "./User";
+import User from "./User";
 import eventSource from "../data/EventSource";
 
 export default function UserList() {
@@ -19,7 +19,7 @@ export default function UserList() {
   return (
     <div>
       <div className={"userlist-header"}>
-        Online users: ({fetchedUsers.length})
+        Online Users: ({fetchedUsers.length})
       </div>
       <div className={"userlist-content"}>
         {fetchedUsers.map((user) => (
