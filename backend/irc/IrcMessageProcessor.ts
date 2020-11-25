@@ -146,11 +146,12 @@ export interface IrcMessage {
 }
 
 type PossibleIrcCommand = 'JOIN' | 'PART' | '353' | 'PING' | 'MODE' | 'PRIVMSG';
-type DuccMessageTrigger = DuccMessageTriggerType.FRIENDS |
-                          DuccMessageTriggerType.KILLERS |
-                          DuccMessageTriggerType.REMINDER;
+type DuccMessageTrigger =
+  | DuccMessageTriggerType.FRIENDS
+  | DuccMessageTriggerType.KILLERS
+  | DuccMessageTriggerType.REMINDER;
 export enum DuccMessageTriggerType {
   FRIENDS = 'fr',
   KILLERS = 'kille',
-  REMINDER = 'reminder'
+  REMINDER = 'reminder',
 }

@@ -37,7 +37,7 @@ scheduleEvent(process.env.LMRD_DUCC_TIME || '09:00', () => {
   setTimeout(() => {
     ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.KILLERS);
   }, 5000);
-})
+});
 
 client.on('end', () => {
   console.log('disconnected from server');

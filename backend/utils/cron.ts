@@ -5,7 +5,7 @@
  * @param triggerThis callback function
  */
 export function scheduleEvent(time: string | undefined, triggerThis: () => void) {
-  if (time === undefined || !time.match(/^\d\d:\d\d$/)){
+  if (time === undefined || !time.match(/^\d\d:\d\d$/)) {
     console.warn('Please specify a time string in the format of hh:mm');
     return;
   }
@@ -14,7 +14,8 @@ export function scheduleEvent(time: string | undefined, triggerThis: () => void)
   const minute = Number(time.split(':')[1]);
 
   // create a Date object at the desired timepoint
-  const startTime = new Date(); startTime.setHours(hour, minute);
+  const startTime = new Date();
+  startTime.setHours(hour, minute);
   const now = new Date();
 
   // increase timepoint by 24 hours if in the past
