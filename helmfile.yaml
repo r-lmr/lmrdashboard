@@ -5,7 +5,7 @@ repositories:
 environments:
   production:
     values:
-      - tagOverride: {{ requiredEnv "CI_COMMIT_TAG" | quote }}
+      - tagOverride: {{ env "CI_COMMIT_TAG" | quote }}
       - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
       - irc:
           username: lmrdashboard
