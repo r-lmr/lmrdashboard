@@ -22,7 +22,6 @@ helmDefaults:
 releases:
   - name: lmrdashboard
     chart: ./chart
-    version: 0.7.0
     namespace: {{ requiredEnv "KUBE_NAMESPACE" }}
     secrets:
       - ./secrets/mariadb.yaml
