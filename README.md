@@ -1,6 +1,17 @@
-# [lmrdashboard](https://lmr.cocaine.farm)
+<h1><a href="https://lmr.cocaine.farm">lmrdashboard</a></h1>
+<p align="center">
+  <a href="https://gitlab.com/cocainefarm/lmrdashboard/-/pipelines" alt="Pipelines">
+    <img src="https://gitlab.com/cocainefarm/lmrdashboard/badges/lmrdashboard/pipeline.svg"/>
+  </a>
+  <a href="https://github.com/aboft/lmrdashboard/blob/lmrdashboard/LICENSE" alt="License">
+    <img src="https://img.shields.io/github/license/aboft/lmrdashboard"/>
+  </a>
+  <a href="https://github.com/aboft/lmrdashboard/releases" alt="Release">
+    <img src="https://img.shields.io/github/v/tag/aboft/lmrdashboard"/>
+  </a>
+</p>
 
-Dashboard displaying various live information about the #linuxmasterrace IRC channel on irc.snoonet.org. Community effort, entirely FOSS.
+Dashboard displaying various live information about the #linuxmasterrace IRC channel on irc.snoonet.org. Community effort, entirely FOSS.  
 
 ## Releasing
 
