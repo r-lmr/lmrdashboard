@@ -1,12 +1,14 @@
 <p align="center">
   <a href="https://lmr.cocaine.farm" alt="">
-    <img src="https://gitlab.com/cocainefarm/lmrdashboard/badges/lmrdashboard/pipeline.svg"/>
+    <img src="https://raw.githubusercontent.com/aboft/lmrdashboard/readme-badges/resources/lmrdlogo.svg"/>
   </a>
 </p>
 <p align="center">
-  <a href="https://lmr.cocaine.farm">lmrdashboard</a>
+  <a href="https://lmr.cocaine.farm" alt="Pipelines">
+    <img src="https://img.shields.io/website?url=https%3A%2F%2Flmr.cocaine.farm%2F"/>
+  </a>
   <a href="https://gitlab.com/cocainefarm/lmrdashboard/-/pipelines" alt="Pipelines">
-    <img src="https://raw.githubusercontent.com/aboft/lmrdashboard/readme-badges/resources/lmrdlogo.svg"/>
+    <img src="https://gitlab.com/cocainefarm/lmrdashboard/badges/lmrdashboard/pipeline.svg"/>
   </a>
   <a href="https://github.com/aboft/lmrdashboard/blob/lmrdashboard/LICENSE" alt="License">
     <img src="https://img.shields.io/github/license/aboft/lmrdashboard"/>
