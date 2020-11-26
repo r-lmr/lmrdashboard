@@ -5,12 +5,14 @@ repositories:
 environments:
   production:
     values:
+      - tagOverride: {{ env "CI_COMMIT_TAG" | quote }}
       - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
       - irc:
           username: lmrdashboard
           channel: "#linuxmasterrace"
   staging:
     values:
+      - tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
       - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
       - irc:
           username: lmrstageboard
@@ -22,14 +24,13 @@ helmDefaults:
 releases:
   - name: lmrdashboard
     chart: ./chart
-    version: 0.7.0
     namespace: {{ requiredEnv "KUBE_NAMESPACE" }}
     secrets:
       - ./secrets/mariadb.yaml
       - ./secrets/irc_user.yaml
     values:
       - image:
-          tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
+          tagOverride: {{ .Values.tagOverride }}
       - irc:
           channel: {{ .Values.irc.channel | quote }}
           username: {{ .Values.irc.username | quote }}
