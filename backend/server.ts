@@ -55,11 +55,6 @@ app.get('/test', async (req, res: Response<any, number>) => {
 // Send additional data when new data arrives from the irc connection
 Listener.addIrcListeners();
 
-// Debug output, can be removed
-setInterval(() => {
-  console.log('Size of resCollection', resCollection.getCollectionSize());
-}, 10000);
-
 app.listen(4000, () => {
   console.log('listening on 4000');
   InitDatabase.CreateTablesIfNotExists();

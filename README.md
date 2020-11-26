@@ -94,7 +94,6 @@ docker-compose up -d
 docker-compose logs -f
 docker-compose down
 ```
-
 Visit `localhost:8080` for a database UI.
 
 ## CI
