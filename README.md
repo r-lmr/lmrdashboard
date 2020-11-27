@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://lmr.cocaine.farm" alt="">
-    <img src="https://raw.githubusercontent.com/aboft/lmrdashboard/readme-badges/resources/lmrdlogo.svg"/>
+    <img src="https://raw.githubusercontent.com/aboft/lmrdashboard/lmrdashboard/resources/lmrdlogo.svg"/>
   </a>
 </p>
 <p align="center">
