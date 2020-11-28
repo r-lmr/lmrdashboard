@@ -1,15 +1,21 @@
 import { Response } from 'express-serve-static-core';
 import sw from 'stopword';
 import { DatabaseMessageUtils, IMessage } from './irc/utils/db/Messages';
-import { DatabaseUserUtils } from './irc/utils/db/Users';
+import { DatabaseUserUtils, RolesNickMap, UserRole } from './irc/utils/db/Users';
 import { DatabaseDuccUtils } from './irc/utils/db/DuccScores';
+import SortedSet from 'collections/sorted-set';
+import { assert } from 'console';
 
 class Sender {
   static async sendUsers(res: Response<any, number>) {
     if (res) {
       const users = await DatabaseUserUtils.getUsers(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
+
+      // Sort users according to rank, within alphabetically
+      const sortedUsers = DatabaseUserUtils.getSortedUsersByRoleAndAlphabetically(users);
+
       res.write('event: users\n');
-      res.write(`data: ${JSON.stringify({ users: users })}`);
+      res.write(`data: ${JSON.stringify({ users: sortedUsers })}`);
       res.write('\n\n');
     }
   }
