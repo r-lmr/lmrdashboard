@@ -16,7 +16,7 @@ class Sender {
 
   static async sendMessages(res: Response<any, number>) {
     if (res) {
-      const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 5);
+      const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 10);
       res.write('event: messages\n');
       res.write(`data: ${JSON.stringify({ messages: messages })}`);
       res.write('\n\n');
@@ -55,7 +55,7 @@ class Sender {
       const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
 
       res.write('event: topWords\n');
-      res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 10) })}`);
+      res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 20) })}`);
       res.write('\n\n');
     }
   }

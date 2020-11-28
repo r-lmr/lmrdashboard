@@ -21,7 +21,7 @@ export default function DuccStatsList(props: IProps) {
   return (
     <div>
       <div className={"duccstatslist-header"}>
-        Top 10 Ducc{" "}
+        Top Ducc{" "}
         {props.type === ScoreType.FRIENDS ? "Friends" : "Killers"}:{" "}
       </div>
       <div className={"duccstatslist-content"}>

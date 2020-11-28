@@ -3,7 +3,7 @@ import { createInterface } from 'readline';
 import dotenv from 'dotenv';
 dotenv.config();
 import { DuccMessageTriggerType, IrcMessage, IrcMessageProcessor } from './IrcMessageProcessor';
-import { scheduleEvent } from '../utils/cron';
+import { scheduleDailyEvent } from '../utils/cron';
 
 const options = {
   host: process.env.LMRD_IRC_HOST,
@@ -31,7 +31,7 @@ rl.on('line', async (line: string) => {
 });
 
 // Daily at 01:00-03:00 CST is best according to aboft => 08:00-10:00 GMT+1 (Server time dependent)
-scheduleEvent(process.env.LMRD_DUCC_TIME || '09:00', () => {
+scheduleDailyEvent(process.env.LMRD_DUCC_TIME || '09:00', () => {
   console.log(`Sending ducc message at ${new Date().toLocaleTimeString('en')}`);
   ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.FRIENDS);
   setTimeout(() => {

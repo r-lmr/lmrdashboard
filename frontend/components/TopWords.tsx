@@ -22,7 +22,7 @@ export default function TopWords() {
       <div className={"topwords-header"}>Current Top Words:</div>
       <Container fluid={"nogutters"}>
         <Row>
-          <Col>
+          <Col md={6}>
             <TopWordsList
               topWords={fetchedTopWords.slice(
                 0,
@@ -30,7 +30,7 @@ export default function TopWords() {
               )}
             />
           </Col>
-          <Col>
+          <Col md={6}>
             <TopWordsList
               topWords={fetchedTopWords.slice(
                 Math.floor(fetchedTopWords.length / 2),

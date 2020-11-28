@@ -21,7 +21,7 @@ export default function MessageList() {
   return (
     <div>
       <div className={"messagelist-header"}>
-        Last 5 messages (
+        Last 10 messages (
         {new Date(fetchedMessages[0].dateCreated).toISOString().split("T")[0]}):
       </div>
       {fetchedMessages.map((message, index) => (
