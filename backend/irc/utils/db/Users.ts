@@ -66,14 +66,11 @@ class DatabaseUserUtils {
    */
   static getSortedUsersByRoleAndAlphabetically(nicksWithRoles: string[]): string[] {
     const rolesNickMap: RolesNickMap = DatabaseUserUtils.getSortedUserMapWithRoles(nicksWithRoles);
-    let sortedUsers: string[] = [];
-    rolesNickMap.forEach((sortedUserSetPerRole: SortedSet<string>, _: UserRole) => {
-      sortedUserSetPerRole.forEach((nickWithRole: string) => {
-        sortedUsers.push(nickWithRole);
-      });
-    });
+    const sortedUsers: string[] = Array.from(rolesNickMap).flatMap(([_, value]) => (value.toArray()));
+
     if (nicksWithRoles.length !== sortedUsers.length)
       console.warn('Sorting users resulted in different number of users');
+
     return sortedUsers;
   }
 }
