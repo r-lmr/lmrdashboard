@@ -2,7 +2,8 @@ import { connect, TLSSocket } from 'tls';
 import { createInterface } from 'readline';
 import dotenv from 'dotenv';
 dotenv.config();
-import { IrcMessage, IrcMessageProcessor } from './IrcMessageProcessor';
+import { DuccMessageTriggerType, IrcMessage, IrcMessageProcessor } from './IrcMessageProcessor';
+import { scheduleEvent } from '../utils/cron';
 
 const options = {
   host: process.env.LMRD_IRC_HOST,
@@ -27,6 +28,15 @@ const ircMessageProcessor = IrcMessageProcessor.Instance(client, joinConfig);
 rl.on('line', async (line: string) => {
   const ircMessage: IrcMessage = ircMessageProcessor.parseMessage(line);
   ircMessageProcessor.processIrcMessage(ircMessage);
+});
+
+// Daily at 01:00-03:00 CST is best according to aboft => 08:00-10:00 GMT+1 (Server time dependent)
+scheduleEvent(process.env.LMRD_DUCC_TIME || '09:00', () => {
+  console.log(`Sending ducc message at ${new Date().toLocaleTimeString('en')}`);
+  ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.FRIENDS);
+  setTimeout(() => {
+    ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.KILLERS);
+  }, 5000);
 });
 
 client.on('end', () => {

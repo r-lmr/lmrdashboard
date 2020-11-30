@@ -3,6 +3,7 @@ import cors from 'cors';
 import './irc/ircconnection';
 import { Response } from 'express-serve-static-core';
 import { Sender } from './Sender';
+import { InitDatabase } from './irc/utils/db/InitDatabase';
 import { DatabaseUserUtils } from './irc/utils/db/Users';
 import { ResCollection } from './ResCollection';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,6 +13,12 @@ const app = Express();
 app.use(cors());
 
 const resCollection = ResCollection.Instance;
+
+app.get('/healthz', async (req, res, next) => {
+  ['/health', '/healthz'].indexOf(req.path.toLowerCase()) >= 0 && ['get', 'head'].indexOf(req.method.toLowerCase()) >= 0
+    ? res.status(200).end()
+    : next();
+});
 
 app.get('/test', async (req, res: Response<any, number>) => {
   const resId = uuidv4();
@@ -48,12 +55,8 @@ app.get('/test', async (req, res: Response<any, number>) => {
 // Send additional data when new data arrives from the irc connection
 Listener.addIrcListeners();
 
-// Debug output, can be removed
-setInterval(() => {
-  console.log('Size of resCollection', resCollection.getCollectionSize());
-}, 10000);
-
-DatabaseUserUtils.flushUserTable(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
 app.listen(4000, () => {
   console.log('listening on 4000');
+  InitDatabase.CreateTablesIfNotExists();
+  DatabaseUserUtils.flushUserTable(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
 });

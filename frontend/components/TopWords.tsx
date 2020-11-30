@@ -1,6 +1,5 @@
 import eventSource from "../data/EventSource";
 import React, { useEffect, useState } from "react";
-import TopWord from "./TopWord";
 import { Container, Row, Col } from "reactstrap";
 import TopWordsList from "./TopWordList";
 
@@ -20,7 +19,7 @@ export default function TopWords() {
 
   return (
     <>
-      <div className={"topwords-header"}>Current top words:</div>
+      <div className={"topwords-header"}>Current Top Words:</div>
       <Container fluid={"nogutters"}>
         <Row>
           <Col>

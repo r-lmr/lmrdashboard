@@ -20,11 +20,11 @@ export default function DuccStatsList(props: IProps) {
 
   return (
     <div>
-      <div className={"userlist-header"}>
+      <div className={"duccstatslist-header"}>
         Top 10 Ducc{" "}
-        {props.type === ScoreType.FRIENDS ? "Befrienders" : "Killers"}:{" "}
+        {props.type === ScoreType.FRIENDS ? "Friends" : "Killers"}:{" "}
       </div>
-      <div className={"userlist-content"}>
+      <div className={"duccstatslist-content"}>
         {fetchedStats.map((duccStat) => (
           <DuccStat
             key={duccStat.user}

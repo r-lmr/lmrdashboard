@@ -1,0 +1,43 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lmrd
+    volumes:
+      - ./backend/irc/utils/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d  # Init the db if it is empty
+      - /opt/data:/var/lib/mysql  # Use data if it exists (ignores the init script)
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Containerfile
+    environment:
+      LMRD_DB_HOST: "db"
+      LMRD_DB_USER: "root"
+      LMRD_DB_PASS: "root"
+      LMRD_DB_NAME: "lmrd"
+      LMRD_IRC_CHANNEL: "#linuxmasterrace"
+    ports:
+      - 4000:4000
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Containerfile
+      args:
+        # Frontend code runs in the browser, doesn't see the container hostname
+        # - NEXT_PUBLIC_LMRD_EVENT_SOURCE=http://backend:4000/test
+        - NEXT_PUBLIC_LMRD_EVENT_SOURCE=http://localhost:4000/test
+    ports:
+      - 3000:80

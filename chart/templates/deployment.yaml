@@ -1,0 +1,172 @@
+{{- $fullname := (include "lmrdashboard.fullname" .) -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "lmrdashboard.fullname" . }}-backend
+  annotations:
+    {{- include "lmrdashboard.annotations" . | nindent 4 }}
+  labels:
+    {{- include "lmrdashboard.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  serviceName: {{ $fullname }}-backend
+  selector:
+    matchLabels:
+      {{- include "lmrdashboard.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- include "lmrdashboard.annotations" . | nindent 8 }}
+      labels:
+        {{- include "lmrdashboard.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.backend.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "lmrdashboard.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.backend.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-backend
+          securityContext:
+            {{- toYaml .Values.backend.securityContext | nindent 12 }}
+          image: {{ .Values.backend.image.repository }}:{{ include "lmrdashboard.imageTag" . }}
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ $fullname }}
+          env:
+            - name: LMRD_IRC_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullname }}-irc-user
+                  key: username
+            - name: LMRD_IRC_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullname }}-irc-user
+                  key: password
+            - name: LMRD_DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullname }}-mariadb
+                  key: mariadb-password
+          ports:
+            - name: backend
+              containerPort: 4000
+              protocol: TCP
+          {{- if .Values.backend.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: backend
+            initialDelaySeconds: {{ .Values.backend.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backend.livenessProbe.periodSeconds }}
+          {{- end }}
+          {{- if .Values.backend.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: backend
+            initialDelaySeconds: {{ .Values.backend.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backend.readinessProbe.periodSeconds }}
+          {{- end }}
+          {{- with .Values.backend.storage }}
+          volumeMounts:
+            - name: {{ .data.name }}
+              mountPath: "/data"
+          {{- end }}
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+      {{- with .Values.backend.storage }}
+      volumes:
+        - name: {{ .data.name }}
+          persistentVolumeClaim:
+            claimName: {{ if .data.existingClaim -}}
+                         {{- .data.existingClaim -}}
+                       {{- else -}}
+                         {{- $fullname }}-{{ .data.name -}}
+                       {{- end }}
+      {{- end }}
+      {{- with .Values.backend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.backend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.backend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+---
+{{- $fullname := (include "lmrdashboard.fullname" .) -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lmrdashboard.fullname" . }}-frontend
+  annotations:
+    {{- include "lmrdashboard.annotations" . | nindent 4 }}
+  labels:
+    {{- include "lmrdashboard.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "lmrdashboard.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- include "lmrdashboard.annotations" . | nindent 8 }}
+      labels:
+        {{- include "lmrdashboard.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.frontend.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "lmrdashboard.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.frontend.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-frontend
+          securityContext:
+            {{- toYaml .Values.frontend.securityContext | nindent 12 }}
+          image: {{ .Values.frontend.image.repository }}:{{ include "lmrdashboard.imageTag" . }}
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - name: frontend
+              containerPort: 80
+              protocol: TCP
+          {{- if .Values.frontend.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: frontend
+            initialDelaySeconds: {{ .Values.frontend.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.frontend.livenessProbe.periodSeconds }}
+          {{- end }}
+          {{- if .Values.frontend.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: frontend
+            initialDelaySeconds: {{ .Values.frontend.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.frontend.readinessProbe.periodSeconds }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+      {{- with .Values.frontend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.frontend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.frontend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

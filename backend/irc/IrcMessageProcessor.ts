@@ -123,6 +123,18 @@ class IrcMessageProcessor {
       }
     }
   }
+
+  private sendPrivMessage(message: string) {
+    this.client.write(`PRIVMSG ${this.joinConfig.channel} :${message}\r\n`);
+  }
+
+  public sendDuccMessage(type: DuccMessageTrigger) {
+    if (type === DuccMessageTriggerType.REMINDER) {
+      this.sendPrivMessage('Reminder to trigger .fr or .kille 🦆');
+      return;
+    }
+    this.sendPrivMessage(`.${type}`);
+  }
 }
 
 export { IrcMessageProcessor };
@@ -134,3 +146,12 @@ export interface IrcMessage {
 }
 
 type PossibleIrcCommand = 'JOIN' | 'PART' | '353' | 'PING' | 'MODE' | 'PRIVMSG';
+type DuccMessageTrigger =
+  | DuccMessageTriggerType.FRIENDS
+  | DuccMessageTriggerType.KILLERS
+  | DuccMessageTriggerType.REMINDER;
+export enum DuccMessageTriggerType {
+  FRIENDS = 'fr',
+  KILLERS = 'kille',
+  REMINDER = 'reminder',
+}

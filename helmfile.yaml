@@ -1,0 +1,91 @@
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
+environments:
+  production:
+    values:
+      - tagOverride: {{ env "CI_COMMIT_TAG" | quote }}
+      - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
+      - irc:
+          username: lmrdashboard
+          channel: "#linuxmasterrace"
+  staging:
+    values:
+      - tagOverride: {{ requiredEnv "CI_COMMIT_SHORT_SHA" | quote }}
+      - host: {{ requiredEnv "CI_ENVIRONMENT_URL" | trimPrefix "https://" | quote }}
+      - irc:
+          username: lmrstageboard
+          channel: "#aboftytest"
+
+helmDefaults:
+  createNamespace: false
+
+releases:
+  - name: lmrdashboard
+    chart: ./chart
+    namespace: {{ requiredEnv "KUBE_NAMESPACE" }}
+    secrets:
+      - ./secrets/mariadb.yaml
+      - ./secrets/irc_user.yaml
+    values:
+      - image:
+          tagOverride: {{ .Values.tagOverride }}
+      - irc:
+          channel: {{ .Values.irc.channel | quote }}
+          username: {{ .Values.irc.username | quote }}
+      - gitlab:
+          envSlug: {{ requiredEnv "CI_ENVIRONMENT_SLUG" | quote }}
+          projectSlug: {{ requiredEnv "CI_PROJECT_PATH_SLUG" | quote }}
+      - ingress:
+          enabled: true
+          hosts:
+            - host: {{ .Values.host }}
+              paths:
+                - /
+          tls:
+            - secretName: cocaine-farm-tls
+              hosts:
+                - {{ .Values.host }}
+      - mariadb:
+          architecture: standalone
+          auth:
+            database: lmrd
+          primary:
+            configuration: |-
+              [mysql]
+              default-character-set=utf8mb4
+              [mysqld]
+              skip-name-resolve
+              explicit_defaults_for_timestamp
+              basedir=/opt/bitnami/mariadb
+              plugin_dir=/opt/bitnami/mariadb/plugin
+              port=3306
+              socket=/opt/bitnami/mariadb/tmp/mysql.sock
+              tmpdir=/opt/bitnami/mariadb/tmp
+              max_allowed_packet=16M
+              bind-address=0.0.0.0
+              pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+              log-error=/opt/bitnami/mariadb/logs/mysqld.log
+              character-set-server=utf8mb4
+              collation-server=utf8mb4_unicode_ci
+              init_connect='SET NAMES utf8mb4'
+              sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
+
+              [client]
+              port=3306
+              socket=/opt/bitnami/mariadb/tmp/mysql.sock
+              default-character-set=UTF8
+              plugin_dir=/opt/bitnami/mariadb/plugin
+
+              [manager]
+              port=3306
+              socket=/opt/bitnami/mariadb/tmp/mysql.sock
+              pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+            persistence:
+              enabled: true
+              storageClass: "ssd"
+              accessModes:
+                - ReadWriteOnce
+              size: 8Gi
