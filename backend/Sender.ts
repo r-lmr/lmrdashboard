@@ -4,7 +4,6 @@ import { DatabaseMessageUtils, IMessage } from './irc/utils/db/Messages';
 import { DatabaseUserUtils, RolesNickMap, UserRole } from './irc/utils/db/Users';
 import { DatabaseDuccUtils } from './irc/utils/db/DuccScores';
 import SortedSet from 'collections/sorted-set';
-import { assert } from 'console';
 
 class Sender {
   static async sendUsers(res: Response<any, number>) {
