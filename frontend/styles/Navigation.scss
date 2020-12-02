@@ -15,11 +15,11 @@
     .navbar-nav {
       .nav-link {
         color: Srcery.$brightblack;
-        -o-transition:.5s;
-        -ms-transition:.5s;
-        -moz-transition:.5s;
-        -webkit-transition:.5s;
-        transition:.5s;
+        -o-transition: 0.5s;
+        -ms-transition: 0.5s;
+        -moz-transition: 0.5s;
+        -webkit-transition: 0.5s;
+        transition: 0.5s;
       }
       .nav-link:hover {
         color: Srcery.$white;

@@ -1,32 +1,45 @@
 import { Response } from 'express-serve-static-core';
 import sw from 'stopword';
 import { DatabaseMessageUtils, IMessage } from './irc/utils/db/Messages';
-import { DatabaseUserUtils } from './irc/utils/db/Users';
+import { DatabaseUserUtils, RolesNickMap, UserRole } from './irc/utils/db/Users';
 import { DatabaseDuccUtils } from './irc/utils/db/DuccScores';
 
 class Sender {
   static async sendUsers(res: Response<any, number>) {
     if (res) {
       const users = await DatabaseUserUtils.getUsers(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
+
+      // Sort users according to rank, within alphabetically
+      const sortedUsers = DatabaseUserUtils.getSortedUsersByRoleAndAlphabetically(users);
+
       res.write('event: users\n');
-      res.write(`data: ${JSON.stringify({ users: users })}`);
+      res.write(`data: ${JSON.stringify({ users: sortedUsers })}`);
       res.write('\n\n');
     }
   }
 
   static async sendMessages(res: Response<any, number>) {
     if (res) {
-      const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 5);
+      const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 15);
       res.write('event: messages\n');
       res.write(`data: ${JSON.stringify({ messages: messages })}`);
       res.write('\n\n');
     }
   }
 
-  static async sendLineCounts(res: Response<any, number>) {
+  static async sendLineCountsLastDays(res: Response<any, number>) {
     if (res) {
-      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDays(5);
-      res.write('event: lineCounts\n');
+      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(5, 'date');
+      res.write('event: lineCountsLastDays\n');
+      res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
+      res.write('\n\n');
+    }
+  }
+
+  static async sendLineCountsHighScores(res: Response<any, number>) {
+    if (res) {
+      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(5, 'count');
+      res.write('event: lineCountsHighScores\n');
       res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
       res.write('\n\n');
     }
@@ -55,7 +68,7 @@ class Sender {
       const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
 
       res.write('event: topWords\n');
-      res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 10) })}`);
+      res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 20) })}`);
       res.write('\n\n');
     }
   }

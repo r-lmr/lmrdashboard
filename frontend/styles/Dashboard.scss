@@ -1,14 +1,12 @@
 @use 'Srcery';
 
 .dashboard-container {
-  font-family: Roboto, "Fira Sans", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Roboto, 'Fira Sans', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1.2em;
   color: Srcery.$white;
   background-color: Srcery.$black;
   padding-top: 2em;
   padding-bottom: 2em;
-  padding-left: 4em;
-  padding-right: 4em;
   scrollbar-width: thin;
   scrollbar-color: steelblue #343a40;
 }
@@ -22,10 +20,10 @@
   background-color: Srcery.$hard_black;
   padding-left: 0.5em;
   padding-right: 0.25em;
-  
+
   .terminal-buttons {
     float: right;
-    
+
     .terminal-button {
       float: right;
       margin-top: 0.25em;

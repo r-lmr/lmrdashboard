@@ -13,7 +13,11 @@ class Listener {
       resCollection.doForAllResInCollection(Sender.sendUsers);
     });
     myEmitter.on('line', async () => {
-      resCollection.doMultipleForAllResInCollection([Sender.sendMessages, Sender.sendLineCounts]);
+      resCollection.doMultipleForAllResInCollection([
+        Sender.sendMessages,
+        Sender.sendLineCountsLastDays,
+        Sender.sendLineCountsHighScores,
+      ]);
     });
     myEmitter.on('friendScore', async () => {
       resCollection.doForAllResInCollection(Sender.sendDuccScores);
