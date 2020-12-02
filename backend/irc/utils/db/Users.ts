@@ -45,22 +45,22 @@ class DatabaseUserUtils {
   private static getUserRole(nickWithRole: string): UserRole {
     if (
       !(
-        nickWithRole.startsWith(UserRoles.OP) ||
-        nickWithRole.startsWith(UserRoles.HOP) ||
-        nickWithRole.startsWith(UserRoles.VOICE)
+        nickWithRole.startsWith(UserRole.OP) ||
+        nickWithRole.startsWith(UserRole.HOP) ||
+        nickWithRole.startsWith(UserRole.VOICE)
       )
     ) {
-      return UserRoles.NONE;
+      return UserRole.NONE;
     }
     return nickWithRole.slice(0, 1) as UserRole;
   }
 
   private static getSortedUserMapWithRoles(nicksWithRoles: string[]): RolesNickMap {
     const rolesNickMap: RolesNickMap = new Map<UserRole, SortedSet<string>>();
-    rolesNickMap.set(UserRoles.OP, new SortedSet<string>());
-    rolesNickMap.set(UserRoles.HOP, new SortedSet<string>());
-    rolesNickMap.set(UserRoles.VOICE, new SortedSet<string>());
-    rolesNickMap.set(UserRoles.NONE, new SortedSet<string>());
+    rolesNickMap.set(UserRole.OP, new SortedSet<string>());
+    rolesNickMap.set(UserRole.HOP, new SortedSet<string>());
+    rolesNickMap.set(UserRole.VOICE, new SortedSet<string>());
+    rolesNickMap.set(UserRole.NONE, new SortedSet<string>());
 
     for (const nickWithRole of nicksWithRoles) {
       const role: UserRole = this.getUserRole(nickWithRole);
@@ -91,8 +91,7 @@ export { DatabaseUserUtils };
 
 export type RolesNickMap = Map<UserRole, SortedSet<string>>;
 
-export type UserRole = UserRoles.OP | UserRoles.HOP | UserRoles.VOICE | UserRoles.NONE;
-enum UserRoles {
+export enum UserRole {
   OP = '@',
   HOP = '%',
   VOICE = '+',
