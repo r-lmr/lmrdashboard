@@ -9,7 +9,6 @@ export default function User(props: IUser) {
 
   return (
     <div>
-      {props.role && roleMap.get(props.role)}
       <span className={`nick-${userHash(props.nick[0].match(/[+|@|%]/) ? props.nick.substring(1) : props.nick) % 16}`}>
         {props.nick}
       </span>
@@ -19,5 +18,4 @@ export default function User(props: IUser) {
 
 export interface IUser {
   nick: string;
-  role?: string;
 }

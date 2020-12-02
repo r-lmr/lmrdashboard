@@ -1,4 +1,5 @@
 import knex from './dbConn';
+import SortedSet from 'collections/sorted-set';
 
 class DatabaseUserUtils {
   static async getUsers(server: string) {
@@ -40,6 +41,60 @@ class DatabaseUserUtils {
       console.log('UNABLE TO DELETE USERS');
     }
   }
+
+  private static getUserRole(nickWithRole: string): UserRole {
+    if (
+      !(
+        nickWithRole.startsWith(UserRoles.OP) ||
+        nickWithRole.startsWith(UserRoles.HOP) ||
+        nickWithRole.startsWith(UserRoles.VOICE)
+      )
+    ) {
+      return UserRoles.NONE;
+    }
+    return nickWithRole.slice(0, 1) as UserRole;
+  }
+
+  private static getSortedUserMapWithRoles(nicksWithRoles: string[]): RolesNickMap {
+    const rolesNickMap: RolesNickMap = new Map<UserRole, SortedSet<string>>();
+    rolesNickMap.set(UserRoles.OP, new SortedSet<string>());
+    rolesNickMap.set(UserRoles.HOP, new SortedSet<string>());
+    rolesNickMap.set(UserRoles.VOICE, new SortedSet<string>());
+    rolesNickMap.set(UserRoles.NONE, new SortedSet<string>());
+
+    for (const nickWithRole of nicksWithRoles) {
+      const role: UserRole = this.getUserRole(nickWithRole);
+      rolesNickMap.get(role)!.push(nickWithRole);
+    }
+
+    return rolesNickMap;
+  }
+
+  /**
+   * Returns a list of strings sorted first by role, then alphabetically
+   * Role precedence: @, %, +
+   * @param nicksWithRoles list of strings of nicks prepended with their role
+   * @returns list of strings of nicks prepended with their role but sorted
+   */
+  static getSortedUsersByRoleAndAlphabetically(nicksWithRoles: string[]): string[] {
+    const rolesNickMap: RolesNickMap = DatabaseUserUtils.getSortedUserMapWithRoles(nicksWithRoles);
+    const sortedUsers: string[] = Array.from(rolesNickMap).flatMap(([_, value]) => value.toArray());
+
+    if (nicksWithRoles.length !== sortedUsers.length)
+      console.warn('Sorting users resulted in different number of users');
+
+    return sortedUsers;
+  }
 }
 
 export { DatabaseUserUtils };
+
+export type RolesNickMap = Map<UserRole, SortedSet<string>>;
+
+export type UserRole = UserRoles.OP | UserRoles.HOP | UserRoles.VOICE | UserRoles.NONE;
+enum UserRoles {
+  OP = '@',
+  HOP = '%',
+  VOICE = '+',
+  NONE = 'NOROLE',
+}

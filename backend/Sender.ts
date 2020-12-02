@@ -1,15 +1,19 @@
 import { Response } from 'express-serve-static-core';
 import sw from 'stopword';
 import { DatabaseMessageUtils, IMessage } from './irc/utils/db/Messages';
-import { DatabaseUserUtils } from './irc/utils/db/Users';
+import { DatabaseUserUtils, RolesNickMap, UserRole } from './irc/utils/db/Users';
 import { DatabaseDuccUtils } from './irc/utils/db/DuccScores';
 
 class Sender {
   static async sendUsers(res: Response<any, number>) {
     if (res) {
       const users = await DatabaseUserUtils.getUsers(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
+
+      // Sort users according to rank, within alphabetically
+      const sortedUsers = DatabaseUserUtils.getSortedUsersByRoleAndAlphabetically(users);
+
       res.write('event: users\n');
-      res.write(`data: ${JSON.stringify({ users: users })}`);
+      res.write(`data: ${JSON.stringify({ users: sortedUsers })}`);
       res.write('\n\n');
     }
   }
@@ -64,7 +68,7 @@ class Sender {
       const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
 
       res.write('event: topWords\n');
-      res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 10) })}`);
+      res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 20) })}`);
       res.write('\n\n');
     }
   }

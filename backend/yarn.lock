@@ -73,6 +73,11 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/collections@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@types/collections/-/collections-5.0.2.tgz#adec0b77c99888a08c70f9ca3954dfa1080c9a7d"
+  integrity sha512-uHcbprJQbpqld77XtYV+001OwRA+bJ1b+z3s5aH2KzPql5LH2HelqX/SudV/OrqGGtlhtEGwC4dK0U25qUDx9A==
+
 "@types/connect@*":
   version "3.4.33"
   resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.33.tgz#31610c901eca573b8713c3330abc6e6b9f588546"
@@ -571,6 +576,13 @@ collection-visit@^1.0.0:
   dependencies:
     map-visit "^1.0.0"
     object-visit "^1.0.0"
+
+collections@^5.1.12:
+  version "5.1.12"
+  resolved "https://registry.yarnpkg.com/collections/-/collections-5.1.12.tgz#270f6c26ddc2930734ae6cc19ad4e8fb412af739"
+  integrity sha512-7WV0gdGlQFHjB//+/5JW4CdMnOlf7fWMMeM3EWvuao7RbK0MeFS01bZOgWmIH5DHDejSutf455QUZ56ZjjROXw==
+  dependencies:
+    weak-map "~1.0.x"
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -2734,6 +2746,11 @@ vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+weak-map@~1.0.x:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/weak-map/-/weak-map-1.0.5.tgz#79691584d98607f5070bd3b70a40e6bb22e401eb"
+  integrity sha1-eWkVhNmGB/UHC9O3CkDmuyLkAes=
 
 which-module@^2.0.0:
   version "2.0.0"

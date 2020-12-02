@@ -20,7 +20,7 @@ export default function Dashboard() {
       <div className={'dashboard-container'}>
         <Container>
           <Row>
-            <Col md>
+            <Col md={3}>
               <UserList />
             </Col>
             <Col md>
@@ -29,13 +29,13 @@ export default function Dashboard() {
             <Col md>
               <LineCountHighScoresList />
             </Col>
-            <Col md>
+            <Col md={2}>
               <DuccStatsList type={ScoreType.FRIENDS} />
             </Col>
-            <Col md>
+            <Col md={2}>
               <DuccStatsList type={ScoreType.KILLERS} />
             </Col>
-            <Col md>
+            <Col md={3}>
               <TopWords />
             </Col>
           </Row>
