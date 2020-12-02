@@ -8,11 +8,15 @@ class DatabaseUserUtils {
   }
 
   static async deleteUser(nick: string, server: string) {
-    await knex('online_users').select('user').where('user', 'like', `%${nick}`).andWhere({ server }).orderBy('user','asc')
-    .then(async retrievedUser => {
-    	console.log(retrievedUser, retrievedUser[0])
-	    await knex('online_users').del().where({user: retrievedUser[0]["user"]})
-    })
+    await knex('online_users')
+      .select('user')
+      .where('user', 'like', `%${nick}`)
+      .andWhere({ server })
+      .orderBy('user', 'asc')
+      .then(async (retrievedUser) => {
+        console.log(retrievedUser, retrievedUser[0]);
+        await knex('online_users').del().where({ user: retrievedUser[0]['user'] });
+      });
     console.log(`User ${nick} has parted.`);
   }
 

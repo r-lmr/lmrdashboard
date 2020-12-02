@@ -93,13 +93,13 @@ class IrcMessageProcessor {
     await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
     myEmitter.emit('part');
   }
-  
+
   private async processKick(ircMessage: IrcMessage) {
     const nick = ircMessage.params[1];
     await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
     myEmitter.emit('part');
   }
-  
+
   private async processPrivMsg(ircMessage: IrcMessage) {
     if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000) return;
 
