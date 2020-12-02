@@ -17,7 +17,7 @@ export default function LineCountList() {
   }, []);
   return (
     <div>
-      <div className={'messagelist-header'}> Line Count Scoreboard : </div>
+      <div className={'messagelist-header'}>Lines Scoreboard:</div>
       {fetchedLines.map((line, index) => (
         <LineCount
           key={(line.date || Date.now()).toString().concat(index.toString())}

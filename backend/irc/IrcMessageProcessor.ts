@@ -49,7 +49,6 @@ class IrcMessageProcessor {
         command: input[1],
         params: input.slice(2),
       };
-      console.log(msg);
       return msg;
     } else {
       const input = line.split(' ');
