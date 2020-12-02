@@ -1,7 +1,8 @@
 import UserList from "../components/UserList";
 import { Container, Row, Col } from "reactstrap";
 import MessageList from "./MessageList";
-import LineCountList from "./LineCountList";
+import LineCountLastDaysList from "./LineCountLastDaysList";
+import LineCountHighScoresList from "./LineCountHighScoresList";
 import TopWords from "./TopWords";
 import DuccStatsList, { ScoreType } from "./DuccStatsList";
 
@@ -23,7 +24,10 @@ export default function Dashboard() {
               <UserList />
             </Col>
             <Col md>
-              <LineCountList />
+              <LineCountLastDaysList />
+            </Col>
+            <Col md>
+              <LineCountHighScoresList />
             </Col>
             <Col md>
               <DuccStatsList type={ScoreType.FRIENDS} />

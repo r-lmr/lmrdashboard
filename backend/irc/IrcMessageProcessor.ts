@@ -24,7 +24,9 @@ class IrcMessageProcessor {
     this.parseCommands.set('MODE', this.processMode.bind(this));
     this.parseCommands.set('JOIN', this.processJoin.bind(this));
     this.parseCommands.set('353', this.process353.bind(this));
-    this.parseCommands.set('PART', this.processPart.bind(this));
+    this.parseCommands.set('PART', this.processPartAndQuit.bind(this));
+    this.parseCommands.set('KICK', this.processKick.bind(this));
+    this.parseCommands.set('QUIT', this.processPartAndQuit.bind(this));
     this.parseCommands.set('PRIVMSG', this.processPrivMsg.bind(this));
   }
 
@@ -47,6 +49,7 @@ class IrcMessageProcessor {
         command: input[1],
         params: input.slice(2),
       };
+      console.log(msg);
       return msg;
     } else {
       const input = line.split(' ');
@@ -69,7 +72,7 @@ class IrcMessageProcessor {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != this.joinConfig.user) {
       const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
-      await DatabaseUserUtils.addUser(nick!, server);
+      await DatabaseUserUtils.addUser(nick!, this.joinConfig.channel);
       myEmitter.emit('join');
     }
   }
@@ -85,13 +88,18 @@ class IrcMessageProcessor {
     });
   }
 
-  private async processPart(ircMessage: IrcMessage) {
+  private async processPartAndQuit(ircMessage: IrcMessage) {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
-    const server = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
-    await DatabaseUserUtils.deleteUser(nick!, server);
+    await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
     myEmitter.emit('part');
   }
-
+  
+  private async processKick(ircMessage: IrcMessage) {
+    const nick = ircMessage.params[1];
+    await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
+    myEmitter.emit('part');
+  }
+  
   private async processPrivMsg(ircMessage: IrcMessage) {
     if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000) return;
 
@@ -99,7 +107,7 @@ class IrcMessageProcessor {
     const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     const server = ircMessage.params[0];
-
+    console.log(nick, msg);
     // Process non bot messages
     if (!ircMessage.prefix?.toLowerCase().split('@')[1].includes('/bot/')) {
       await DatabaseMessageUtils.saveLine(nick!, server, msg);
@@ -145,7 +153,7 @@ export interface IrcMessage {
   params: string[];
 }
 
-type PossibleIrcCommand = 'JOIN' | 'PART' | '353' | 'PING' | 'MODE' | 'PRIVMSG';
+type PossibleIrcCommand = 'JOIN' | 'PART' | 'QUIT' | 'KICK' | '353' | 'PING' | 'MODE' | 'PRIVMSG';
 type DuccMessageTrigger =
   | DuccMessageTriggerType.FRIENDS
   | DuccMessageTriggerType.KILLERS

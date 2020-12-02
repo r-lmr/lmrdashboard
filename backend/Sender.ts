@@ -16,17 +16,26 @@ class Sender {
 
   static async sendMessages(res: Response<any, number>) {
     if (res) {
-      const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 5);
+      const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 15);
       res.write('event: messages\n');
       res.write(`data: ${JSON.stringify({ messages: messages })}`);
       res.write('\n\n');
     }
   }
 
-  static async sendLineCounts(res: Response<any, number>) {
+  static async sendLineCountsLastDays(res: Response<any, number>) {
     if (res) {
-      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDays(5);
-      res.write('event: lineCounts\n');
+      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(5, 'date');
+      res.write('event: lineCountsLastDays\n');
+      res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
+      res.write('\n\n');
+    }
+  }
+
+  static async sendLineCountsHighScores(res: Response<any, number>) {
+    if (res) {
+      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(5, 'count');
+      res.write('event: lineCountsHighScores\n');
       res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
       res.write('\n\n');
     }

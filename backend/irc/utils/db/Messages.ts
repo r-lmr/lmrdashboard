@@ -50,8 +50,8 @@ class DatabaseMessageUtils {
     return parsedLines;
   }
 
-  static async getLineCountLastNDays(days: number): Promise<ILineCount[]> {
-    const lineCounts = await knex('line_counts').select().orderBy('date', 'desc').limit(days);
+  static async getLineCountLastNDaysOrMax(days: number, orderColumn: string): Promise<ILineCount[]> {
+    const lineCounts = await knex('line_counts').select().orderBy(orderColumn, 'desc').limit(days);
     const parsedLineCounts = lineCounts.map((entry) => {
       return {
         date: this.formatDate(entry['date']),

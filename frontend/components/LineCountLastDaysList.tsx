@@ -12,7 +12,7 @@ export default function LineCountList() {
     eventSource.onmessage = (e) => {
       console.log(e);
     };
-    eventSource.addEventListener("lineCounts", (e: any) => {
+    eventSource.addEventListener("lineCountsLastDays", (e: any) => {
       const data = JSON.parse(e.data);
       setFetchedLines(data.lineCounts);
     });
