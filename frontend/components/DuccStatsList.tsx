@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import eventSource from "../data/EventSource";
-import DuccStat, { IDuccStat } from "./DuccStat";
+import React, { useEffect, useState } from 'react';
+import eventSource from '../data/EventSource';
+import DuccStat, { IDuccStat } from './DuccStat';
 
 export default function DuccStatsList(props: IProps) {
-  const [fetchedStats, setFetchedStats] = useState<IDuccStat[]>([
-    { user: "Loading..." },
-  ]);
+  const [fetchedStats, setFetchedStats] = useState<IDuccStat[]>([{ user: 'Loading...' }]);
 
   useEffect(() => {
     eventSource.onmessage = (e) => {
       console.log(e);
     };
-    eventSource.addEventListener("duccScore", (e: any) => {
+    eventSource.addEventListener('duccScore', (e: any) => {
       const data = JSON.parse(e.data);
       console.log(data.duccScores);
       setFetchedStats(data.duccScores[props.type]);
@@ -20,17 +18,12 @@ export default function DuccStatsList(props: IProps) {
 
   return (
     <div>
-      <div className={"duccstatslist-header"}>
-        Top 10 Ducc{" "}
-        {props.type === ScoreType.FRIENDS ? "Friends" : "Killers"}:{" "}
+      <div className={'duccstatslist-header'}>
+        Top 10 Ducc {props.type === ScoreType.FRIENDS ? 'Friends' : 'Killers'}:{' '}
       </div>
-      <div className={"duccstatslist-content"}>
+      <div className={'duccstatslist-content'}>
         {fetchedStats.map((duccStat) => (
-          <DuccStat
-            key={duccStat.user}
-            user={duccStat.user}
-            duccs={duccStat.duccs}
-          />
+          <DuccStat key={duccStat.user} user={duccStat.user} duccs={duccStat.duccs} />
         ))}
       </div>
     </div>
@@ -42,6 +35,6 @@ interface IProps {
 }
 
 export enum ScoreType {
-  FRIENDS = "duccFriends",
-  KILLERS = "duccKillers",
+  FRIENDS = 'duccFriends',
+  KILLERS = 'duccKillers',
 }
