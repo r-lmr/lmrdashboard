@@ -8,6 +8,7 @@ metadata:
   labels:
     {{- include "lmrdashboard.labels" . | nindent 4 }}
 spec:
+  podManagementPolicy: Parallel
   replicas: 1
   serviceName: {{ $fullname }}-backend
   selector:
