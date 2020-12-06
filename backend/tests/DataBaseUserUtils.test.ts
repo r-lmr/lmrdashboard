@@ -6,7 +6,7 @@ test('nicks with roles to be sorted are sorted successfully', () => {
   expect(sortedUsers).toEqual(['@A', '@B', '%A', '%B', '+A', '+B', 'A', 'B']);
 });
 
-test('warning is printed if number of users differ', () => {
+test('warning is printed if number of users differs', () => {
   const consoleSpy = jest.spyOn(console, 'warn');
   const users = ['+B', '@B', '+A', 'A', '%A', 'B', '%B', '@A', '@A']; // Notice duplicate user
   const sortedUsers = DatabaseUserUtils.getSortedUsersByRoleAndAlphabetically(users);

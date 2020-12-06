@@ -15,7 +15,7 @@ const mockJoinConfig: JoinConfig = {
   bufferTime: new Date(),
 };
 
-test('raw line is parsed to correct IrcMessage object', () => {
+test('raw IRC message line is parsed to correct IrcMessage object', () => {
   const ircMessageProcessor = IrcMessageProcessor.Instance(null!, mockJoinConfig);
   const ircMessage: IrcMessage = ircMessageProcessor.parseMessage(mockLine);
   expect(ircMessage).toEqual(mockIrcMessage);
