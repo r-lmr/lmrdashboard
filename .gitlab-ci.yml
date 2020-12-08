@@ -139,9 +139,9 @@ test:e2e:
     - yarn test:e2e-ci
   artifacts:
     when: always
+    paths:
+      - results/
     reports:
-      paths:
-        - results/
       junit:
         - results/test-output-*.xml
 
