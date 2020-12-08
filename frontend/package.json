@@ -17,7 +17,7 @@
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "test:e2e-local": "yarn run compose:up & wait-on http://localhost:3000 && yarn run cy:run && yarn run compose:down",
-    "test:e2e-ci": "start-server-and-test http://localhost:3000 cy:run"
+    "test:e2e-ci": "start-server-and-test start-server http://localhost:3000 cy:run"
   },
   "dependencies": {
     "@types/eventsource": "^1.1.5",
