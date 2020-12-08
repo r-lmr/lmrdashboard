@@ -137,6 +137,13 @@ test:e2e:
     - cd frontend
     - yarn install
     - yarn test:e2e-ci
+  artifacts:
+    when: always
+    reports:
+      paths:
+        - results/
+      junit:
+        - results/test-output-*.xml
 
 
 ##################################################
