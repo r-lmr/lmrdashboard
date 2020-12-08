@@ -118,7 +118,7 @@ build:frontend:tags:
 # E2E TEST
 test:e2e:
   stage: test-e2e
-  image: cypress/browsers:chrome69
+  image: cypress/browsers:latest
   services: 
     - name: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_SHORT_SHA}"
       alias: backend
