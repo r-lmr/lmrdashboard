@@ -15,7 +15,7 @@
     "compose:logs": "docker-compose logs -f",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test:e2e": "yarn run compose:up & wait-on http://localhost:3000 && yarn run cy:run"
+    "test:e2e": "yarn run compose:up & wait-on http://localhost:3000 && yarn run cy:run && yarn run compose:down"
   },
   "dependencies": {
     "@types/eventsource": "^1.1.5",

@@ -2,6 +2,7 @@ stages:
   - lint
   - test
   - build
+  - test-e2e
   - deploy
 
 include:
@@ -78,9 +79,6 @@ build:backend:lmrdashboard:
   variables:
     DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_SHORT_SHA}"
     BUILD_PATH: "backend/"
-  only:
-    refs:
-      - lmrdashboard
 
 build:backend:tags:
   extends: .container:base
@@ -102,9 +100,6 @@ build:frontend:lmrdashboard:
     DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_SHORT_SHA}"
     BUILD_PATH: "frontend/"
     BUILD_ARGS: "NEXT_PUBLIC_LMRD_EVENT_SOURCE=https://lmr.staging.cocaine.farm/api/test"
-  only:
-    refs:
-      - lmrdashboard
 
 build:frontend:tags:
   extends: .container:base
@@ -117,6 +112,41 @@ build:frontend:tags:
   only:
     refs:
       - tags
+
+
+##################################################
+# E2E TEST
+test:e2e:
+  stage: test-e2e
+  image: $BASE_IMAGE
+  services: 
+    - name: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_SHORT_SHA}"
+      alias: backend
+    - name: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_SHORT_SHA}"
+      alias: frontend
+    - name: mariadb:latest
+      alias: db
+  variables:
+    MYSQL_ROOT_PASSWORD: "root"
+    MYSQL_DATABASE: "lmrd"
+    LMRD_DB_HOST: "db"
+    LMRD_DB_USER: "root"
+    LMRD_DB_PASS: "root"
+    LMRD_DB_NAME: "lmrd"
+    LMRD_IRC_CHANNEL: "#aboftytest"
+    # Ideally the event source should be this, but it's already defined as a build arg 
+    # when the image is pushed to the registry, can it be overwritten?
+    NEXT_PUBLIC_LMRD_EVENT_SOURCE: "http://localhost:4000/test"  # Or http://backend:4000/test
+  # Ports ?! https://gitlab.com/gitlab-org/gitlab-runner/-/issues/2460
+  # Having 3000 for the frontend and 4000 for the backend exposed/mapped, just like in the
+  # docker-compose would be great.
+  # The backend container file already exposes 4000 so maybe a mapping isn't needed there.
+  # The frontend container file exposes only 80 by default due to nginx, but that could be used as well
+  # if the base URL is changed/dynamic to e.g. http://frontend:80 in cypress.
+  script: 
+    - cd frontend
+    - yarn cy:run
+
 
 ##################################################
 # DEPLOY
