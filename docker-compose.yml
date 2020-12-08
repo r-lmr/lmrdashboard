@@ -27,7 +27,7 @@ services:
       LMRD_DB_USER: "root"
       LMRD_DB_PASS: "root"
       LMRD_DB_NAME: "lmrd"
-      LMRD_IRC_CHANNEL: "#linuxmasterrace"
+      LMRD_IRC_CHANNEL: "#aboftytest"
     ports:
       - 4000:4000
 
