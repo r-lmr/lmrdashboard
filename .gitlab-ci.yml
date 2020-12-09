@@ -140,10 +140,10 @@ test:e2e:
   artifacts:
     when: always
     paths:
-      - results/
+      - ${CI_PROJECT_DIR}/frontend/results/
     reports:
       junit:
-        - results/test-output-*.xml
+        - ${CI_PROJECT_DIR}/frontend/results/test-output-*.xml
 
 
 ##################################################
