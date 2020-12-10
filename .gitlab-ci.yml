@@ -2,6 +2,7 @@ stages:
   - lint
   - test
   - build
+  - test-e2e
   - deploy
 
 include:
@@ -78,9 +79,6 @@ build:backend:lmrdashboard:
   variables:
     DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_SHORT_SHA}"
     BUILD_PATH: "backend/"
-  only:
-    refs:
-      - lmrdashboard
 
 build:backend:tags:
   extends: .container:base
@@ -102,9 +100,6 @@ build:frontend:lmrdashboard:
     DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_SHORT_SHA}"
     BUILD_PATH: "frontend/"
     BUILD_ARGS: "NEXT_PUBLIC_LMRD_EVENT_SOURCE=https://lmr.staging.cocaine.farm/api/test"
-  only:
-    refs:
-      - lmrdashboard
 
 build:frontend:tags:
   extends: .container:base
@@ -117,6 +112,39 @@ build:frontend:tags:
   only:
     refs:
       - tags
+
+
+##################################################
+# E2E TEST
+test:e2e:
+  stage: test-e2e
+  image: cypress/browsers:latest
+  services: 
+    - name: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_SHORT_SHA}"
+      alias: backend
+    - name: mariadb:latest
+      alias: db
+  variables:
+    MYSQL_ROOT_PASSWORD: "root"
+    MYSQL_DATABASE: "lmrd"
+    LMRD_DB_HOST: "db"
+    LMRD_DB_USER: "root"
+    LMRD_DB_PASS: "root"
+    LMRD_DB_NAME: "lmrd"
+    LMRD_IRC_CHANNEL: "#aboftytest"
+    NEXT_PUBLIC_LMRD_EVENT_SOURCE: "http://backend:4000"
+  script: 
+    - cd frontend
+    - yarn install
+    - yarn test:e2e-ci
+  artifacts:
+    when: always
+    paths:
+      - ${CI_PROJECT_DIR}/frontend/results/
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}/frontend/results/test-output-*.xml
+
 
 ##################################################
 # DEPLOY

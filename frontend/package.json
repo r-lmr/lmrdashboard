@@ -8,8 +8,16 @@
     "build": "next build",
     "export": "next build && next export",
     "start": "next start",
+    "start-server": "yarn run export && yarn run start",
     "lint": "eslint .",
-    "pretty": "prettier --write ."
+    "pretty": "prettier --write .",
+    "compose:up": "docker-compose up -d",
+    "compose:down": "docker-compose down",
+    "compose:logs": "docker-compose logs -f",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "test:e2e-local": "yarn run compose:up & wait-on http://localhost:3000 && yarn run cy:run && yarn run compose:down",
+    "test:e2e-ci": "start-server-and-test start-server http://localhost:3000 cy:run"
   },
   "dependencies": {
     "@types/eventsource": "^1.1.5",
@@ -28,8 +36,11 @@
     "@types/reactstrap": "^8.5.2",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
+    "cypress": "^6.1.0",
     "eslint": "^7.12.1",
+    "eslint-plugin-cypress": "^2.11.2",
     "prettier": "2.1.2",
+    "start-server-and-test": "^1.11.6",
     "typescript": "^4.0.3"
   }
 }
