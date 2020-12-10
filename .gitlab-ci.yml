@@ -68,6 +68,24 @@ backend:tsc:
     - yarn install
     - yarn run tsc
 
+backend:test:
+  extends: .test
+  <<: *cache_backend
+  variables:
+    JEST_JUNIT_OUTPUT_DIR: "${CI_PROJECT_DIR}/backend/results"
+  script:
+    - cd backend
+    - yarn install
+    - yarn jest --ci --silent
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    when: always
+    paths:
+      - ${CI_PROJECT_DIR}/backend/results/
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}/backend/results/junit.xml
+
 
 ##################################################
 # BUILD
