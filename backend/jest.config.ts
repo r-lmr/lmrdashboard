@@ -10,5 +10,8 @@ const config: Config.InitialOptions = {
     },
   },
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
+  collectCoverage: true,
+  coverageDirectory: 'results/coverage',
+  reporters: [ "default", "jest-junit" ],
 };
 export default config;
