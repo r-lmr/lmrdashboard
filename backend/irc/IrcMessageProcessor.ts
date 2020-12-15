@@ -49,10 +49,12 @@ class IrcMessageProcessor {
         command: input[1],
         params: input.slice(2),
       };
+      console.log('FIRST RETURN MSG IrcMessageProcessor\n', msg);
       return msg;
     } else {
       const input = line.split(' ');
       const msg = { command: input[0], params: [input[1]] };
+      console.log('SECOND RETURN MSG IrcMessageProcessor\n', msg);
       return msg;
     }
   }
@@ -91,12 +93,14 @@ class IrcMessageProcessor {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
     myEmitter.emit('part');
+    console.log('RUNNING PARTANDQUIT');
   }
 
   private async processKick(ircMessage: IrcMessage) {
     const nick = ircMessage.params[1];
     await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
     myEmitter.emit('part');
+    console.log('RUNNING KICK');
   }
 
   private async processPrivMsg(ircMessage: IrcMessage) {
