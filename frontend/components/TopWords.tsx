@@ -24,6 +24,11 @@ export default function TopWords() {
         <Row>
           <Col md={6}>
             <TopWordsList
+              topWords={fetchedTopWords.slice(0, Math.floor(fetchedTopWords.length / 2))}
+            />
+          </Col>
+          <Col md={6}>
+            <TopWordsList
               topWords={fetchedTopWords.slice(Math.floor(fetchedTopWords.length / 2), fetchedTopWords.length)}
             />
           </Col>

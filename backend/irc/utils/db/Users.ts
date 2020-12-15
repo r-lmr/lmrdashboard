@@ -16,6 +16,7 @@ class DatabaseUserUtils {
       .orderBy('user', 'asc')
       .then(async (retrievedUser) => {
         if (retrievedUser.length > 1 && retrievedUser[0]) {
+          console.log('ATTEMPTING TO DELETE PARTED/QUIT USER ' + nick);
           console.log(retrievedUser, retrievedUser[0]);
           await knex('online_users').del().where({ user: retrievedUser[0]['user'] });
         }
@@ -25,6 +26,7 @@ class DatabaseUserUtils {
   }
 
   static async addUser(nick: string, server: string) {
+    console.log('ATTEMPTING TO ADD NEW USER ' + nick);
     await knex('online_users')
       .insert({ user: nick, server })
       .catch((e) => {
