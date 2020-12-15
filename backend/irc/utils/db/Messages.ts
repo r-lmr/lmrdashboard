@@ -37,10 +37,6 @@ class DatabaseMessageUtils {
     from.setDate(today.getDate() - days);
 
     const lines = await knex('last_messages').where('dateCreated', '>=', this.formatDate(from)).select();
-<<<<<<< HEAD
-
-=======
->>>>>>> ui-redesign
     const parsedLines = lines.map((entry) => {
       return {
         nick: entry['user'],
