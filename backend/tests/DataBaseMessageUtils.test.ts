@@ -31,7 +31,8 @@ tracker.on('query', (query: { response: (arg0: any) => void; }) => {
 describe('foo', () => {
   it('bar', async () => {
     const res = await DatabaseMessageUtils.getLinesLastNDays(1);
-    const users = res;
-    console.log(users);
+    const messages = res;
+    console.log(messages);
+    expect(messages.length).toEqual(2);
   });
 });
