@@ -38,7 +38,8 @@ class DatabaseMessageUtils {
 
     const lines = await knex('last_messages')
       .select()
-      .whereBetween('dateCreated', [this.formatDate(from), this.formatDate(today)]);
+      .whereBetween('dateCreated', [from, today]);
+
     const parsedLines = lines.map((entry) => {
       return {
         nick: entry['user'],
