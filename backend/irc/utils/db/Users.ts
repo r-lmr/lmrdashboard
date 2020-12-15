@@ -15,9 +15,12 @@ class DatabaseUserUtils {
       .andWhere({ server })
       .orderBy('user', 'asc')
       .then(async (retrievedUser) => {
-        console.log(retrievedUser, retrievedUser[0]);
-        await knex('online_users').del().where({ user: retrievedUser[0]['user'] });
-      });
+        if (retrievedUser.length > 1 && retrievedUser[0]) {
+          console.log(retrievedUser, retrievedUser[0]);
+          await knex('online_users').del().where({ user: retrievedUser[0]['user'] });
+        }
+      })
+      .catch((e) => console.log('ERROR IN Users.deleteUser', e));
     console.log(`User ${nick} has parted.`);
   }
 

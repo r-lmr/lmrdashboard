@@ -23,25 +23,27 @@ export default function Dashboard() {
             <Col md={3}>
               <UserList />
             </Col>
-            <Col md={2}>
+            <Col md={3}>
               <LineCountLastDaysList />
             </Col>
-            <Col md={2}>
+            <Col md={3}>
               <LineCountHighScoresList />
             </Col>
-            <Col md={2}>
+            <Col md={3}>
+              <TopWords />
+            </Col>
+          </Row>
+          <Row style={{ justifyContent: 'center', marginTop: '1em' }}>
+            <Col md={4}>
               <DuccStatsList type={ScoreType.FRIENDS} />
             </Col>
-            <Col md={3}>
+            <Col md={4}>
               <DuccStatsList type={ScoreType.KILLERS} />
             </Col>
           </Row>
-          <Row>
-            <Col md={8}>
+          <Row style={{ marginTop: '1em' }}>
+            <Col md={12}>
               <MessageList />
-            </Col>
-            <Col md={4}>
-              <TopWords />
             </Col>
           </Row>
         </Container>

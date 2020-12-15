@@ -1,10 +1,10 @@
-import { JoinConfig } from "../irc/ircconnection";
-import { IrcMessage, IrcMessageProcessor } from "../irc/IrcMessageProcessor";
+import { JoinConfig } from '../irc/ircconnection';
+import { IrcMessage, IrcMessageProcessor } from '../irc/IrcMessageProcessor';
 
 const mockIrcMessage = {
   prefix: ':Nick!Nick@snoonet.org/user/Nick',
   command: 'PRIVMSG',
-  params: ['#channel', ':myMessage']
+  params: ['#channel', ':myMessage'],
 };
 
 const mockLine = ':Nick!Nick@snoonet.org/user/Nick PRIVMSG #channel :myMessage';

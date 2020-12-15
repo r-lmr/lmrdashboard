@@ -1,4 +1,4 @@
-import { DatabaseUserUtils } from "../irc/utils/db/Users";
+import { DatabaseUserUtils } from '../irc/utils/db/Users';
 
 test('nicks with roles to be sorted are sorted successfully', () => {
   const users = ['+B', '@B', '+A', 'A', '%A', 'B', '%B', '@A'];
