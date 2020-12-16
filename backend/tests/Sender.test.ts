@@ -7,6 +7,7 @@ const tracker = require('mock-knex').getTracker();
 
 const db = knex({
   client: 'mysql',
+  connection: { port: 3307 }
 });
 
 
