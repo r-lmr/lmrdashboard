@@ -16,12 +16,11 @@ describe('test Sender with mocked database response', () => {
 
   beforeAll((done) => {
     LAST_MESSAGES = last_messages;
-    LAST_MESSAGES.map((lm, idx) => {
+    LAST_MESSAGES.forEach((lm, idx) => {
       const date = new Date();
       date.setDate(date.getDate() - idx);
       lm.dateCreated = date;
-
-    })
+    });
     mockDb.mock(db);
     done();
   });
@@ -69,6 +68,6 @@ describe('test Sender with mocked database response', () => {
     expected.set("best", 1);
     expected.set("love", 1);
 
-    expect(sortedWordCounts).toEqual(expected)
+    expect(sortedWordCounts).toEqual(expected);
   });
 });
