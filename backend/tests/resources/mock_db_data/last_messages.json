@@ -1,0 +1,20 @@
+[
+  {
+    "user": "foo",
+    "server": "#bar",
+    "message": "Linux is good",
+    "dateCreated": "{DATE}"
+  },
+  {
+    "user": "asdf",
+    "server": "#fdsa",
+    "message": "Windows is bad, I don't need it, thanks I'm good",
+    "dateCreated": "{DATE}"
+  },
+  {
+    "user": "one",
+    "server": "#two",
+    "message": "Linux is the best, I love Linux",
+    "dateCreated": "{DATE}"
+  }
+]

@@ -76,7 +76,7 @@ backend:test:
   script:
     - cd backend
     - yarn install
-    - yarn jest --ci --silent
+    - yarn test:unit-ci
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     when: always

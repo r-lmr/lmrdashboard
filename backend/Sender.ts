@@ -45,10 +45,7 @@ class Sender {
     }
   }
 
-  static async sendTopWords(res: Response<any, number>) {
-    if (res) {
-      console.log(`sendTopWords at ${new Date()}`);
-
+  static async getTopWords(): Promise<Map<string, number>> {
       const messages: IMessage[] = await DatabaseMessageUtils.getLinesLastNDays(7);
       const wordCounts: Map<string, number> = new Map<string, number>();
 
@@ -66,7 +63,13 @@ class Sender {
       }
 
       const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
+      return sortedWordCounts;
+  }
 
+  static async sendTopWords(res: Response<any, number>) {
+    if (res) {
+      console.log(`sendTopWords at ${new Date()}`);
+      const sortedWordCounts = await this.getTopWords();
       res.write('event: topWords\n');
       res.write(`data: ${JSON.stringify({ topWords: Array.from(sortedWordCounts.entries()).slice(0, 20) })}`);
       res.write('\n\n');
