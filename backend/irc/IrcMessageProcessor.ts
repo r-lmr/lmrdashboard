@@ -10,15 +10,16 @@ import myEmitter from './utils/emitter';
  */
 class IrcMessageProcessor {
   private static _instance: IrcMessageProcessor;
+  private modeState: boolean = false;
   private readonly client: TLSSocket;
   private readonly joinConfig: JoinConfig;
-  private readonly names: string[];
+  //private readonly names: string[];
   private readonly parseCommands: Map<PossibleIrcCommand, (ircMessage: IrcMessage) => void>;
 
   private constructor(client: TLSSocket, joinConfig: JoinConfig) {
     this.client = client;
     this.joinConfig = joinConfig;
-    this.names = [];
+    //this.names = [];
     this.parseCommands = new Map<PossibleIrcCommand, (ircMessage: IrcMessage) => void>();
     this.parseCommands.set('PING', this.processPing.bind(this));
     this.parseCommands.set('MODE', this.processMode.bind(this));
@@ -49,12 +50,12 @@ class IrcMessageProcessor {
         command: input[1],
         params: input.slice(2),
       };
-      console.log('FIRST RETURN MSG IrcMessageProcessor\n', msg);
+      // console.log('FIRST RETURN MSG IrcMessageProcessor\n', msg);
       return msg;
     } else {
       const input = line.split(' ');
       const msg = { command: input[0], params: [input[1]] };
-      console.log('SECOND RETURN MSG IrcMessageProcessor\n', msg);
+      // console.log('SECOND RETURN MSG IrcMessageProcessor\n', msg);
       return msg;
     }
   }
@@ -63,28 +64,79 @@ class IrcMessageProcessor {
     this.client.write('PONG ' + ircMessage.params[0] + '\r\n');
   }
 
-  private processMode() {
-    this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
+  private async runNamesCommand() {
+    // we can run this command when more than one user is being
+    // role promoted or revoked (ex. netsplits)
     this.client.write(`NAMES ${this.joinConfig.channel}\r\n`);
     console.log(`TRYING TO JOIN ${this.joinConfig.channel}`);
+  }
+
+  private async processMode(ircMessage: IrcMessage) {
+    console.log('MODE FUNCTION\n', ircMessage);
+    if (!this.modeState) {
+      // we only want to try and join once but we can toggle the state
+      // to prevent multiple joins and only run NAMES when needed
+      this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
+      this.runNamesCommand();
+      this.modeState = true;
+    } else if (ircMessage.params[1].match(/[o|h|v]/)) {
+      // update joining user with role
+      const [server, roleMode, user] = ircMessage.params;
+      // anything that has more than just one promotion parameter
+      // we will let the NAMES parse handle the assignment of roles
+      if (roleMode.length > 2) {
+        DatabaseUserUtils.flushUserTable(this.joinConfig.channel);
+        console.log('running names command');
+        this.runNamesCommand();
+        return;
+      }
+      let role = null;
+      switch (roleMode) {
+        case '+o':
+          role = '@';
+          break;
+        case '+h':
+          role = '%';
+          break;
+        case '+v':
+          role = '+';
+          break;
+        case '-v' || '-h' || '-o':
+          role = null;
+          break;
+      }
+      await DatabaseUserUtils.updateUser(user, role, server);
+      myEmitter.emit('join');
+    }
   }
 
   private async processJoin(ircMessage: IrcMessage) {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != this.joinConfig.user) {
       const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
-      await DatabaseUserUtils.addUser(nick!, this.joinConfig.channel);
+      console.log(nick, nick!.slice(1), nick![0] === '@' || '%' || '+');
+      nick!.match(/^[@|%|+]/)
+        ? await DatabaseUserUtils.addUser(nick!.slice(1), nick![0], server)
+        : await DatabaseUserUtils.addUser(nick!, null, server);
       myEmitter.emit('join');
     }
   }
 
   private async process353(ircMessage: IrcMessage) {
+    console.log(ircMessage);
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
-      if (name.length > 0 && !this.names.includes(name)) {
-        this.names.push(name);
+      if (name.length > 0) {
+        // I'm removing refs to this.names as it does not seem to be needed
+        // no sense in tracking names in a local array when stored in DB as well
+        //&& !this.names.includes(name)
+        // this.names.push(name);
         const server = '#' + ircMessage.params[2].slice(1);
-        await DatabaseUserUtils.addUser(name, server);
+        // add second column to host the role to join with nick later
+        name.match(/^[@|%|+]/)
+          ? await DatabaseUserUtils.addUser(name.slice(1), name[0], server)
+          : await DatabaseUserUtils.addUser(name, null, server);
+        myEmitter.emit('join');
       }
     });
   }
@@ -166,3 +218,17 @@ export enum DuccMessageTriggerType {
   KILLERS = 'kille',
   REMINDER = 'reminder',
 }
+
+type ModeOP = {
+  mode: '+o';
+  role: '@';
+};
+type ModeHOP = {
+  mode: '+h';
+  role: '%';
+};
+type ModeVoice = {
+  mode: '+v';
+  role: '+';
+};
+type ModeRole = ModeOP | ModeHOP | ModeVoice;
