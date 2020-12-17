@@ -11,7 +11,7 @@ class ResCollection {
     this.collection = new Map();
   }
 
-  public static get Instance() {
+  public static get Instance(): ResCollection {
     return this._instance || (this._instance = new this());
   }
 
@@ -31,7 +31,7 @@ class ResCollection {
     this.collection.set(id, res);
   }
 
-  public removeFromCollection(id: string) {
+  public removeFromCollection(id: string): void {
     console.log(`Removing res from collection of size ${this.collection.size}`);
     if (!this.collection.has(id)) {
       console.warn('Response not found in Response collection when trying to delete');

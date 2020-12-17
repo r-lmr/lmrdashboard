@@ -1,7 +1,7 @@
 import knex from './dbConn';
 
 class DatabaseDuccUtils {
-  static async insertOrUpdateDuccScores(scores: string[], duccType: string) {
+  static async insertOrUpdateDuccScores(scores: string[], duccType: string): Promise<void> {
     let tableName: string;
     duccType == 'friend' ? (tableName = 'friend_scores') : (tableName = 'killer_scores');
     scores.forEach(async (scoreString) => {
@@ -20,7 +20,7 @@ class DatabaseDuccUtils {
     });
   }
 
-  static async retrieveAllDuccScores() {
+  static async retrieveAllDuccScores(): Promise<ReturnDuccScores> {
     const allFriendScoresDB = await knex('friend_scores').select().orderBy('duccs', 'desc').limit(10);
     const allKillerScoresDB = await knex('killer_scores').select().orderBy('duccs', 'desc').limit(10);
     const duccFriends = allFriendScoresDB.map((entry) => {
@@ -32,4 +32,15 @@ class DatabaseDuccUtils {
     return { duccFriends, duccKillers };
   }
 }
+
+interface DuccScores {
+  user: string;
+  duccs: number;
+}
+
+interface ReturnDuccScores {
+  duccFriends: DuccScores[];
+  duccKillers: DuccScores[];
+}
+
 export { DatabaseDuccUtils };

@@ -2,7 +2,7 @@ import knex from './dbConn';
 import SortedSet from 'collections/sorted-set';
 
 class DatabaseUserUtils {
-  static async getUsers(server: string) {
+  static async getUsers(server: string): Promise<string[]> {
     const allUsersDB = await knex('online_users').select(['user', 'role']).where({ server });
     const allUsers = allUsersDB.map((user) => {
       // join user and role
@@ -14,7 +14,7 @@ class DatabaseUserUtils {
     return allUsers;
   }
 
-  static async deleteUser(nick: string, server: string) {
+  static async deleteUser(nick: string, server: string): Promise<void> {
     // delete user from db
     await knex('online_users')
       .del()
@@ -23,7 +23,7 @@ class DatabaseUserUtils {
     console.log(`User ${nick} has parted.`);
   }
 
-  static async addUser(nick: string, role: string | null, server: string) {
+  static async addUser(nick: string, role: string | null, server: string): Promise<void> {
     console.log('ATTEMPTING TO ADD NEW USER ' + nick);
     await knex('online_users')
       .insert({ user: nick, role, server })
@@ -35,12 +35,12 @@ class DatabaseUserUtils {
     console.log(`${nick} has come online.`);
   }
 
-  static async updateUser(nick: string, role: string | null, server: string) {
+  static async updateUser(nick: string, role: string | null, server: string): Promise<void> {
     await knex('online_users').where({ user: nick, server }).update({ role });
     console.log('UPDATED USER ROLE FOR ' + nick);
   }
 
-  static async flushUserTable(server: string) {
+  static async flushUserTable(server: string): Promise<void> {
     try {
       console.log('ATTEMPTING TO CLEAR USER TABLE ON START');
       const deleted = await knex('online_users').where({ server }).del();

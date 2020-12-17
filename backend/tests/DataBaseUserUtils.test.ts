@@ -1,5 +1,5 @@
 import { DatabaseUserUtils } from '../irc/utils/db/Users';
-import { IrcMessage, IrcMessageProcessor } from '../irc/IrcMessageProcessor';
+import { IrcMessageProcessor } from '../irc/IrcMessageProcessor';
 import { JoinConfig } from '../irc/ircconnection';
 
 const mockJoinConfig: JoinConfig = {

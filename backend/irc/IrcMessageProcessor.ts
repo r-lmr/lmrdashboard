@@ -10,7 +10,7 @@ import myEmitter from './utils/emitter';
  */
 class IrcMessageProcessor {
   private static _instance: IrcMessageProcessor;
-  private modeState: boolean = false;
+  private modeState = false;
   private readonly client: TLSSocket;
   private readonly joinConfig: JoinConfig;
   //private readonly names: string[];
