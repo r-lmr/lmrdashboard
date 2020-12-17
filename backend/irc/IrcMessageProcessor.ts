@@ -63,7 +63,7 @@ class IrcMessageProcessor {
     this.client.write('PONG ' + ircMessage.params[0] + '\r\n');
   }
 
-  private async runNamesCommand(): void {
+  private runNamesCommand(): void {
     // we can run this command when more than one user is being
     // role promoted or revoked (ex. netsplits)
     this.client.write(`NAMES ${this.joinConfig.channel}\r\n`);
