@@ -19,7 +19,6 @@ class IrcMessageProcessor {
   private constructor(client: TLSSocket, joinConfig: JoinConfig) {
     this.client = client;
     this.joinConfig = joinConfig;
-    //this.names = [];
     this.parseCommands = new Map<PossibleIrcCommand, (ircMessage: IrcMessage) => void>();
     this.parseCommands.set('PING', this.processPing.bind(this));
     this.parseCommands.set('MODE', this.processMode.bind(this));
@@ -60,19 +59,19 @@ class IrcMessageProcessor {
     }
   }
 
-  private processPing(ircMessage: IrcMessage) {
+  private processPing(ircMessage: IrcMessage): void {
     this.client.write('PONG ' + ircMessage.params[0] + '\r\n');
   }
 
-  private async runNamesCommand() {
+  private async runNamesCommand(): void {
     // we can run this command when more than one user is being
     // role promoted or revoked (ex. netsplits)
     this.client.write(`NAMES ${this.joinConfig.channel}\r\n`);
     console.log(`TRYING TO JOIN ${this.joinConfig.channel}`);
   }
 
-  private async processMode(ircMessage: IrcMessage) {
-    console.log('MODE FUNCTION\n', ircMessage);
+  private async processMode(ircMessage: IrcMessage): Promise<void> {
+    // console.log('MODE FUNCTION\n', ircMessage);
     if (!this.modeState) {
       // we only want to try and join once but we can toggle the state
       // to prevent multiple joins and only run NAMES when needed
@@ -110,7 +109,7 @@ class IrcMessageProcessor {
     }
   }
 
-  private async processJoin(ircMessage: IrcMessage) {
+  private async processJoin(ircMessage: IrcMessage): Promise<void> {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != this.joinConfig.user) {
       const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
@@ -122,15 +121,10 @@ class IrcMessageProcessor {
     }
   }
 
-  private async process353(ircMessage: IrcMessage) {
-    console.log(ircMessage);
+  private async process353(ircMessage: IrcMessage): Promise<void> {
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
       if (name.length > 0) {
-        // I'm removing refs to this.names as it does not seem to be needed
-        // no sense in tracking names in a local array when stored in DB as well
-        //&& !this.names.includes(name)
-        // this.names.push(name);
         const server = '#' + ircMessage.params[2].slice(1);
         // add second column to host the role to join with nick later
         name.match(/^[@|%|+]/)
@@ -162,7 +156,7 @@ class IrcMessageProcessor {
     const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     const server = ircMessage.params[0];
-    console.log(nick, msg);
+
     // Process non bot messages
     if (!ircMessage.prefix?.toLowerCase().split('@')[1].includes('/bot/')) {
       await DatabaseMessageUtils.saveLine(nick!, server, msg);
@@ -218,17 +212,3 @@ export enum DuccMessageTriggerType {
   KILLERS = 'kille',
   REMINDER = 'reminder',
 }
-
-type ModeOP = {
-  mode: '+o';
-  role: '@';
-};
-type ModeHOP = {
-  mode: '+h';
-  role: '%';
-};
-type ModeVoice = {
-  mode: '+v';
-  role: '+';
-};
-type ModeRole = ModeOP | ModeHOP | ModeVoice;

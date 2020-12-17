@@ -1,10 +1,10 @@
 apiVersion: v2
-appVersion: 0.3.1
+appVersion: 0.3.0
 description: A Helm chart for Kubernetes
 name: lmrdashboard
 type: application
-version: 0.3.1
+version: 0.3.0
 dependencies:
   - name: mariadb
-    version: "9.0.1"
-    repository: "https://charts.bitnami.com/bitnami"
+    version: '9.0.1'
+    repository: 'https://charts.bitnami.com/bitnami'
