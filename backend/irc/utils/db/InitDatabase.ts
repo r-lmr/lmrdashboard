@@ -46,6 +46,7 @@ class InitDatabase {
         if (!exists) {
           return knex.schema.createTable('online_users', function (table) {
             table.string('user').unique();
+            table.string('role');
             table.string('server');
             table.dateTime('dateCreated').defaultTo(knex.fn.now());
           });
