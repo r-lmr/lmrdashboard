@@ -35,9 +35,18 @@ class DatabaseUserUtils {
     console.log(`${nick} has come online.`);
   }
 
-  static async updateUser(nick: string, role: string | null, server: string): Promise<void> {
-    await knex('online_users').where({ user: nick, server }).update({ role });
-    console.log('UPDATED USER ROLE FOR ' + nick);
+  static async updateUser(role: string | null, server: string, oldNick: string, newNick?: string): Promise<void> {
+    if (role && role === 'KEEP') {
+      await knex('online_users')
+        .where({ user: oldNick, server })
+        .update({ user: newNick ?? oldNick });
+      console.log(`CHANGED NICK ${oldNick} TO ${newNick}`);
+    } else {
+      await knex('online_users')
+        .where({ user: oldNick, server })
+        .update({ role, user: newNick ?? oldNick });
+      console.log('UPDATED USER ROLE FOR ' + oldNick);
+    }
   }
 
   static async flushUserTable(server: string): Promise<void> {

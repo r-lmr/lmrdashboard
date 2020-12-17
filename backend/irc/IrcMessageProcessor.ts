@@ -28,6 +28,7 @@ class IrcMessageProcessor {
     this.parseCommands.set('KICK', this.processKick.bind(this));
     this.parseCommands.set('QUIT', this.processPartAndQuit.bind(this));
     this.parseCommands.set('PRIVMSG', this.processPrivMsg.bind(this));
+    this.parseCommands.set('NICK', this.processNick.bind(this));
   }
 
   public static Instance(client: TLSSocket, joinConfig: JoinConfig) {
@@ -49,7 +50,7 @@ class IrcMessageProcessor {
         command: input[1],
         params: input.slice(2),
       };
-      // console.log('FIRST RETURN MSG IrcMessageProcessor\n', msg);
+      console.log('FIRST RETURN MSG IrcMessageProcessor\n', msg);
       return msg;
     } else {
       const input = line.split(' ');
@@ -104,9 +105,16 @@ class IrcMessageProcessor {
           role = null;
           break;
       }
-      await DatabaseUserUtils.updateUser(user, role, server);
+      await DatabaseUserUtils.updateUser(role, server, user);
       myEmitter.emit('join');
     }
+  }
+
+  private async processNick(ircMessage: IrcMessage): Promise<void> {
+    const oldNick = ircMessage.prefix?.split('!')[0].slice(1);
+    const newNick = ircMessage.params[0];
+    await DatabaseUserUtils.updateUser('KEEP', this.joinConfig.channel, oldNick!, newNick);
+    myEmitter.emit('join');
   }
 
   private async processJoin(ircMessage: IrcMessage): Promise<void> {
@@ -202,7 +210,7 @@ export interface IrcMessage {
   params: string[];
 }
 
-type PossibleIrcCommand = 'JOIN' | 'PART' | 'QUIT' | 'KICK' | '353' | 'PING' | 'MODE' | 'PRIVMSG';
+type PossibleIrcCommand = 'JOIN' | 'PART' | 'QUIT' | 'KICK' | '353' | 'PING' | 'MODE' | 'PRIVMSG' | 'NICK';
 type DuccMessageTrigger =
   | DuccMessageTriggerType.FRIENDS
   | DuccMessageTriggerType.KILLERS
