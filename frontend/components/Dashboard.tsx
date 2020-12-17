@@ -20,29 +20,29 @@ export default function Dashboard() {
       <div className={'dashboard-container'}>
         <Container>
           <Row>
-            <Col md={3} className={'component'}>
+            <Col md={3}>
               <UserList />
             </Col>
-            <Col md={3} className={'component'}>
+            <Col md={3}>
               <LineCountLastDaysList />
             </Col>
-            <Col md={3} className={'component'}>
+            <Col md={3}>
               <LineCountHighScoresList />
             </Col>
-            <Col md={3} className={'component'}>
+            <Col md={3}>
               <TopWords />
             </Col>
           </Row>
           <Row style={{ justifyContent: 'center', marginTop: '1em' }}>
-            <Col md={4} className={'component'}>
+            <Col md={4}>
               <DuccStatsList type={ScoreType.FRIENDS} />
             </Col>
-            <Col md={4} className={'component'}>
+            <Col md={4}>
               <DuccStatsList type={ScoreType.KILLERS} />
             </Col>
           </Row>
           <Row style={{ marginTop: '1em' }}>
-            <Col md={12} className={'component'}>
+            <Col md={12}>
               <MessageList />
             </Col>
           </Row>

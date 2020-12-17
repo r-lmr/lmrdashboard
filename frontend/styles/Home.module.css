@@ -121,8 +121,4 @@
     width: 100%;
     flex-direction: column;
   }
-  .component {
-    margin-top: 2em;
-    margin-bottom: 2em;
-  }
 }
