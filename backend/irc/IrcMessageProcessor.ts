@@ -13,7 +13,6 @@ class IrcMessageProcessor {
   private modeState = false;
   private readonly client: TLSSocket;
   private readonly joinConfig: JoinConfig;
-  //private readonly names: string[];
   private readonly parseCommands: Map<PossibleIrcCommand, (ircMessage: IrcMessage) => void>;
 
   private constructor(client: TLSSocket, joinConfig: JoinConfig) {
@@ -86,7 +85,6 @@ class IrcMessageProcessor {
   }
 
   private async processMode(ircMessage: IrcMessage): Promise<void> {
-    // console.log('MODE FUNCTION\n', ircMessage);
     if (!this.modeState) {
       // we only want to try and join once but we can toggle the state
       // to prevent multiple joins and only run NAMES when needed
