@@ -29,6 +29,8 @@ class IrcMessageProcessor {
     this.parseCommands.set('QUIT', this.processPartAndQuit.bind(this));
     this.parseCommands.set('PRIVMSG', this.processPrivMsg.bind(this));
     this.parseCommands.set('NICK', this.processNick.bind(this));
+    this.parseCommands.set('900', this.process900Command.bind(this));
+    this.parseCommands.set('NOTICE', this.processNotice.bind(this));
   }
 
   public static Instance(client: TLSSocket, joinConfig: JoinConfig) {
@@ -41,6 +43,7 @@ class IrcMessageProcessor {
   }
 
   public parseMessage(line: string): IrcMessage {
+    console.log(line);
     // for some reason the chunks arent always parsed as lines by \r\n
     // so we force it by splitting our selves then loop over each line
     if (line[0] == ':') {
@@ -68,7 +71,18 @@ class IrcMessageProcessor {
     // we can run this command when more than one user is being
     // role promoted or revoked (ex. netsplits)
     this.client.write(`NAMES ${this.joinConfig.channel}\r\n`);
-    console.log(`TRYING TO JOIN ${this.joinConfig.channel}`);
+  }
+
+  private process900Command(ircMessage: IrcMessage): void {
+    this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
+  }
+
+  private processNotice(ircMessage: IrcMessage): void {
+    const param = ircMessage.params.slice(1).join(' ');
+    if (param.includes('assword incorrect')) {
+      console.log('PASSWORD IS NOT CORRECT. NICK WILL BE CHANGED.');
+      this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
+    }
   }
 
   private async processMode(ircMessage: IrcMessage): Promise<void> {
@@ -76,7 +90,7 @@ class IrcMessageProcessor {
     if (!this.modeState) {
       // we only want to try and join once but we can toggle the state
       // to prevent multiple joins and only run NAMES when needed
-      this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
+
       this.runNamesCommand();
       this.modeState = true;
     } else if (ircMessage.params[1].match(/[o|h|v]/)) {
@@ -210,7 +224,18 @@ export interface IrcMessage {
   params: string[];
 }
 
-type PossibleIrcCommand = 'JOIN' | 'PART' | 'QUIT' | 'KICK' | '353' | 'PING' | 'MODE' | 'PRIVMSG' | 'NICK';
+type PossibleIrcCommand =
+  | 'JOIN'
+  | 'PART'
+  | 'QUIT'
+  | 'KICK'
+  | '353'
+  | 'PING'
+  | 'MODE'
+  | 'PRIVMSG'
+  | 'NICK'
+  | '900'
+  | 'NOTICE';
 type DuccMessageTrigger =
   | DuccMessageTriggerType.FRIENDS
   | DuccMessageTriggerType.KILLERS
