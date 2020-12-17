@@ -4,7 +4,7 @@
  * @param time Hour and minute in the format of hh:mm
  * @param triggerThis callback function
  */
-export function scheduleDailyEvent(time: string | undefined, triggerThis: () => void) {
+export function scheduleDailyEvent(time: string | undefined, triggerThis: () => void): void {
   if (time === undefined || !time.match(/^\d\d:\d\d$/)) {
     console.warn('Please specify a time string in the format of hh:mm');
     return;

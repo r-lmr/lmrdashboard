@@ -1,11 +1,11 @@
 import { Response } from 'express-serve-static-core';
 import sw from 'stopword';
 import { DatabaseMessageUtils, IMessage } from './irc/utils/db/Messages';
-import { DatabaseUserUtils, RolesNickMap, UserRole } from './irc/utils/db/Users';
+import { DatabaseUserUtils } from './irc/utils/db/Users';
 import { DatabaseDuccUtils } from './irc/utils/db/DuccScores';
 
 class Sender {
-  static async sendUsers(res: Response<any, number>) {
+  static async sendUsers(res: Response<any, number>): Promise<void> {
     if (res) {
       const users = await DatabaseUserUtils.getUsers(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
 
@@ -18,7 +18,7 @@ class Sender {
     }
   }
 
-  static async sendMessages(res: Response<any, number>) {
+  static async sendMessages(res: Response<any, number>): Promise<void> {
     if (res) {
       const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 15);
       res.write('event: messages\n');
@@ -27,7 +27,7 @@ class Sender {
     }
   }
 
-  static async sendLineCountsLastDays(res: Response<any, number>) {
+  static async sendLineCountsLastDays(res: Response<any, number>): Promise<void> {
     if (res) {
       const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(5, 'date');
       res.write('event: lineCountsLastDays\n');
@@ -36,7 +36,7 @@ class Sender {
     }
   }
 
-  static async sendLineCountsHighScores(res: Response<any, number>) {
+  static async sendLineCountsHighScores(res: Response<any, number>): Promise<void> {
     if (res) {
       const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(5, 'count');
       res.write('event: lineCountsHighScores\n');
@@ -45,7 +45,7 @@ class Sender {
     }
   }
 
-  static async sendTopWords(res: Response<any, number>) {
+  static async sendTopWords(res: Response<any, number>): Promise<void> {
     if (res) {
       console.log(`sendTopWords at ${new Date()}`);
 
@@ -72,7 +72,7 @@ class Sender {
       res.write('\n\n');
     }
   }
-  static async sendDuccScores(res: Response<any, number>) {
+  static async sendDuccScores(res: Response<any, number>): Promise<void> {
     if (res) {
       const duccScores = await DatabaseDuccUtils.retrieveAllDuccScores();
       res.write('event: duccScore\n');

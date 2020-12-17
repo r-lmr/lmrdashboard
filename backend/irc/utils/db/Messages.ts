@@ -14,7 +14,7 @@ class DatabaseMessageUtils {
     return [year, month, day].join('-');
   }
 
-  static async getLines(server: string, numOfLines: number) {
+  static async getLines(server: string, numOfLines: number): Promise<IMessage[]> {
     const messages = await knex('last_messages')
       .select()
       .where({ server })
@@ -70,7 +70,7 @@ class DatabaseMessageUtils {
     return parsedLineCount[0];
   }
 
-  static async saveLine(nick: string, server: string, message: string) {
+  static async saveLine(nick: string, server: string, message: string): Promise<void> {
     await knex('last_messages').insert({ user: nick, server, message });
     const lineCountExists = await knex('line_counts').select().whereRaw('date = date(?)', [new Date()]);
     if (lineCountExists.length < 1) {
