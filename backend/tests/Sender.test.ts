@@ -17,8 +17,6 @@ describe('test Sender with mocked database response', () => {
       lm.dateCreated = date;
     });
     mockDb.mock(knex);
-    console.log("process.env.LMRD_DB_HOST", process.env.LMRD_DB_HOST);
-    console.log("process.env.LMRD_DB_PORT", process.env.LMRD_DB_PORT);
     done();
   });
 
