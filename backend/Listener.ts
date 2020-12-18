@@ -3,7 +3,7 @@ import { ResCollection } from './ResCollection';
 import { Sender } from './Sender';
 
 class Listener {
-  static addIrcListeners() {
+  static addIrcListeners(): void {
     const resCollection = ResCollection.Instance;
 
     myEmitter.on('join', async () => {

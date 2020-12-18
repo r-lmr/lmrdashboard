@@ -9,11 +9,12 @@ const options = {
   host: process.env.LMRD_IRC_HOST,
 };
 
-const client: TLSSocket = connect(Number(process.env.LMRD_IRC_PORT) || 6697, options, async () => {
+const client: TLSSocket = connect(Number(process.env.LMRD_IRC_PORT) || 6697, options, () => {
   console.log('connected to server!');
+  // client.write(`CONNECT `)
   client.write(`PASS ${process.env.LMRD_IRC_PASS}\r\n`);
-  client.write(`USER ${process.env.LMRD_IRC_USER} localhost * :LMR Dashboard Connection\r\n`);
   client.write(`NICK ${process.env.LMRD_IRC_USER} \r\n`);
+  client.write(`USER ${process.env.LMRD_IRC_USER} localhost * :LMR Dashboard Connection\r\n`);
 });
 const rl = createInterface({ input: client, crlfDelay: Infinity });
 
