@@ -1,15 +1,9 @@
-import knex from 'knex';
 import mockDb from 'mock-knex';
 import last_messages from './resources/mock_db_data/last_messages.json'
 import { DatabaseMessageUtils } from '../irc/utils/db/Messages';
 import { Sender } from '../Sender';
+import knex from '../irc/utils/db/dbConn'
 const tracker = require('mock-knex').getTracker();
-
-const db = knex({
-  client: 'mysql',
-  connection: { port: 3307 }
-});
-
 
 let LAST_MESSAGES: { user: string; server: string; message: string; dateCreated: Date | string; }[] = []
 
@@ -22,12 +16,14 @@ describe('test Sender with mocked database response', () => {
       date.setDate(date.getDate() - idx);
       lm.dateCreated = date;
     });
-    mockDb.mock(db);
+    mockDb.mock(knex);
+    console.log("process.env.LMRD_DB_HOST", process.env.LMRD_DB_HOST);
+    console.log("process.env.LMRD_DB_PORT", process.env.LMRD_DB_PORT);
     done();
   });
 
   afterAll((done) => {
-    mockDb.unmock(db);
+    mockDb.unmock(knex);
     done();
   });
 
