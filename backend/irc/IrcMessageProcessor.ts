@@ -52,7 +52,6 @@ class IrcMessageProcessor {
         command: input[1],
         params: input.slice(2),
       };
-      console.log('FIRST RETURN MSG IrcMessageProcessor\n', msg);
       return msg;
     } else {
       const input = line.split(' ');
@@ -97,7 +96,7 @@ class IrcMessageProcessor {
       // anything that has more than just one promotion parameter
       // we will let the NAMES parse handle the assignment of roles
       if (roleMode.length > 2) {
-        DatabaseUserUtils.flushUserTable(this.joinConfig.channel);
+        DatabaseUserUtils.flushUserTable();
         console.log('running names command');
         this.runNamesCommand();
         return;
@@ -117,7 +116,7 @@ class IrcMessageProcessor {
           role = null;
           break;
       }
-      await DatabaseUserUtils.updateUser(role, server, user);
+      await DatabaseUserUtils.updateUser(role, user);
       myEmitter.emit('join');
     }
   }
@@ -125,18 +124,17 @@ class IrcMessageProcessor {
   private async processNick(ircMessage: IrcMessage): Promise<void> {
     const oldNick = ircMessage.prefix?.split('!')[0].slice(1);
     const newNick = ircMessage.params[0];
-    await DatabaseUserUtils.updateUser('KEEP', this.joinConfig.channel, oldNick!, newNick);
+    await DatabaseUserUtils.updateUser('KEEP', oldNick!, newNick);
     myEmitter.emit('join');
   }
 
   private async processJoin(ircMessage: IrcMessage): Promise<void> {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != this.joinConfig.user) {
-      const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
       console.log(nick, nick!.slice(1), nick![0] === '@' || '%' || '+');
       nick!.match(/^[@|%|+]/)
-        ? await DatabaseUserUtils.addUser(nick!.slice(1), nick![0], server)
-        : await DatabaseUserUtils.addUser(nick!, null, server);
+        ? await DatabaseUserUtils.addUser(nick!.slice(1), nick![0])
+        : await DatabaseUserUtils.addUser(nick!, null);
       myEmitter.emit('join');
     }
   }
@@ -145,11 +143,10 @@ class IrcMessageProcessor {
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
       if (name.length > 0) {
-        const server = '#' + ircMessage.params[2].slice(1);
         // add second column to host the role to join with nick later
         name.match(/^[@|%|+]/)
-          ? await DatabaseUserUtils.addUser(name.slice(1), name[0], server)
-          : await DatabaseUserUtils.addUser(name, null, server);
+          ? await DatabaseUserUtils.addUser(name.slice(1), name[0])
+          : await DatabaseUserUtils.addUser(name, null);
         myEmitter.emit('join');
       }
     });
@@ -157,14 +154,14 @@ class IrcMessageProcessor {
 
   private async processPartAndQuit(ircMessage: IrcMessage) {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
-    await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
+    await DatabaseUserUtils.deleteUser(nick!);
     myEmitter.emit('part');
     console.log('RUNNING PARTANDQUIT');
   }
 
   private async processKick(ircMessage: IrcMessage) {
     const nick = ircMessage.params[1];
-    await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
+    await DatabaseUserUtils.deleteUser(nick!);
     myEmitter.emit('part');
     console.log('RUNNING KICK');
   }

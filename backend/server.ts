@@ -59,5 +59,5 @@ Listener.addIrcListeners();
 app.listen(4000, () => {
   console.log('listening on 4000');
   InitDatabase.CreateTablesIfNotExists();
-  DatabaseUserUtils.flushUserTable(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
+  DatabaseUserUtils.flushUserTable();
 });

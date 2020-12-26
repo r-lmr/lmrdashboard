@@ -46,9 +46,9 @@ LMRD_DB_USER=<user>
 LMRD_DB_PASS=<password>
 LMRD_IRC_HOST=irc.snoonet.org
 LMRD_IRC_PORT=6697
-LMRD_IRC_CHANNEL=#linuxmasterrace
-LMRD_IRC_USER=lmrdashboard
-LMRD_IRC_PASS=<password or empty>
+LMRD_IRC_CHANNEL=#aboftytest
+LMRD_IRC_USER=<testusernick>
+LMRD_IRC_PASS=<password>
 ```
 
 #### Database
