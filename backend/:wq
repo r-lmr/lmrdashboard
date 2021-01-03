@@ -43,6 +43,9 @@ class IrcMessageProcessor {
 
   public parseMessage(line: string): IrcMessage {
     console.log(line);
+    const bufLine = Buffer.from(line, 'hex');
+    console.log(bufLine.includes('\u0200'));
+    //console.log(line.includes('0x02'));
     // for some reason the chunks arent always parsed as lines by \r\n
     // so we force it by splitting our selves then loop over each line
     if (line[0] == ':') {
@@ -52,6 +55,7 @@ class IrcMessageProcessor {
         command: input[1],
         params: input.slice(2),
       };
+      //console.log('FIRST RETURN MSG IrcMessageProcessor\n', msg);
       return msg;
     } else {
       const input = line.split(' ');
@@ -77,7 +81,7 @@ class IrcMessageProcessor {
 
   private processNotice(ircMessage: IrcMessage): void {
     const param = ircMessage.params.slice(1).join(' ');
-    if (param.includes('assword incorrect') || param.includes('is not registered')) {
+    if (param.includes('assword incorrect')) {
       console.log('PASSWORD IS NOT CORRECT. NICK WILL BE CHANGED.');
       this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
     }
@@ -96,7 +100,7 @@ class IrcMessageProcessor {
       // anything that has more than just one promotion parameter
       // we will let the NAMES parse handle the assignment of roles
       if (roleMode.length > 2) {
-        DatabaseUserUtils.flushUserTable();
+        DatabaseUserUtils.flushUserTable(this.joinConfig.channel);
         console.log('running names command');
         this.runNamesCommand();
         return;
@@ -116,7 +120,7 @@ class IrcMessageProcessor {
           role = null;
           break;
       }
-      await DatabaseUserUtils.updateUser(role, user);
+      await DatabaseUserUtils.updateUser(role, server, user);
       myEmitter.emit('join');
     }
   }
@@ -124,17 +128,18 @@ class IrcMessageProcessor {
   private async processNick(ircMessage: IrcMessage): Promise<void> {
     const oldNick = ircMessage.prefix?.split('!')[0].slice(1);
     const newNick = ircMessage.params[0];
-    await DatabaseUserUtils.updateUser('KEEP', oldNick!, newNick);
+    await DatabaseUserUtils.updateUser('KEEP', this.joinConfig.channel, oldNick!, newNick);
     myEmitter.emit('join');
   }
 
   private async processJoin(ircMessage: IrcMessage): Promise<void> {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
     if (nick != this.joinConfig.user) {
+      const server: string = ircMessage.params[0].split(' ', 1)[0].replace(':', '');
       console.log(nick, nick!.slice(1), nick![0] === '@' || '%' || '+');
       nick!.match(/^[@|%|+]/)
-        ? await DatabaseUserUtils.addUser(nick!.slice(1), nick![0])
-        : await DatabaseUserUtils.addUser(nick!, null);
+        ? await DatabaseUserUtils.addUser(nick!.slice(1), nick![0], server)
+        : await DatabaseUserUtils.addUser(nick!, null, server);
       myEmitter.emit('join');
     }
   }
@@ -143,10 +148,11 @@ class IrcMessageProcessor {
     ircMessage.params.slice(3).forEach(async (name) => {
       name = name.replace(':', '').trim();
       if (name.length > 0) {
+        const server = '#' + ircMessage.params[2].slice(1);
         // add second column to host the role to join with nick later
         name.match(/^[@|%|+]/)
-          ? await DatabaseUserUtils.addUser(name.slice(1), name[0])
-          : await DatabaseUserUtils.addUser(name, null);
+          ? await DatabaseUserUtils.addUser(name.slice(1), name[0], server)
+          : await DatabaseUserUtils.addUser(name, null, server);
         myEmitter.emit('join');
       }
     });
@@ -154,14 +160,14 @@ class IrcMessageProcessor {
 
   private async processPartAndQuit(ircMessage: IrcMessage) {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
-    await DatabaseUserUtils.deleteUser(nick!);
+    await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
     myEmitter.emit('part');
     console.log('RUNNING PARTANDQUIT');
   }
 
   private async processKick(ircMessage: IrcMessage) {
     const nick = ircMessage.params[1];
-    await DatabaseUserUtils.deleteUser(nick!);
+    await DatabaseUserUtils.deleteUser(nick!, this.joinConfig.channel);
     myEmitter.emit('part');
     console.log('RUNNING KICK');
   }
