@@ -2,8 +2,8 @@ import knex from './dbConn';
 import SortedSet from 'collections/sorted-set';
 
 class DatabaseUserUtils {
-  static async getUsers(server: string): Promise<string[]> {
-    const allUsersDB = await knex('online_users').select(['user', 'role']).where({ server });
+  static async getUsers(): Promise<string[]> {
+    const allUsersDB = await knex('online_users').select(['user', 'role']);
     const allUsers = allUsersDB.map((user) => {
       // join user and role
       if (user['role']) {
@@ -14,19 +14,19 @@ class DatabaseUserUtils {
     return allUsers;
   }
 
-  static async deleteUser(nick: string, server: string): Promise<void> {
+  static async deleteUser(nick: string): Promise<void> {
     // delete user from db
     await knex('online_users')
       .del()
-      .where({ user: nick, server })
+      .where({ user: nick })
       .catch((e) => console.log('ERROR IN Users.deleteUser', e));
     console.log(`User ${nick} has parted.`);
   }
 
-  static async addUser(nick: string, role: string | null, server: string): Promise<void> {
+  static async addUser(nick: string, role: string | null): Promise<void> {
     console.log('ATTEMPTING TO ADD NEW USER ' + nick);
     await knex('online_users')
-      .insert({ user: nick, role, server })
+      .insert({ user: nick, role })
       .catch((e) => {
         //ignore any duplicate users that may be in table
         //example: disconnecting from IRC
@@ -35,24 +35,24 @@ class DatabaseUserUtils {
     console.log(`${nick} has come online.`);
   }
 
-  static async updateUser(role: string | null, server: string, oldNick: string, newNick?: string): Promise<void> {
+  static async updateUser(role: string | null, oldNick: string, newNick?: string): Promise<void> {
     if (role && role === 'KEEP') {
       await knex('online_users')
-        .where({ user: oldNick, server })
+        .where({ user: oldNick })
         .update({ user: newNick ?? oldNick });
       console.log(`CHANGED NICK ${oldNick} TO ${newNick}`);
     } else {
       await knex('online_users')
-        .where({ user: oldNick, server })
+        .where({ user: oldNick })
         .update({ role, user: newNick ?? oldNick });
       console.log('UPDATED USER ROLE FOR ' + oldNick);
     }
   }
 
-  static async flushUserTable(server: string): Promise<void> {
+  static async flushUserTable(): Promise<void> {
     try {
       console.log('ATTEMPTING TO CLEAR USER TABLE ON START');
-      const deleted = await knex('online_users').where({ server }).del();
+      const deleted = await knex('online_users').del();
       if (deleted) console.log('DELETED ALL USERS');
     } catch (e) {
       console.log('UNABLE TO DELETE USERS');

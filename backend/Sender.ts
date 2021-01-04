@@ -7,7 +7,7 @@ import { DatabaseDuccUtils } from './irc/utils/db/DuccScores';
 class Sender {
   static async sendUsers(res: Response<any, number>): Promise<void> {
     if (res) {
-      const users = await DatabaseUserUtils.getUsers(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace');
+      const users = await DatabaseUserUtils.getUsers();
 
       // Sort users according to rank, within alphabetically
       const sortedUsers = DatabaseUserUtils.getSortedUsersByRoleAndAlphabetically(users);
