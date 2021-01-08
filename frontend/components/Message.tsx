@@ -1,4 +1,4 @@
-import userHash from '../data/UserHash';
+import { getNickCSSClass } from '../data/UserHash';
 
 export default function Message(props: IMessage) {
 
@@ -16,7 +16,7 @@ export default function Message(props: IMessage) {
 
   return (
     <div>
-      [{props.dateCreated}] <span className={`nick-${userHash(props.nick) % 16}`}>{props.nick}</span>{formatMessage()}
+      [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>{formatMessage()}
     </div>
   );
 }
