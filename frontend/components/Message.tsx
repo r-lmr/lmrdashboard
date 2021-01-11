@@ -1,22 +1,30 @@
 import { getNickCSSClass } from '../data/UserHash';
 
-export default function Message(props: IMessage) {
+export default function Message(props: IMessage): JSX.Element {
 
   /**
-   * Parses for ACTION, which is sent when /me is used
-   * @returns the message with either a colon or nothing prefixed
+   * Returns a message formatted in the way irssi formats it for /me
    */
-  function formatMessage(): string {
-    // Slice is needed to ignore an unrenderable character in front of ACTION
-    if (props.message.slice(1).startsWith('ACTION')) {
-      return props.message.replace('ACTION', '');
-    }
-    return `: ${props.message}`;
+  function getFormattedActionMessage(): JSX.Element {
+    return (<>
+      [{props.dateCreated}] * <span className={getNickCSSClass(props.nick)}>{props.nick}</span>{props.message.replace('ACTION', '')}
+    </>)
+  }
+
+  /**
+   * Returns a message formatted in a normal <nick>: <message> format
+   */
+  function getFormattedNormalMessage(): JSX.Element {
+    return (<>
+      [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>: {props.message}
+    </>)
   }
 
   return (
     <div>
-      [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>{formatMessage()}
+      {props.message.slice(1).startsWith('ACTION') ?
+        getFormattedActionMessage() :
+        getFormattedNormalMessage()}
     </div>
   );
 }
