@@ -2,12 +2,12 @@ import { JoinConfig } from '../irc/ircconnection';
 import { IrcMessage, IrcMessageProcessor } from '../irc/IrcMessageProcessor';
 
 const mockIrcMessage = {
-  prefix: ':Nick!Nick@snoonet.org/user/Nick',
+  prefix: 'Nick!Nick@snoonet.org/user/Nick',
   command: 'PRIVMSG',
-  params: ['#channel', ':myMessage'],
+  params: ['#channel', 'my message with multiple words'],
 };
 
-const mockLine = ':Nick!Nick@snoonet.org/user/Nick PRIVMSG #channel :myMessage';
+const mockLine = ':Nick!Nick@snoonet.org/user/Nick PRIVMSG #channel :my message with multiple words';
 
 const mockJoinConfig: JoinConfig = {
   channel: '#channel',
