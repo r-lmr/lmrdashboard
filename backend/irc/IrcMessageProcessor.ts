@@ -105,7 +105,7 @@ class IrcMessageProcessor {
   }
 
   private processNotice(ircMessage: IrcMessage): void {
-    const param = ircMessage.params.slice(1).join(' ');
+    const param = ircMessage.params[1];
     if (param.includes('assword incorrect') || param.includes('is not registered')) {
       console.log('PASSWORD IS NOT CORRECT. NICK WILL BE CHANGED.');
       this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
@@ -151,14 +151,14 @@ class IrcMessageProcessor {
   }
 
   private async processNick(ircMessage: IrcMessage): Promise<void> {
-    const oldNick = ircMessage.prefix?.split('!')[0].slice(1);
+    const oldNick = ircMessage.prefix?.split('!')[0];
     const newNick = ircMessage.params[0];
     await DatabaseUserUtils.updateUser('KEEP', oldNick!, newNick);
     myEmitter.emit('join');
   }
 
   private async processJoin(ircMessage: IrcMessage): Promise<void> {
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
     if (nick != this.joinConfig.user) {
       console.log(nick, nick!.slice(1), nick![0] === '@' || '%' || '+');
       nick!.match(/^[@|%|+]/)
@@ -169,7 +169,7 @@ class IrcMessageProcessor {
   }
 
   private async process353(ircMessage: IrcMessage): Promise<void> {
-    ircMessage.params.slice(3).forEach(async (name) => {
+    ircMessage.params[3].split(' ').forEach(async (name) => {
       name = name.replace(':', '').trim();
       if (name.length > 0) {
         // add second column to host the role to join with nick later
@@ -199,7 +199,7 @@ class IrcMessageProcessor {
     if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000) return;
 
     const msg = ircMessage.params[1];
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
     const server = ircMessage.params[0];
 
     // Process non bot messages
@@ -210,7 +210,7 @@ class IrcMessageProcessor {
       // Process bot messages
       // Process ducc stats
       if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
-        const duccMsg = ircMessage.params.slice(1).join(' ');
+        const duccMsg = ircMessage.params[1];
         const splitMsgByBullet = duccMsg.split('\u2022');
         // fix the first split by removing the 'Duck ... scores in #channel'
         const correctFirstScore = splitMsgByBullet[0].split(':');
