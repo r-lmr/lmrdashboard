@@ -25,7 +25,7 @@ class InitDatabase {
         return knex.schema.createTable('last_messages', function (table) {
           table.string('user');
           table.string('server');
-          table.string('message');
+          table.string('message', 512);
           table.dateTime('dateCreated').defaultTo(knex.fn.now());
         });
       }
