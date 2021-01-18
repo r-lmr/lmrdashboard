@@ -1,4 +1,4 @@
-import userHash from '../data/UserHash';
+import { getNickCSSClass } from '../data/UserHash';
 
 export default function User(props: IUser) {
   const roleMap: Map<string, string> = new Map<string, string>([
@@ -9,7 +9,7 @@ export default function User(props: IUser) {
 
   return (
     <div>
-      <span className={`nick-${userHash(props.nick[0].match(/[+|@|%]/) ? props.nick.substring(1) : props.nick) % 16}`}>
+      <span className={getNickCSSClass(props.nick[0].match(/[+|@|%]/) ? props.nick.substring(1) : props.nick)}>
         {props.nick}
       </span>
     </div>
