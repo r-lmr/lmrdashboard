@@ -73,7 +73,7 @@ DROP TABLE IF EXISTS `last_messages`;
 CREATE TABLE `last_messages` (
   `user` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `server` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `message` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `message` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `dateCreated` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

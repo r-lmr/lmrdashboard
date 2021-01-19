@@ -43,22 +43,51 @@ class IrcMessageProcessor {
 
   public parseMessage(line: string): IrcMessage {
     console.log(line);
-    // for some reason the chunks arent always parsed as lines by \r\n
-    // so we force it by splitting our selves then loop over each line
-    if (line[0] == ':') {
-      const input = line.split(' ');
-      const msg = {
-        prefix: input[0],
-        command: input[1],
-        params: input.slice(2),
-      };
-      return msg;
-    } else {
-      const input = line.split(' ');
-      const msg = { command: input[0], params: [input[1]] };
-      // console.log('SECOND RETURN MSG IrcMessageProcessor\n', msg);
-      return msg;
+
+    // Create variables with default values
+    let prefix = undefined;
+    let command = '';
+    const params = [];
+
+    // Iterate through the string.
+    // If we parse one section fully we add
+    // it's consumed amount of chars to i
+    for (let i = 0; i < line.length; ) {
+      if (i == 0 && line[i] == ':') {
+        // If the first character is a colon everything
+        // till the next space character is the prefix
+        const end = line.indexOf(' ', i);
+        prefix = line.slice(i + 1, end);
+        i = end + 1;
+      } else if (line[i] == ':') {
+        // If there is any other colon we treat
+        // everything following it as one final parameter
+        params.push(line.slice(i + 1, line.length));
+        break;
+      } else {
+        // Catch all to parse the rest
+        let end = line.indexOf(' ', i);
+        end = end == -1 ? line.length : end;
+
+        if (command == '') {
+          // If command is not set then we are parsing
+          // the first parameter which is the command
+          command = line.slice(i, end);
+        } else {
+          // Everything else is a single word parameter
+          params.push(line.slice(i, end));
+        }
+
+        i = end + 1;
+      }
     }
+
+    // Returns the object now with populated fields
+    return {
+      prefix: prefix,
+      command: command,
+      params: params,
+    };
   }
 
   private processPing(ircMessage: IrcMessage): void {
@@ -76,7 +105,7 @@ class IrcMessageProcessor {
   }
 
   private processNotice(ircMessage: IrcMessage): void {
-    const param = ircMessage.params.slice(1).join(' ');
+    const param = ircMessage.params[1];
     if (param.includes('assword incorrect') || param.includes('is not registered')) {
       console.log('PASSWORD IS NOT CORRECT. NICK WILL BE CHANGED.');
       this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
@@ -122,14 +151,14 @@ class IrcMessageProcessor {
   }
 
   private async processNick(ircMessage: IrcMessage): Promise<void> {
-    const oldNick = ircMessage.prefix?.split('!')[0].slice(1);
+    const oldNick = ircMessage.prefix?.split('!')[0];
     const newNick = ircMessage.params[0];
     await DatabaseUserUtils.updateUser('KEEP', oldNick!, newNick);
     myEmitter.emit('join');
   }
 
   private async processJoin(ircMessage: IrcMessage): Promise<void> {
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
     if (nick != this.joinConfig.user) {
       console.log(nick, nick!.slice(1), nick![0] === '@' || '%' || '+');
       nick!.match(/^[@|%|+]/)
@@ -140,7 +169,7 @@ class IrcMessageProcessor {
   }
 
   private async process353(ircMessage: IrcMessage): Promise<void> {
-    ircMessage.params.slice(3).forEach(async (name) => {
+    ircMessage.params[3].split(' ').forEach(async (name) => {
       name = name.replace(':', '').trim();
       if (name.length > 0) {
         // add second column to host the role to join with nick later
@@ -169,9 +198,8 @@ class IrcMessageProcessor {
   private async processPrivMsg(ircMessage: IrcMessage) {
     if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000) return;
 
-    // Normal messages can only hold 256 chars in the database
-    const msg = ircMessage.params.slice(1).join(' ').substring(1, 256);
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+    const msg = ircMessage.params[1];
+    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
     const server = ircMessage.params[0];
 
     // Process non bot messages
@@ -182,7 +210,7 @@ class IrcMessageProcessor {
       // Process bot messages
       // Process ducc stats
       if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
-        const duccMsg = ircMessage.params.slice(1).join(' ');
+        const duccMsg = ircMessage.params[1];
         const splitMsgByBullet = duccMsg.split('\u2022');
         // fix the first split by removing the 'Duck ... scores in #channel'
         const correctFirstScore = splitMsgByBullet[0].split(':');
