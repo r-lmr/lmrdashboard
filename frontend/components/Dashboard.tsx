@@ -1,7 +1,7 @@
 import UserList from '../components/UserList';
 import { Container, Row, Col } from 'reactstrap';
 import MessageList from './MessageList';
-import LineCountList, { LineCountListType } from './LineCountLastDaysList';
+import LineCountList, { LineCountListType } from './LineCountList';
 import TopWords from './TopWords';
 import DuccStatsList, { ScoreType } from './DuccStatsList';
 
