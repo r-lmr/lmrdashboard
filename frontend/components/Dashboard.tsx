@@ -1,8 +1,7 @@
 import UserList from '../components/UserList';
 import { Container, Row, Col } from 'reactstrap';
 import MessageList from './MessageList';
-import LineCountLastDaysList from './LineCountLastDaysList';
-import LineCountHighScoresList from './LineCountHighScoresList';
+import LineCountList, { LineCountListType } from './LineCountLastDaysList';
 import TopWords from './TopWords';
 import DuccStatsList, { ScoreType } from './DuccStatsList';
 
@@ -24,10 +23,10 @@ export default function Dashboard() {
               <UserList />
             </Col>
             <Col md={3}>
-              <LineCountLastDaysList />
+              <LineCountList type={LineCountListType.LAST_DAYS}/>
             </Col>
             <Col md={3}>
-              <LineCountHighScoresList />
+              <LineCountList type={LineCountListType.HIGH_SCORE}/>
             </Col>
             <Col md={3}>
               <TopWords />

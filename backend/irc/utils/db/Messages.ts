@@ -25,6 +25,7 @@ class DatabaseMessageUtils {
         nick: entry['user'],
         server: entry['server'],
         message: entry['message'],
+        userIsBot: entry['userIsBot'],
         dateCreated: entry['dateCreated'],
       };
     });
@@ -42,6 +43,7 @@ class DatabaseMessageUtils {
         nick: entry['user'],
         server: entry['server'],
         message: entry['message'],
+        userIsBot: entry['userIsBot'],
         dateCreated: entry['dateCreated'],
       };
     });
@@ -54,6 +56,7 @@ class DatabaseMessageUtils {
       return {
         date: this.formatDate(entry['date']),
         lineCount: entry['count'],
+        botLines: entry['botLines']
       };
     });
     return parsedLineCounts;
@@ -65,19 +68,30 @@ class DatabaseMessageUtils {
       return {
         date: entry['date'],
         lineCount: entry['count'],
+        botLines: entry['botLines']
       };
     });
     return parsedLineCount[0];
   }
 
-  static async saveLine(nick: string, server: string, message: string): Promise<void> {
-    await knex('last_messages').insert({ user: nick, server, message });
+  static async saveLine(nick: string, server: string, message: string, userIsBot: boolean): Promise<void> {
+    await knex('last_messages').insert({ user: nick, server, message, userIsBot });
     const lineCountExists = await knex('line_counts').select().whereRaw('date = date(?)', [new Date()]);
-    if (lineCountExists.length < 1) {
-      await knex('line_counts').insert({ count: 1, date: this.formatDate(new Date()) });
+
+    if (!userIsBot) {
+      if (lineCountExists.length < 1) {
+        await knex('line_counts').insert({ count: 1, botLines: 0, date: this.formatDate(new Date()) });
+      } else {
+        await knex('line_counts').whereRaw('date = date(?)', [new Date()]).increment('count', 1);
+      }
     } else {
-      await knex('line_counts').whereRaw('date = date(?)', [new Date()]).increment('count', 1);
+      if (lineCountExists.length < 1) {
+        await knex('line_counts').insert({ count: 0, botLines: 1, date: this.formatDate(new Date()) });
+      } else {
+        await knex('line_counts').whereRaw('date = date(?)', [new Date()]).increment('botLines', 1);
+      }
     }
+
     console.log('Saving message to db.');
   }
 }
@@ -87,6 +101,7 @@ export { DatabaseMessageUtils };
 interface ILineCount {
   date: string;
   lineCount: number;
+  botLines: number;
 }
 
 export interface IMessage {
@@ -94,4 +109,5 @@ export interface IMessage {
   server: string;
   message: string;
   dateCreated: string;
+  userIsBot: boolean;
 }
