@@ -32,8 +32,8 @@ class DatabaseMessageUtils {
   }
 
   static async getLinesLastNDays(days: number): Promise<IMessage[]> {
-    const today = new Date();
-    const from = new Date();
+    const today = new Date(new Date().toUTCString());
+    const from = new Date(new Date().toUTCString());
     from.setDate(today.getDate() - days);
 
     const lines = await knex('last_messages').where('dateCreated', '>=', this.formatDate(from)).select();
@@ -58,7 +58,9 @@ class DatabaseMessageUtils {
     });
     return parsedLineCounts;
   }
-
+  // doesn't seem we use this function so commenting
+  // out for now until we may need it or purge
+  /*
   static async getLineCount(date: string): Promise<ILineCount> {
     const lineCount = await knex('line_counts').select().where({ date });
     const parsedLineCount = lineCount.map((entry) => {
@@ -69,14 +71,16 @@ class DatabaseMessageUtils {
     });
     return parsedLineCount[0];
   }
-
+*/
   static async saveLine(nick: string, server: string, message: string): Promise<void> {
     await knex('last_messages').insert({ user: nick, server, message });
     const lineCountExists = await knex('line_counts').select().whereRaw('date = date(?)', [new Date()]);
     if (lineCountExists.length < 1) {
-      await knex('line_counts').insert({ count: 1, date: this.formatDate(new Date()) });
+      await knex('line_counts').insert({ count: 1, date: this.formatDate(new Date(new Date().toUTCString())) });
     } else {
-      await knex('line_counts').whereRaw('date = date(?)', [new Date()]).increment('count', 1);
+      await knex('line_counts')
+        .whereRaw('date = date(?)', [new Date(new Date().toUTCString())])
+        .increment('count', 1);
     }
     console.log('Saving message to db.');
   }

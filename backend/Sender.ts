@@ -46,24 +46,24 @@ class Sender {
   }
 
   static async getTopWords(): Promise<Map<string, number>> {
-      const messages: IMessage[] = await DatabaseMessageUtils.getLinesLastNDays(7);
-      const wordCounts: Map<string, number> = new Map<string, number>();
+    const messages: IMessage[] = await DatabaseMessageUtils.getLinesLastNDays(7);
+    const wordCounts: Map<string, number> = new Map<string, number>();
 
-      for (const message of messages) {
-        const messageText: string = message.message.toLowerCase();
-        const words = sw.removeStopwords(messageText.split(/\s+/));
-        for (let word of words) {
-          // strip any non alpha chars to prevent odd render on screen
-          word = word.replace(/[^a-zA-Z0-9 ]/g, '').trim();
-          if (word && !word.match(/^[0-9]*$/)) {
-            if (!wordCounts.has(word)) wordCounts.set(word, 1);
-            else wordCounts.set(word, wordCounts.get(word)! + 1);
-          }
+    for (const message of messages) {
+      const messageText: string = message.message.toLowerCase();
+      const words = sw.removeStopwords(messageText.split(/\s+/));
+      for (let word of words) {
+        // strip any non alpha chars to prevent odd render on screen
+        word = word.replace(/[^a-zA-Z0-9 ]/g, '').trim();
+        if (word && !word.match(/^[0-9]*$/)) {
+          if (!wordCounts.has(word)) wordCounts.set(word, 1);
+          else wordCounts.set(word, wordCounts.get(word)! + 1);
         }
       }
+    }
 
-      const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
-      return sortedWordCounts;
+    const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
+    return sortedWordCounts;
   }
 
   static async sendTopWords(res: Response<any, number>): Promise<void> {
