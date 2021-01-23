@@ -26,7 +26,7 @@ class InitDatabase {
           table.string('user');
           table.string('server');
           table.string('message', 512);
-          table.dateTime('dateCreated').defaultTo(knex.fn.now());
+          table.dateTime('dateCreated').defaultTo(knex.raw('utc_timestamp'));
         });
       }
     });
@@ -35,7 +35,7 @@ class InitDatabase {
       if (!exists) {
         return knex.schema.createTable('line_counts', function (table) {
           table.integer('count');
-          table.dateTime('date');
+          table.dateTime('date').defaultTo(knex.raw('utc_timestamp'));
         });
       }
     });
@@ -47,7 +47,7 @@ class InitDatabase {
           return knex.schema.createTable('online_users', function (table) {
             table.string('user').unique();
             table.string('role');
-            table.dateTime('dateCreated').defaultTo(knex.fn.now());
+            table.dateTime('dateCreated').defaultTo(knex.raw('utc_timestamp'));
           });
         }
       })
