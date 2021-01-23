@@ -32,8 +32,8 @@ class DatabaseMessageUtils {
   }
 
   static async getLinesLastNDays(days: number): Promise<IMessage[]> {
-    const today = new Date(new Date().toUTCString());
-    const from = new Date(new Date().toUTCString());
+    const today = new Date();
+    const from = new Date();
     from.setDate(today.getDate() - days);
 
     const lines = await knex('last_messages').where('dateCreated', '>=', this.formatDate(from)).select();
@@ -76,10 +76,10 @@ class DatabaseMessageUtils {
     await knex('last_messages').insert({ user: nick, server, message });
     const lineCountExists = await knex('line_counts').select().whereRaw('date = date(?)', [new Date()]);
     if (lineCountExists.length < 1) {
-      await knex('line_counts').insert({ count: 1, date: this.formatDate(new Date(new Date().toUTCString())) });
+      await knex('line_counts').insert({ count: 1, date: this.formatDate(new Date()) });
     } else {
       await knex('line_counts')
-        .whereRaw('date = date(?)', [new Date(new Date().toUTCString())])
+        .whereRaw('date = date(?)', [new Date()])
         .increment('count', 1);
     }
     console.log('Saving message to db.');
