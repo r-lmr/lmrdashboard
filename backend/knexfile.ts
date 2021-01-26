@@ -13,7 +13,7 @@ export default {
       database: process.env.LMRD_DB_NAME,
     },
     migrations: {
-      directory: __dirname + '/irc/utils/db/knex_migrations',
+      directory: __dirname + '/database/knex_migrations',
     },
   },
 
@@ -31,7 +31,7 @@ export default {
       max: 10,
     },
     migrations: {
-      directory: __dirname + '/irc/utils/db/knex_migrations',
+      directory: __dirname + '/database/knex_migrations',
     },
   },
 };
