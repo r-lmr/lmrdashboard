@@ -1,8 +1,8 @@
 import { TLSSocket } from 'tls';
 import { JoinConfig } from './ircconnection';
-import { DatabaseDuccUtils } from './utils/db/DuccScores';
-import { DatabaseMessageUtils } from './utils/db/Messages';
-import { DatabaseUserUtils } from './utils/db/Users';
+import { DatabaseDuccUtils } from '../database/DuccScores';
+import { DatabaseMessageUtils } from '../database/Messages';
+import { DatabaseUserUtils } from '../database/Users';
 import myEmitter from './utils/emitter';
 
 /*

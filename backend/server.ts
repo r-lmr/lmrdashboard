@@ -3,8 +3,8 @@ import cors from 'cors';
 import './irc/ircconnection';
 import { Response } from 'express-serve-static-core';
 import { Sender } from './Sender';
-import { InitDatabase } from './irc/utils/db/InitDatabase';
-import { DatabaseUserUtils } from './irc/utils/db/Users';
+import { InitDatabase } from './database/InitDatabase';
+import { DatabaseUserUtils } from './database/Users';
 import { ResCollection } from './ResCollection';
 import { v4 as uuidv4 } from 'uuid';
 import { Listener } from './Listener';
@@ -59,5 +59,6 @@ Listener.addIrcListeners();
 app.listen(4000, () => {
   console.log('listening on 4000');
   InitDatabase.CreateTablesIfNotExists();
+  InitDatabase.MigrateDatabase();
   DatabaseUserUtils.flushUserTable();
 });
