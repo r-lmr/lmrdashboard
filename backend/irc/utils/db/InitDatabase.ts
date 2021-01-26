@@ -27,6 +27,7 @@ class InitDatabase {
           table.string('server');
           table.string('message', 512);
           table.dateTime('dateCreated').defaultTo(knex.raw('utc_timestamp'));
+          table.boolean('userIsBot').notNullable().defaultTo(0);
         });
       }
     });
@@ -35,6 +36,7 @@ class InitDatabase {
       if (!exists) {
         return knex.schema.createTable('line_counts', function (table) {
           table.integer('count');
+          table.integer('botLines');
           table.dateTime('date').defaultTo(knex.raw('utc_timestamp'));
         });
       }
