@@ -204,9 +204,11 @@ class IrcMessageProcessor {
 
     // Process non bot messages
     if (!ircMessage.prefix?.toLowerCase().split('@')[1].includes('/bot/')) {
-      await DatabaseMessageUtils.saveLine(nick!, server, msg);
+      await DatabaseMessageUtils.saveLine(nick!, server, msg, false);
       myEmitter.emit('line');
     } else {
+      await DatabaseMessageUtils.saveLine(nick!, server, msg, true);
+      myEmitter.emit('line');
       // Process bot messages
       // Process ducc stats
       if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
