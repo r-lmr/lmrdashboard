@@ -59,5 +59,6 @@ Listener.addIrcListeners();
 app.listen(4000, () => {
   console.log('listening on 4000');
   InitDatabase.CreateTablesIfNotExists();
+  InitDatabase.MigrateDatabase();
   DatabaseUserUtils.flushUserTable();
 });
