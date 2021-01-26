@@ -56,7 +56,7 @@ class DatabaseMessageUtils {
       return {
         date: this.formatDate(entry['date']),
         lineCount: entry['count'],
-        botLines: entry['botLines']
+        botLines: entry['botLines'],
       };
     });
     return parsedLineCounts;
@@ -68,7 +68,7 @@ class DatabaseMessageUtils {
       return {
         date: entry['date'],
         lineCount: entry['count'],
-        botLines: entry['botLines']
+        botLines: entry['botLines'],
       };
     });
     return parsedLineCount[0];
@@ -88,7 +88,10 @@ class DatabaseMessageUtils {
       if (lineCountExists.length < 1) {
         await knex('line_counts').insert({ count: 0, botLines: 1, date: this.formatDate(new Date()) });
       } else {
-        await knex('line_counts').whereRaw('date = date(?)', [new Date()]).increment('botLines', 1);
+        await knex('line_counts')
+          .whereRaw('date = date(?)', [new Date()])
+          .increment('botLines', 1)
+          .increment('count', 1);
       }
     }
 

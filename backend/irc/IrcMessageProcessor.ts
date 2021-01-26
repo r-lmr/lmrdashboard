@@ -211,16 +211,20 @@ class IrcMessageProcessor {
       myEmitter.emit('line');
       // Process bot messages
       // Process ducc stats
+      console.log('PRIVMSG PARSE', nick, msg);
       if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
+        console.log('inside the ducc parse');
         const duccMsg = ircMessage.params[1];
         const splitMsgByBullet = duccMsg.split('\u2022');
+
         // fix the first split by removing the 'Duck ... scores in #channel'
         const correctFirstScore = splitMsgByBullet[0].split(':');
-        splitMsgByBullet[0] = `${correctFirstScore[2]}: ${correctFirstScore[3]}`;
-        if (correctFirstScore[1].includes('friend')) {
+        splitMsgByBullet[0] = `${correctFirstScore[1]}: ${correctFirstScore[2].trim()}`;
+
+        if (correctFirstScore[0].includes('friend')) {
           await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'friend');
           myEmitter.emit('friendScore');
-        } else if (correctFirstScore[1].includes('killer')) {
+        } else if (correctFirstScore[0].includes('killer')) {
           await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'killer');
           myEmitter.emit('killedScore');
         }
