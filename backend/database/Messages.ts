@@ -88,7 +88,10 @@ class DatabaseMessageUtils {
       if (lineCountExists.length < 1) {
         await knex('line_counts').insert({ count: 1, botLines: 1, date: this.formatDate(new Date()) });
       } else {
-        await knex('line_counts').whereRaw('date = date(?)', [new Date()]).increment('botLines', 1);
+        await knex('line_counts')
+          .whereRaw('date = date(?)', [new Date()])
+          .increment('botLines', 1)
+          .increment('count', 1);
       }
     }
 
