@@ -211,9 +211,7 @@ class IrcMessageProcessor {
       myEmitter.emit('line');
       // Process bot messages
       // Process ducc stats
-      console.log('PRIVMSG PARSE', nick, msg);
       if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
-        console.log('inside the ducc parse');
         const duccMsg = ircMessage.params[1];
         const splitMsgByBullet = duccMsg.split('\u2022');
 

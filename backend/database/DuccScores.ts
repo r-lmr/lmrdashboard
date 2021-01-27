@@ -5,10 +5,10 @@ class DatabaseDuccUtils {
     let tableName: string;
     duccType == 'friend' ? (tableName = 'friend_scores') : (tableName = 'killer_scores');
     scores.forEach(async (scoreString) => {
+      // remove any zero width spaces or control chars from gonzobot
       scoreString = scoreString.replace(/[\x02|\u200B]/g, '').trim();
       const score: string[] = scoreString.split(':');
       const duccs: number = parseInt(score[1].trim());
-      //score[0] = score[0].replace(/^[a-zA-Z0-9]/, '');
       await knex(tableName)
         .select()
         .where({ user: score[0] })
