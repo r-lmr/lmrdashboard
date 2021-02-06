@@ -86,6 +86,24 @@ backend:test:
       junit:
         - ${CI_PROJECT_DIR}/backend/results/junit.xml
 
+frontend:test:
+  extends: .test
+  <<: *cache_backend
+  variables:
+    JEST_JUNIT_OUTPUT_DIR: "${CI_PROJECT_DIR}/frontend/results"
+  script:
+    - cd frontend
+    - yarn install
+    - yarn test:unit-ci
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    when: always
+    paths:
+      - ${CI_PROJECT_DIR}/frontend/results/
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}/frontend/results/junit.xml
+
 
 ##################################################
 # BUILD
