@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LineCount Component has 50% bot messages 1`] = `
+<div>
+  [
+  2021-01-01
+  ]: 
+  24
+   (
+  50%
+  )
+  foo
+</div>
+`;
+
+exports[`LineCount Component has 100% bot messages 1`] = `
+<div>
+  [
+  2021-01-01
+  ]: 
+  24
+   (
+  100%
+  )
+  foo
+</div>
+`;
