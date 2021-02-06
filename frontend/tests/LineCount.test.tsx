@@ -10,7 +10,7 @@ test('LineCount Component has 50% bot messages', () => {
       key={'key'}
       lineCount={24}
       botLines={12}
-      date={new Date('2021-01-01').toString()}
+      date={'2021-01-01'}
       message={'foo'}
     />,
   );
@@ -26,7 +26,7 @@ test('LineCount Component has 100% bot messages', () => {
       key={'key'}
       lineCount={24}
       botLines={24}
-      date={new Date('2021-01-01').toString()}
+      date={'2021-01-01'}
       message={'foo'}
     />,
   );
