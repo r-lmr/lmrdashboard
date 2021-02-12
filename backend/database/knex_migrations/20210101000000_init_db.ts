@@ -27,3 +27,11 @@ export async function up(knex: Knex): Promise<void> {
     table.dateTime('dateCreated').defaultTo(knex.fn.now());
   });
 }
+
+export async function down(knex: Knex): Promise<void> {
+  knex.schema.dropTable('friend_scroes');
+  knex.schema.dropTable('killer_scroes');
+  knex.schema.dropTable('last_messages');
+  knex.schema.dropTable('line_counts');
+  knex.schema.dropTable('online_users');
+}
