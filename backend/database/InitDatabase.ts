@@ -10,64 +10,6 @@ class InitDatabase {
         console.log('Running database migrations of latest');
       });
   }
-
-  static CreateTablesIfNotExists() {
-    knex.schema.hasTable('friend_scores').then(function (exists) {
-      if (!exists) {
-        return knex.schema.createTable('friend_scores', function (table) {
-          table.string('user').unique();
-          table.integer('duccs');
-        });
-      }
-    });
-
-    knex.schema.hasTable('killer_scores').then(function (exists) {
-      if (!exists) {
-        return knex.schema.createTable('killer_scores', function (table) {
-          table.string('user').unique();
-          table.integer('duccs');
-        });
-      }
-    });
-
-    knex.schema.hasTable('last_messages').then(function (exists) {
-      if (!exists) {
-        return knex.schema.createTable('last_messages', function (table) {
-          table.string('user');
-          table.string('server');
-          table.string('message', 512);
-          table.dateTime('dateCreated').defaultTo(knex.fn.now());
-          table.boolean('userIsBot');
-        });
-      }
-    });
-
-    knex.schema.hasTable('line_counts').then(function (exists) {
-      if (!exists) {
-        return knex.schema.createTable('line_counts', function (table) {
-          table.integer('count');
-          table.integer('botLines');
-          table.dateTime('date');
-        });
-      }
-    });
-
-    knex.schema
-      .hasTable('online_users')
-      .then(function (exists) {
-        if (!exists) {
-          return knex.schema.createTable('online_users', function (table) {
-            table.string('user').unique();
-            table.string('role');
-            table.dateTime('dateCreated').defaultTo(knex.fn.now());
-          });
-        }
-      })
-      .then(() => {
-        console.log('created all missing tables');
-      })
-      .catch((e) => console.log(e));
-  }
 }
 
 export { InitDatabase };
