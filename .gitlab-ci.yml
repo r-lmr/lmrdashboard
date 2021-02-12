@@ -170,8 +170,6 @@ test:e2e:
   needs:
     - build:backend
     - build:frontend
-    - build:backend:release
-    - build:frontend:release
   services: 
     - name: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_SHORT_SHA}"
       alias: backend
@@ -206,8 +204,8 @@ deploy:production:
   image: kube.cat/cocainefarm/helmfile:v0.135.0
   stage: deploy
   needs:
-    - build:backend:release
-    - build:frontend:release
+    - build:backend
+    - build:frontend
     - test:e2e
   environment:
     name: production
