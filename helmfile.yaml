@@ -39,6 +39,8 @@ releases:
           projectSlug: {{ requiredEnv "CI_PROJECT_PATH_SLUG" | quote }}
       - ingress:
           enabled: true
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
           hosts:
             - host: {{ .Values.host }}
               paths:
