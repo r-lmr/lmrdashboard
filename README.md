@@ -75,7 +75,7 @@ Visit `localhost:3000`.
 cd backend
 yarn install
 tsc # optional
-ts-node server.js
+ts-node server.ts
 curl http://localhost:4000/test # optional
 ```
 
