@@ -9,7 +9,6 @@ class DatabaseDuccUtils {
       scoreString = scoreString.replace(/[\x02|\u200B]/g, '').trim();
       const score: string[] = scoreString.split(':');
       const duccs: number = parseInt(score[1].trim().replace(/[^0-9]/g, ''));
-      console.log(duccs);
       await knex(tableName)
         .select()
         .where({ user: score[0] })
