@@ -160,7 +160,7 @@ class IrcMessageProcessor {
   private async processJoin(ircMessage: IrcMessage): Promise<void> {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
     if (nick != this.joinConfig.user) {
-      console.log(nick, nick!.slice(1), nick![0] === '@' || '%' || '+');
+      //console.log(nick, nick!.slice(1), nick![0] === '@' || '%' || '+');
       nick!.match(/^[@|%|+]/)
         ? await DatabaseUserUtils.addUser(nick!.slice(1), nick![0])
         : await DatabaseUserUtils.addUser(nick!, null);
@@ -170,7 +170,6 @@ class IrcMessageProcessor {
 
   private async process353(ircMessage: IrcMessage): Promise<void> {
     ircMessage.params[3].split(' ').forEach(async (name) => {
-      name = name.replace(':', '').trim();
       if (name.length > 0) {
         // add second column to host the role to join with nick later
         name.match(/^[@|%|+]/)
@@ -182,7 +181,7 @@ class IrcMessageProcessor {
   }
 
   private async processPartAndQuit(ircMessage: IrcMessage) {
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0].slice(1);
+    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
     await DatabaseUserUtils.deleteUser(nick!);
     myEmitter.emit('part');
     console.log('RUNNING PARTANDQUIT');
