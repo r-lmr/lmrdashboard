@@ -160,7 +160,6 @@ class IrcMessageProcessor {
   private async processJoin(ircMessage: IrcMessage): Promise<void> {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
     if (nick != this.joinConfig.user) {
-      //console.log(nick, nick!.slice(1), nick![0] === '@' || '%' || '+');
       nick!.match(/^[@|%|+]/)
         ? await DatabaseUserUtils.addUser(nick!.slice(1), nick![0])
         : await DatabaseUserUtils.addUser(nick!, null);
