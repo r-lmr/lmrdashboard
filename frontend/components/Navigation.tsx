@@ -22,7 +22,7 @@ const Navigation = (props: IProps) => {
               <NavLink href="https://kiwiirc.com/nextclient/irc.snoonet.org/#linuxmasterrace">Web IRC</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="https://github.com/aboft/lmrdashboard">Source</NavLink>
+              <NavLink href="https://github.com/r-lmr/lmrdashboard">Source</NavLink>
             </NavItem>
           </Nav>
           <NavbarText>linux good windows bad</NavbarText>
