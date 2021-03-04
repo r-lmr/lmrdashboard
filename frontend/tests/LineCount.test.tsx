@@ -4,7 +4,6 @@ import { expect } from '@jest/globals';
 import LineCount from '../components/LineCount';
 
 test('LineCount Component has 50% bot messages', () => {
-
   const component = renderer.create(
     <LineCount
       key={'key'}
@@ -20,7 +19,6 @@ test('LineCount Component has 50% bot messages', () => {
 });
 
 test('LineCount Component has 100% bot messages', () => {
-
   const component = renderer.create(
     <LineCount
       key={'key'}

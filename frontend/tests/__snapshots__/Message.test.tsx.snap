@@ -1,0 +1,213 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`message with URLs has links rendered 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-8"
+  >
+    RMS
+  </span>
+  : 
+  <span>
+     
+    This
+  </span>
+  <span>
+     
+    is
+  </span>
+  <span>
+     
+    a
+  </span>
+  <span>
+     
+    message
+  </span>
+  <span>
+     
+    with:
+  </span>
+  <span>
+     
+    <a
+      href="https://reddit.com"
+    >
+      https://reddit.com
+    </a>
+    ,
+  </span>
+  <span>
+     
+    also
+  </span>
+  <span>
+     
+    <a
+      href="https://reddit.com/r/linuxmasterrace"
+    >
+      https://reddit.com/r/linuxmasterrace
+    </a>
+  </span>
+</div>
+`;
+
+exports[`message with mixed link types has them rendered 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-14"
+  >
+    Gnu
+  </span>
+  : 
+  <span>
+     
+    This
+  </span>
+  <span>
+     
+    is
+  </span>
+  <span>
+     
+    a
+  </span>
+  <span>
+     
+    message
+  </span>
+  <span>
+     
+    with:
+  </span>
+  <span>
+     
+    <a
+      href="https://reddit.com/r/linuxmasterrace"
+    >
+      r/linuxmasterrace
+    </a>
+    ,
+  </span>
+  <span>
+     
+    which
+  </span>
+  <span>
+     
+    links
+  </span>
+  <span>
+     
+    to
+  </span>
+  <span>
+     
+    <a
+      href="https://reddit.com/r/linuxmasterrace"
+    >
+      https://reddit.com/r/linuxmasterrace
+    </a>
+    .
+  </span>
+</div>
+`;
+
+exports[`message with subreddits has them rendered as links 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-14"
+  >
+    Gnu
+  </span>
+  : 
+  <span>
+     
+    This
+  </span>
+  <span>
+     
+    is
+  </span>
+  <span>
+     
+    a
+  </span>
+  <span>
+     
+    message
+  </span>
+  <span>
+     
+    with:
+  </span>
+  <span>
+     
+    <a
+      href="https://reddit.com/r/linuxmasterrace"
+    >
+      r/linuxmasterrace
+    </a>
+    ,
+  </span>
+  <span>
+     
+    also
+  </span>
+  <span>
+     
+    <a
+      href="https://reddit.com/r/linux"
+    >
+      /r/linux
+    </a>
+  </span>
+</div>
+`;
+
+exports[`message without links does not have links rendered 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-15"
+  >
+    Linus
+  </span>
+  : 
+  <span>
+     
+    This
+  </span>
+  <span>
+     
+    is
+  </span>
+  <span>
+     
+    a
+  </span>
+  <span>
+     
+    message
+  </span>
+  <span>
+     
+    without
+  </span>
+  <span>
+     
+    links.
+  </span>
+</div>
+`;
