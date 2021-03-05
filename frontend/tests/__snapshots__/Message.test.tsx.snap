@@ -185,29 +185,6 @@ exports[`message without links does not have links rendered 1`] = `
     Linus
   </span>
   : 
-  <span>
-     
-    This
-  </span>
-  <span>
-     
-    is
-  </span>
-  <span>
-     
-    a
-  </span>
-  <span>
-     
-    message
-  </span>
-  <span>
-     
-    without
-  </span>
-  <span>
-     
-    links.
-  </span>
+  This is a message without links.
 </div>
 `;

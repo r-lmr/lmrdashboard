@@ -1,5 +1,5 @@
 export function hasTrailingChar(text: string): boolean {
-  return (text.endsWith(',') || text.endsWith('.'));
+  return [',', '.', '!', '?'].includes(text.slice(text.length - 1, text.length))
 }
 
 export function splitToTextWithoutTrailingAndTrailing(text: string): Array<string> {

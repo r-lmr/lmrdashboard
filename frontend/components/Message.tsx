@@ -50,6 +50,13 @@ export default function Message(props: IMessage): JSX.Element {
       });
   }
 
+  function linkifyMessageContentIfMessageContainsUrlOrSubreddit(message: string): string | JSX.Element[] {
+    if (/^.*((https:\/\/)|(\/?r)).*$/.test(message)) {
+      return linkifyMessageContent(message);
+    }
+    return message;
+  }
+
   /**
    * Returns a message formatted in the way irssi formats it for /me.
    */
@@ -64,7 +71,9 @@ export default function Message(props: IMessage): JSX.Element {
    */
   function getFormattedNormalMessage(): JSX.Element {
     return (<>
-      [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>: {linkifyMessageContent(props.message)}
+      [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>: {
+        linkifyMessageContentIfMessageContainsUrlOrSubreddit(props.message)
+      }
     </>)
   }
 
