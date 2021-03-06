@@ -1,0 +1,153 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`message that contains an "r" but no links does not trigger link rendering 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-15"
+  >
+    Linus
+  </span>
+  : 
+  This is a message without links, but it has an r.
+</div>
+`;
+
+exports[`message with URLs has links rendered 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-8"
+  >
+    RMS
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with:
+   
+  <a
+    href="http://reddit.com"
+  >
+    http://reddit.com
+  </a>
+  ,
+   
+  also
+   
+  <a
+    href="https://reddit.com/r/linuxmasterrace"
+  >
+    https://reddit.com/r/linuxmasterrace
+  </a>
+</div>
+`;
+
+exports[`message with mixed link types has them rendered 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-14"
+  >
+    Gnu
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with:
+   
+  <a
+    href="https://reddit.com/r/linuxmasterrace"
+  >
+    r/linuxmasterrace
+  </a>
+  ,
+   
+  which
+   
+  links
+   
+  to
+   
+  <a
+    href="https://reddit.com/r/linuxmasterrace"
+  >
+    https://reddit.com/r/linuxmasterrace
+  </a>
+  .
+</div>
+`;
+
+exports[`message with subreddits has them rendered as links 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-14"
+  >
+    Gnu
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with:
+   
+  <a
+    href="https://reddit.com/r/linuxmasterrace"
+  >
+    r/linuxmasterrace
+  </a>
+  ,
+   
+  also
+   
+  <a
+    href="https://reddit.com/r/linux"
+  >
+    /r/linux
+  </a>
+</div>
+`;
+
+exports[`message without links does not have links rendered 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-15"
+  >
+    Linus
+  </span>
+  : 
+  This is a message without links.
+</div>
+`;
