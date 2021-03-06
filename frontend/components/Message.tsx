@@ -1,36 +1,7 @@
 import { getNickCSSClass } from '../data/UserHash';
-import { hasTrailingChar, splitToTextWithoutTrailingAndTrailing } from '../util/stringUtils';
+import { LinkUtils } from '../util/LinkUtils';
 
 export default function Message(props: IMessage): JSX.Element {
-
-  /**
-   * Wraps an a href around text, given an url and clickable text.
-   */
-  function formatLinkNormally(href: string, clickable: string): JSX.Element {
-    return <> <a href={href}>{clickable}</a></>;
-  }
-
-  /**
-   * 
-   * Wraps an a href around text, given an url and clickable text,
-   * but excludes a trailing , or . from the clickable link.
-   */
-  function formatLinkWithEndChar(href: string, clickable: string, endChar: string): JSX.Element {
-    return <> <a href={href}>{clickable}</a>{endChar}</>;
-  }
-
-  /**
-   * Calls either link formatting method depending on whether the href or clickable text contains trailing characters.
-   * Also splits up the href and clickable into parts with and without the trailing characters.
-   */
-  function formatLink(href: string, clickable: string): JSX.Element {
-    if (hasTrailingChar(clickable) || hasTrailingChar(href)) {
-      const [clickableWithoutEndChar, endChar] = splitToTextWithoutTrailingAndTrailing(clickable);
-      const hrefWithoutEndChar = splitToTextWithoutTrailingAndTrailing(href)[0];
-      return formatLinkWithEndChar(hrefWithoutEndChar, clickableWithoutEndChar, endChar);
-    }
-    return formatLinkNormally(href, clickable);
-  }
 
   /** 
    * If a message contains URLs or (/)r/<subreddit> those parts will be linked.
@@ -39,11 +10,11 @@ export default function Message(props: IMessage): JSX.Element {
     return message.split(' ')
       .map(messagePart => {
         if (messagePart.startsWith('r/')) {
-          return formatLink('https://reddit.com/' + messagePart, messagePart);
+          return LinkUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
         } else if (messagePart.startsWith('/r/')) {
-          return formatLink('https://reddit.com' + messagePart, messagePart);
+          return LinkUtils.formatLink('https://reddit.com' + messagePart, messagePart);
         } else if (messagePart.startsWith('https://')) {
-          return formatLink(messagePart, messagePart);
+          return LinkUtils.formatLink(messagePart, messagePart);
         } else {
           return <> {messagePart}</>
         }

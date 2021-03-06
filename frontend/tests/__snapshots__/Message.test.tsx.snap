@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`message that contains an "r" but no links does not trigger link rendering 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-15"
+  >
+    Linus
+  </span>
+  : 
+  This is a message without links, but it has an r.
+</div>
+`;
+
 exports[`message with URLs has links rendered 1`] = `
 <div>
   [
