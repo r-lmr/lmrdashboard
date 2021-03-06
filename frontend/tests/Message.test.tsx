@@ -43,7 +43,7 @@ test('message with URLs has links rendered', () => {
   const component = renderer.create(
     <Message
       nick={'RMS'}
-      message={'This is a message with: https://reddit.com, also https://reddit.com/r/linuxmasterrace'}
+      message={'This is a message with: http://reddit.com, also https://reddit.com/r/linuxmasterrace'}
       dateCreated={'2021-01-01'}
     />
   );

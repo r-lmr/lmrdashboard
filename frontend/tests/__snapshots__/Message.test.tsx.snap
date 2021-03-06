@@ -38,9 +38,9 @@ exports[`message with URLs has links rendered 1`] = `
   with:
    
   <a
-    href="https://reddit.com"
+    href="http://reddit.com"
   >
-    https://reddit.com
+    http://reddit.com
   </a>
   ,
    

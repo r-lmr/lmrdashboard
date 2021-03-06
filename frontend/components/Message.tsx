@@ -13,7 +13,7 @@ export default function Message(props: IMessage): JSX.Element {
           return LinkUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
         } else if (messagePart.startsWith('/r/')) {
           return LinkUtils.formatLink('https://reddit.com' + messagePart, messagePart);
-        } else if (messagePart.startsWith('https://')) {
+        } else if (/^.*(.+:\/\/).*$/.test(messagePart)) {
           return LinkUtils.formatLink(messagePart, messagePart);
         } else {
           return <> {messagePart}</>
@@ -22,7 +22,7 @@ export default function Message(props: IMessage): JSX.Element {
   }
 
   function linkifyMessageContentIfMessageContainsUrlOrSubreddit(message: string): string | JSX.Element[] {
-    if (/^.*((https:\/\/)|(\/?r\/)).*$/.test(message)) {
+    if (/^.*((.+:\/\/)|(\/?r\/)).*$/.test(message)) {
       return linkifyMessageContent(message);
     }
     return message;
