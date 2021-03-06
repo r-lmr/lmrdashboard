@@ -7,7 +7,7 @@ export default function Message(props: IMessage): JSX.Element {
    * Wraps an a href around text, given an url and clickable text.
    */
   function formatLinkNormally(href: string, clickable: string): JSX.Element {
-    return <span> <a href={href}>{clickable}</a></span>;
+    return <> <a href={href}>{clickable}</a></>;
   }
 
   /**
@@ -16,7 +16,7 @@ export default function Message(props: IMessage): JSX.Element {
    * but excludes a trailing , or . from the clickable link.
    */
   function formatLinkWithEndChar(href: string, clickable: string, endChar: string): JSX.Element {
-    return <span> <a href={href}>{clickable}</a>{endChar}</span>;
+    return <> <a href={href}>{clickable}</a>{endChar}</>;
   }
 
   /**
@@ -45,13 +45,13 @@ export default function Message(props: IMessage): JSX.Element {
         } else if (messagePart.startsWith('https://')) {
           return formatLink(messagePart, messagePart);
         } else {
-          return <span> {messagePart}</span>
+          return <> {messagePart}</>
         }
       });
   }
 
   function linkifyMessageContentIfMessageContainsUrlOrSubreddit(message: string): string | JSX.Element[] {
-    if (/^.*((https:\/\/)|(\/?r)).*$/.test(message)) {
+    if (/^.*((https:\/\/)|(\/?r\/)).*$/.test(message)) {
       return linkifyMessageContent(message);
     }
     return message;
