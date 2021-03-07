@@ -1,60 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`message that contains an "r" but no links does not trigger link rendering 1`] = `
-<div>
-  [
-  2021-01-01
-  ] 
-  <span
-    className="nick-15"
-  >
-    Linus
-  </span>
-  : 
-  This is a message without links, but it has an r.
-</div>
-`;
-
-exports[`message with URLs has links rendered 1`] = `
-<div>
-  [
-  2021-01-01
-  ] 
-  <span
-    className="nick-8"
-  >
-    RMS
-  </span>
-  : 
-   
-  This
-   
-  is
-   
-  a
-   
-  message
-   
-  with:
-   
-  <a
-    href="http://reddit.com"
-  >
-    http://reddit.com
-  </a>
-  ,
-   
-  also
-   
-  <a
-    href="https://reddit.com/r/linuxmasterrace"
-  >
-    https://reddit.com/r/linuxmasterrace
-  </a>
-</div>
-`;
-
-exports[`message with asterisks and bold escape code has bold formatting 1`] = `
+exports[`bold formatting message with asterisks and bold escape code has bold formatting 1`] = `
 <div>
   [
   2021-01-01
@@ -94,7 +40,7 @@ exports[`message with asterisks and bold escape code has bold formatting 1`] = `
 </div>
 `;
 
-exports[`message with asterisks and links has both formatting 1`] = `
+exports[`bold formatting message with asterisks and links has both formatting 1`] = `
 <div>
   [
   2021-01-01
@@ -138,7 +84,7 @@ exports[`message with asterisks and links has both formatting 1`] = `
 </div>
 `;
 
-exports[`message with asterisks has bold formatting 1`] = `
+exports[`bold formatting message with asterisks has bold formatting 1`] = `
 <div>
   [
   2021-01-01
@@ -182,7 +128,7 @@ exports[`message with asterisks has bold formatting 1`] = `
 </div>
 `;
 
-exports[`message with asterisks, bold escape code and links has correct formatting 1`] = `
+exports[`bold formatting message with asterisks, bold escape code and links has correct formatting 1`] = `
 <div>
   [
   2021-01-01
@@ -232,7 +178,7 @@ exports[`message with asterisks, bold escape code and links has correct formatti
 </div>
 `;
 
-exports[`message with bold escape code has bold formatting 1`] = `
+exports[`bold formatting message with bold escape code has bold formatting 1`] = `
 <div>
   [
   2021-01-01
@@ -264,7 +210,61 @@ exports[`message with bold escape code has bold formatting 1`] = `
 </div>
 `;
 
-exports[`message with mixed link types has them rendered 1`] = `
+exports[`link formatting message that contains an "r" but no links does not trigger link rendering 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-15"
+  >
+    Linus
+  </span>
+  : 
+  This is a message without links, but it has an r.
+</div>
+`;
+
+exports[`link formatting message with URLs has links rendered 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-8"
+  >
+    RMS
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with:
+   
+  <a
+    href="http://reddit.com"
+  >
+    http://reddit.com
+  </a>
+  ,
+   
+  also
+   
+  <a
+    href="https://reddit.com/r/linuxmasterrace"
+  >
+    https://reddit.com/r/linuxmasterrace
+  </a>
+</div>
+`;
+
+exports[`link formatting message with mixed link types has them rendered 1`] = `
 <div>
   [
   2021-01-01
@@ -308,7 +308,7 @@ exports[`message with mixed link types has them rendered 1`] = `
 </div>
 `;
 
-exports[`message with subreddits has them rendered as links 1`] = `
+exports[`link formatting message with subreddits has them rendered as links 1`] = `
 <div>
   [
   2021-01-01
@@ -347,7 +347,7 @@ exports[`message with subreddits has them rendered as links 1`] = `
 </div>
 `;
 
-exports[`message without links does not have special formatting 1`] = `
+exports[`no formatting message without links does not have special formatting 1`] = `
 <div>
   [
   2021-01-01
