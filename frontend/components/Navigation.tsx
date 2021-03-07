@@ -24,6 +24,9 @@ const Navigation = (props: IProps) => {
             <NavItem>
               <NavLink href="https://github.com/r-lmr/lmrdashboard">Source</NavLink>
             </NavItem>
+            <NavItem>
+              <NavLink href=" http://linuxmasterrace.org">linuxmasterrace.org</NavLink>
+            </NavItem>
           </Nav>
           <NavbarText>linux good windows bad</NavbarText>
         </Collapse>
