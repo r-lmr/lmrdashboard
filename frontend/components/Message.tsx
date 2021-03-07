@@ -2,9 +2,24 @@ import { getNickCSSClass } from '../data/UserHash';
 import { FormatUtils } from '../util/FormatUtils';
 
 export default function Message(props: IMessage): JSX.Element {
+  /**
+   * Matches strings containing a URL or subreddit
+   */
+  const subredditOrLinkRegex = /^.*((.+:\/\/)|(\/?r\/)).*$/;
+
+  /**
+   * Matches strings containing a URL
+   */
+  const linkRegex = /^.*(.+:\/\/).*$/;
+
+  /**
+   * Matches strings containing a *word* wrapped with asterisks
+   */
+  const asterisksRegex = /^.*(\*.*\*).*$/;
 
   /** 
    * If a message contains URLs or (/)r/<subreddit> those parts will be linked.
+   * Link formatting has precedence over aesthetic formatting
    */
   function enrichMessageContentFormatting(message: string): JSX.Element[] {
     return message.split(' ')
@@ -13,9 +28,9 @@ export default function Message(props: IMessage): JSX.Element {
           return FormatUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
         } else if (messagePart.startsWith('/r/')) {
           return FormatUtils.formatLink('https://reddit.com' + messagePart, messagePart);
-        } else if (/^.*(.+:\/\/).*$/.test(messagePart)) {
+        } else if (linkRegex.test(messagePart)) {
           return FormatUtils.formatLink(messagePart, messagePart);
-        } else if (/^.*(\*.*\*).*$/.test(messagePart)) {
+        } else if (asterisksRegex.test(messagePart)) {
           return FormatUtils.formatBold(messagePart);
         } else {
           return <> {messagePart}</>
@@ -24,7 +39,7 @@ export default function Message(props: IMessage): JSX.Element {
   }
 
   function enrichMessageContentFormattingIfNeeded(message: string): string | JSX.Element[] {
-    if (/^.*((.+:\/\/)|(\/?r\/)).*$/.test(message) || /^.*(\*.*\*).*$/.test(message)) {
+    if (subredditOrLinkRegex.test(message) || asterisksRegex.test(message)) {
       return enrichMessageContentFormatting(message);
     }
     return message;

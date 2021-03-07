@@ -4,7 +4,6 @@ import { expect } from '@jest/globals';
 
 import Message from '../components/Message';
 import { FormatUtils } from '../util/FormatUtils';
-import { link } from 'fs';
 
 test('message without links does not have special formatting', () => {
   const linkSpy = jest.spyOn(FormatUtils, 'formatLink');
