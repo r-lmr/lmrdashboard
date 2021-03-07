@@ -210,6 +210,72 @@ exports[`bold formatting message with bold escape code has bold formatting 1`] =
 </div>
 `;
 
+exports[`bold formatting message with bold escape code(s) can be unescaped 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+  <b>
+     
+    bold
+  </b>
+   
+  not
+   
+  bold
+  <b>
+     
+    bold
+  </b>
+  <b>
+     
+    again
+  </b>
+</div>
+`;
+
+exports[`bold formatting message with bold escape code(s) escaping multiple words can be unescaped 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  notbold
+  <b>
+     
+    both
+  </b>
+  <b>
+     
+    bold
+  </b>
+   
+  not
+   
+  bold
+  <b>
+     
+    bold
+  </b>
+  <b>
+     
+    again
+  </b>
+</div>
+`;
+
 exports[`link formatting message that contains an "r" but no links does not trigger link rendering 1`] = `
 <div>
   [

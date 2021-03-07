@@ -146,6 +146,38 @@ describe('bold formatting', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  test('message with bold escape code(s) can be unescaped', () => {
+    const escapeSpy = jest.spyOn(FormatUtils, 'formatBoldViaEscapeCharacter');
+
+    const component = renderer.create(
+      <Message
+        nick={'BoldMoveCotton'}
+        message={'\u0002bold\u0002 not bold \u0002bold again'}
+        dateCreated={'2021-01-01'}
+      />
+    );
+
+    const tree = component.toJSON();
+    expect(escapeSpy).toHaveBeenCalled();
+    expect(tree).toMatchSnapshot();
+  });
+
+  test('message with bold escape code(s) escaping multiple words can be unescaped', () => {
+    const escapeSpy = jest.spyOn(FormatUtils, 'formatBoldViaEscapeCharacter');
+
+    const component = renderer.create(
+      <Message
+        nick={'BoldMoveCotton'}
+        message={'notbold \u0002both bold\u0002 not bold \u0002bold again'}
+        dateCreated={'2021-01-01'}
+      />
+    );
+
+    const tree = component.toJSON();
+    expect(escapeSpy).toHaveBeenCalled();
+    expect(tree).toMatchSnapshot();
+  });
+
   test('message with asterisks and bold escape code has bold formatting', () => {
     const asteriskSpy = jest.spyOn(FormatUtils, 'formatBoldViaAsterisks');
     const escapeSpy = jest.spyOn(FormatUtils, 'formatBoldViaEscapeCharacter');

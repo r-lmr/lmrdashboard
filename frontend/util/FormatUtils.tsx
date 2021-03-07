@@ -1,3 +1,4 @@
+import { escapeSelector } from "cypress/types/jquery";
 import innerText from "react-innertext";
 import { StringUtils } from "./StringUtils";
 
@@ -17,21 +18,37 @@ export const FormatUtils = {
    * Formats everything after the bold escape character bold
    */
   formatBoldViaEscapeCharacter: (preparedMessage: JSX.Element[]): JSX.Element[] => {
+    const escapeChar = '\u0002';
+
     const formattedMessage: JSX.Element[] = [];
-    let escapeCharUsed = false;
+    let escape = false;
 
     preparedMessage.forEach((messagePart: JSX.Element) => {
       const messagePartInnerText: string = innerText(messagePart);
 
+      // Unset escaping if it has been set in a previous word
+      // but the escape char appears in this word again
+      if (escape && messagePartInnerText.includes(escapeChar)) {
+        escape = false;
+      }
+
       // Always apply the same formatting once an escape character has been used
-      // (No un-escaping or other escape chars supported)
-      if (escapeCharUsed) {
+      // (Un-escaping via the same character in a later word again)
+      if (escape) {
         formattedMessage.push(<b>{messagePart}</b>);
-      } else if (messagePartInnerText.includes('\u0002')) {
+      } else if (messagePartInnerText.includes(escapeChar)) {
         formattedMessage.push(<b>{messagePart}</b>);
-        escapeCharUsed = true;
+        escape = true;
       } else {
         formattedMessage.push(<>{messagePart}</>);
+      }
+
+      // Unescaping if the same word contains the escape char again
+      if (messagePartInnerText.slice(messagePartInnerText.indexOf(escapeChar) + 1).includes(escapeChar)) {
+        escape = false;
+      }
+      if (messagePartInnerText.endsWith(escapeChar)) {
+        escape = false;
       }
     });
 
