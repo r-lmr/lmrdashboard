@@ -18,6 +18,8 @@ export default function Message(props: IMessage): JSX.Element {
    */
   const asterisksRegex = /^.*(\*.*\*).*$/;
 
+  const boldEscapeChar = '\u0002';
+
   /** 
    * If a message contains URLs or (/)r/<subreddit> those parts will be linked.
    * Link formatting has precedence over aesthetic formatting
@@ -56,7 +58,7 @@ export default function Message(props: IMessage): JSX.Element {
     if (subredditOrLinkRegex.test(message) || asterisksRegex.test(message)) {
       formattedMessage = enrichMessageContentFormattingPerPart(message);
     }
-    if (message.includes('\u0002')) {
+    if (message.includes(boldEscapeChar)) {
       formattedMessage = enrichMessageContentFormattingViaEscapeCodes(formattedMessage);
     }
     return formattedMessage;
