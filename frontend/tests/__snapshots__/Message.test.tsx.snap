@@ -54,6 +54,46 @@ exports[`message with URLs has links rendered 1`] = `
 </div>
 `;
 
+exports[`message with asterisks and bold escape code has bold formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with
+   
+  
+  <b>
+    *asterisks*
+  </b>
+  
+   
+  and
+  <b>
+     
+    escape
+  </b>
+  <b>
+     
+    codes
+  </b>
+</div>
+`;
+
 exports[`message with asterisks and links has both formatting 1`] = `
 <div>
   [
@@ -139,6 +179,88 @@ exports[`message with asterisks has bold formatting 1`] = `
     *right*
   </b>
   ?
+</div>
+`;
+
+exports[`message with asterisks, bold escape code and links has correct formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with
+   
+  
+  <b>
+    *asterisks*
+  </b>
+  ,
+  <b>
+     
+    escape
+  </b>
+  <b>
+     
+    codes
+  </b>
+  <b>
+     
+    and
+  </b>
+  <b>
+     
+    <a
+      href="http://reddit.com"
+    >
+      http://reddit.com
+    </a>
+  </b>
+</div>
+`;
+
+exports[`message with bold escape code has bold formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with
+  <b>
+     
+    escape
+  </b>
+  <b>
+     
+    codes
+  </b>
 </div>
 `;
 

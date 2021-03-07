@@ -7,7 +7,7 @@ import { FormatUtils } from '../util/FormatUtils';
 
 test('message without links does not have special formatting', () => {
   const linkSpy = jest.spyOn(FormatUtils, 'formatLink');
-  const boldSpy = jest.spyOn(FormatUtils, 'formatBold');
+  const boldSpy = jest.spyOn(FormatUtils, 'formatBoldViaAsterisks');
 
   const component = renderer.create(
     <Message
@@ -87,7 +87,7 @@ test('message with mixed link types has them rendered', () => {
 });
 
 test('message with asterisks has bold formatting', () => {
-  const spy = jest.spyOn(FormatUtils, 'formatBold');
+  const spy = jest.spyOn(FormatUtils, 'formatBoldViaAsterisks');
   const component = renderer.create(
     <Message
       nick={'BoldMoveCotton'}
@@ -101,10 +101,9 @@ test('message with asterisks has bold formatting', () => {
   expect(tree).toMatchSnapshot();
 });
 
-
 test('message with asterisks and links has both formatting', () => {
   const linkSpy = jest.spyOn(FormatUtils, 'formatLink');
-  const boldSpy = jest.spyOn(FormatUtils, 'formatBold');
+  const boldSpy = jest.spyOn(FormatUtils, 'formatBoldViaAsterisks');
 
   const component = renderer.create(
     <Message
@@ -117,5 +116,50 @@ test('message with asterisks and links has both formatting', () => {
   const tree = component.toJSON();
   expect(linkSpy).toHaveBeenCalled();
   expect(boldSpy).toHaveBeenCalled();
+  expect(tree).toMatchSnapshot();
+});
+
+test('message with bold escape code has bold formatting', () => {
+  // const spy = jest.spyOn(FormatUtils, 'formatBoldViaAsterisks');
+  const component = renderer.create(
+    <Message
+      nick={'BoldMoveCotton'}
+      message={'This is a message with \u0002escape codes'}
+      dateCreated={'2021-01-01'}
+    />
+  );
+
+  const tree = component.toJSON();
+  // expect(spy).toHaveBeenCalled();
+  expect(tree).toMatchSnapshot();
+});
+
+test('message with asterisks and bold escape code has bold formatting', () => {
+  // const spy = jest.spyOn(FormatUtils, 'formatBoldViaAsterisks');
+  const component = renderer.create(
+    <Message
+      nick={'BoldMoveCotton'}
+      message={'This is a message with *asterisks* and \u0002escape codes'}
+      dateCreated={'2021-01-01'}
+    />
+  );
+
+  const tree = component.toJSON();
+  // expect(spy).toHaveBeenCalled();
+  expect(tree).toMatchSnapshot();
+});
+
+test('message with asterisks, bold escape code and links has correct formatting', () => {
+  // const spy = jest.spyOn(FormatUtils, 'formatBoldViaAsterisks');
+  const component = renderer.create(
+    <Message
+      nick={'BoldMoveCotton'}
+      message={'This is a message with *asterisks*, \u0002escape codes and http://reddit.com'}
+      dateCreated={'2021-01-01'}
+    />
+  );
+
+  const tree = component.toJSON();
+  // expect(spy).toHaveBeenCalled();
   expect(tree).toMatchSnapshot();
 });
