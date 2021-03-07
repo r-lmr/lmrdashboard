@@ -54,6 +54,94 @@ exports[`message with URLs has links rendered 1`] = `
 </div>
 `;
 
+exports[`message with asterisks and links has both formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with
+   
+  asterisk
+   
+  
+  <b>
+    *bolded*
+  </b>
+  
+   
+  words
+   
+  and
+   
+  links:
+   
+  <a
+    href="https://reddit.com"
+  >
+    https://reddit.com
+  </a>
+</div>
+`;
+
+exports[`message with asterisks has bold formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  
+  <b>
+    *message*
+  </b>
+  
+   
+  with
+   
+  asterisk
+   
+  
+  <b>
+    *bolded*
+  </b>
+  
+   
+  words,
+   
+  
+  <b>
+    *right*
+  </b>
+  ?
+</div>
+`;
+
 exports[`message with mixed link types has them rendered 1`] = `
 <div>
   [
@@ -137,7 +225,7 @@ exports[`message with subreddits has them rendered as links 1`] = `
 </div>
 `;
 
-exports[`message without links does not have links rendered 1`] = `
+exports[`message without links does not have special formatting 1`] = `
 <div>
   [
   2021-01-01

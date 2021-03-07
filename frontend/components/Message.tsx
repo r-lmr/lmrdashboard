@@ -1,29 +1,31 @@
 import { getNickCSSClass } from '../data/UserHash';
-import { LinkUtils } from '../util/LinkUtils';
+import { FormatUtils } from '../util/FormatUtils';
 
 export default function Message(props: IMessage): JSX.Element {
 
   /** 
    * If a message contains URLs or (/)r/<subreddit> those parts will be linked.
    */
-  function linkifyMessageContent(message: string): JSX.Element[] {
+  function enrichMessageContentFormatting(message: string): JSX.Element[] {
     return message.split(' ')
       .map(messagePart => {
         if (messagePart.startsWith('r/')) {
-          return LinkUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
+          return FormatUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
         } else if (messagePart.startsWith('/r/')) {
-          return LinkUtils.formatLink('https://reddit.com' + messagePart, messagePart);
+          return FormatUtils.formatLink('https://reddit.com' + messagePart, messagePart);
         } else if (/^.*(.+:\/\/).*$/.test(messagePart)) {
-          return LinkUtils.formatLink(messagePart, messagePart);
+          return FormatUtils.formatLink(messagePart, messagePart);
+        } else if (/^.*(\*.*\*).*$/.test(messagePart)) {
+          return FormatUtils.formatBold(messagePart);
         } else {
           return <> {messagePart}</>
         }
       });
   }
 
-  function linkifyMessageContentIfMessageContainsUrlOrSubreddit(message: string): string | JSX.Element[] {
-    if (/^.*((.+:\/\/)|(\/?r\/)).*$/.test(message)) {
-      return linkifyMessageContent(message);
+  function enrichMessageContentFormattingIfNeeded(message: string): string | JSX.Element[] {
+    if (/^.*((.+:\/\/)|(\/?r\/)).*$/.test(message) || /^.*(\*.*\*).*$/.test(message)) {
+      return enrichMessageContentFormatting(message);
     }
     return message;
   }
@@ -43,7 +45,7 @@ export default function Message(props: IMessage): JSX.Element {
   function getFormattedNormalMessage(): JSX.Element {
     return (<>
       [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>: {
-        linkifyMessageContentIfMessageContainsUrlOrSubreddit(props.message)
+        enrichMessageContentFormattingIfNeeded(props.message)
       }
     </>)
   }
