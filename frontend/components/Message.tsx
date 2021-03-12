@@ -1,31 +1,67 @@
 import { getNickCSSClass } from '../data/UserHash';
-import { LinkUtils } from '../util/LinkUtils';
+import { FormatUtils } from '../util/FormatUtils';
+import innerText from 'react-innertext';
 
 export default function Message(props: IMessage): JSX.Element {
+  /**
+   * Matches strings containing a URL or subreddit
+   */
+  const subredditOrLinkRegex = /^.*((.+:\/\/)|(\/?r\/)).*$/;
+
+  /**
+   * Matches strings containing a URL
+   */
+  const linkRegex = /^.*(.+:\/\/).*$/;
+
+  /**
+   * Matches strings containing a *word* wrapped with asterisks
+   */
+  const asterisksRegex = /^.*(\*.*\*).*$/;
+
+  const boldEscapeChar = '\u0002';
 
   /** 
    * If a message contains URLs or (/)r/<subreddit> those parts will be linked.
+   * Link formatting has precedence over aesthetic formatting
    */
-  function linkifyMessageContent(message: string): JSX.Element[] {
+  function enrichMessageContentFormattingPerPart(message: string): JSX.Element[] {
     return message.split(' ')
-      .map(messagePart => {
+      .map((messagePart: string) => {
         if (messagePart.startsWith('r/')) {
-          return LinkUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
+          return FormatUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
         } else if (messagePart.startsWith('/r/')) {
-          return LinkUtils.formatLink('https://reddit.com' + messagePart, messagePart);
-        } else if (/^.*(.+:\/\/).*$/.test(messagePart)) {
-          return LinkUtils.formatLink(messagePart, messagePart);
+          return FormatUtils.formatLink('https://reddit.com' + messagePart, messagePart);
+        } else if (linkRegex.test(messagePart)) {
+          return FormatUtils.formatLink(messagePart, messagePart);
+        } else if (asterisksRegex.test(messagePart)) {
+          return FormatUtils.formatBoldViaAsterisks(messagePart);
         } else {
           return <> {messagePart}</>
         }
       });
   }
 
-  function linkifyMessageContentIfMessageContainsUrlOrSubreddit(message: string): string | JSX.Element[] {
-    if (/^.*((.+:\/\/)|(\/?r\/)).*$/.test(message)) {
-      return linkifyMessageContent(message);
+  function enrichMessageContentFormattingViaEscapeCodes(message: JSX.Element[]): JSX.Element[] {
+    let preparedMessage = message;
+    // Prepare for case if no previous formatting has been done,
+    // i.e. the whole message content is in the first element
+    // => Split it into parts as if previous formatting has been done
+    if (message.length === 1) {
+      preparedMessage = innerText(message[0]).split(' ')
+        .map(it => <> {it}</>);
     }
-    return message;
+    return FormatUtils.formatBoldViaEscapeCharacter(preparedMessage);
+  }
+
+  function enrichMessageContentFormattingIfNeeded(message: string): JSX.Element[] {
+    let formattedMessage: JSX.Element[] = [<>{message}</>];
+    if (subredditOrLinkRegex.test(message) || asterisksRegex.test(message)) {
+      formattedMessage = enrichMessageContentFormattingPerPart(message);
+    }
+    if (message.includes(boldEscapeChar)) {
+      formattedMessage = enrichMessageContentFormattingViaEscapeCodes(formattedMessage);
+    }
+    return formattedMessage;
   }
 
   /**
@@ -43,7 +79,7 @@ export default function Message(props: IMessage): JSX.Element {
   function getFormattedNormalMessage(): JSX.Element {
     return (<>
       [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>: {
-        linkifyMessageContentIfMessageContainsUrlOrSubreddit(props.message)
+        enrichMessageContentFormattingIfNeeded(props.message)
       }
     </>)
   }

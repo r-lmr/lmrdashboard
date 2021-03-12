@@ -1,6 +1,282 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`message that contains an "r" but no links does not trigger link rendering 1`] = `
+exports[`bold formatting message with asterisks and bold escape code has bold formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with
+   
+  
+  <b>
+    *asterisks*
+  </b>
+  
+   
+  and
+  <b>
+     
+    escape
+  </b>
+  <b>
+     
+    codes
+  </b>
+</div>
+`;
+
+exports[`bold formatting message with asterisks and links has both formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with
+   
+  asterisk
+   
+  
+  <b>
+    *bolded*
+  </b>
+  
+   
+  words
+   
+  and
+   
+  links:
+   
+  <a
+    href="https://reddit.com"
+  >
+    https://reddit.com
+  </a>
+</div>
+`;
+
+exports[`bold formatting message with asterisks has bold formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  
+  <b>
+    *message*
+  </b>
+  
+   
+  with
+   
+  asterisk
+   
+  
+  <b>
+    *bolded*
+  </b>
+  
+   
+  words,
+   
+  
+  <b>
+    *right*
+  </b>
+  ?
+</div>
+`;
+
+exports[`bold formatting message with asterisks, bold escape code and links has correct formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with
+   
+  
+  <b>
+    *asterisks*
+  </b>
+  ,
+  <b>
+     
+    escape
+  </b>
+  <b>
+     
+    codes
+  </b>
+  <b>
+     
+    and
+  </b>
+  <b>
+     
+    <a
+      href="http://reddit.com"
+    >
+      http://reddit.com
+    </a>
+  </b>
+</div>
+`;
+
+exports[`bold formatting message with bold escape code has bold formatting 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  This
+   
+  is
+   
+  a
+   
+  message
+   
+  with
+  <b>
+     
+    escape
+  </b>
+  <b>
+     
+    codes
+  </b>
+</div>
+`;
+
+exports[`bold formatting message with bold escape code(s) can be unescaped 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+  <b>
+     
+    bold
+  </b>
+   
+  not
+   
+  bold
+  <b>
+     
+    bold
+  </b>
+  <b>
+     
+    again
+  </b>
+</div>
+`;
+
+exports[`bold formatting message with bold escape code(s) escaping multiple words can be unescaped 1`] = `
+<div>
+  [
+  2021-01-01
+  ] 
+  <span
+    className="nick-1"
+  >
+    BoldMoveCotton
+  </span>
+  : 
+   
+  notbold
+  <b>
+     
+    both
+  </b>
+  <b>
+     
+    bold
+  </b>
+   
+  not
+   
+  bold
+  <b>
+     
+    bold
+  </b>
+  <b>
+     
+    again
+  </b>
+</div>
+`;
+
+exports[`link formatting message that contains an "r" but no links does not trigger link rendering 1`] = `
 <div>
   [
   2021-01-01
@@ -15,7 +291,7 @@ exports[`message that contains an "r" but no links does not trigger link renderi
 </div>
 `;
 
-exports[`message with URLs has links rendered 1`] = `
+exports[`link formatting message with URLs has links rendered 1`] = `
 <div>
   [
   2021-01-01
@@ -54,7 +330,7 @@ exports[`message with URLs has links rendered 1`] = `
 </div>
 `;
 
-exports[`message with mixed link types has them rendered 1`] = `
+exports[`link formatting message with mixed link types has them rendered 1`] = `
 <div>
   [
   2021-01-01
@@ -98,7 +374,7 @@ exports[`message with mixed link types has them rendered 1`] = `
 </div>
 `;
 
-exports[`message with subreddits has them rendered as links 1`] = `
+exports[`link formatting message with subreddits has them rendered as links 1`] = `
 <div>
   [
   2021-01-01
@@ -137,7 +413,7 @@ exports[`message with subreddits has them rendered as links 1`] = `
 </div>
 `;
 
-exports[`message without links does not have links rendered 1`] = `
+exports[`no formatting message without links does not have special formatting 1`] = `
 <div>
   [
   2021-01-01

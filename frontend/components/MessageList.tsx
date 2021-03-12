@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import eventSource from '../data/EventSource';
 import { IMessage } from './Message';
 
-export default function MessageList() {
+export default function MessageList(): JSX.Element {
   const [fetchedMessages, setFetchedMessages] = useState<IMessage[]>([
     { message: 'Loading...', nick: '', dateCreated: '1970-01-01' },
   ]);
