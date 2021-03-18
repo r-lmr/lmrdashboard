@@ -1,5 +1,6 @@
 import { Response } from 'express-serve-static-core';
 import sw from 'stopword';
+import stopwordsEn from 'stopwords-en';
 import { DatabaseMessageUtils, IMessage } from './database/Messages';
 import { DatabaseUserUtils } from './database/Users';
 import { DatabaseDuccUtils } from './database/DuccScores';
@@ -51,10 +52,16 @@ class Sender {
 
     for (const message of messages) {
       const messageText: string = message.message.toLowerCase();
-      const words = sw.removeStopwords(messageText.split(/\s+/));
-      for (let word of words) {
-        // strip any non alpha chars to prevent odd render on screen
-        word = word.replace(/[^a-zA-Z0-9 ]/g, '').trim();
+
+      const splitAndCleanedWords: string[] = messageText.split(/\s+/)
+        .map((word: string) =>
+          word.replace(/[^a-zA-Z0-9 ]/g, '').trim()
+        );
+
+      // More stop word sources are necessary to filter out all
+      const words = sw.removeStopwords(splitAndCleanedWords, [...sw.en, ...stopwordsEn]);
+
+      for (const word of words) {
         if (word && !word.match(/^[0-9]*$/)) {
           if (!wordCounts.has(word)) wordCounts.set(word, 1);
           else wordCounts.set(word, wordCounts.get(word)! + 1);
