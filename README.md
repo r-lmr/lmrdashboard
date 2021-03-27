@@ -1,11 +1,11 @@
 <p align="center">
-  <a href="https://lmr.cocaine.farm" alt="">
+  <a href="https://dash.linuxmasterrace.org/" alt="">
     <img src="https://raw.githubusercontent.com/r-lmr/lmrdashboard/lmrdashboard/resources/lmrdlogo.svg"/>
   </a>
 </p>
 <p align="center">
-  <a href="https://lmr.cocaine.farm" alt="Pipelines">
-    <img src="https://img.shields.io/website?url=https%3A%2F%2Flmr.cocaine.farm%2F"/>
+  <a href="https://dash.linuxmasterrace.org/" alt="Pipelines">
+    <img src="https://img.shields.io/website?url=https%3A%2F%2Fdash.linuxmasterrace.org%2F"/>
   </a>
   <a href="https://gitlab.com/cocainefarm/lmrdashboard/-/pipelines" alt="Pipelines">
     <img src="https://gitlab.com/cocainefarm/lmrdashboard/badges/lmrdashboard/pipeline.svg"/>
@@ -22,7 +22,7 @@ Dashboard displaying various live information about the #linuxmasterrace IRC cha
 
 ## Releasing
 
-The master branch gets continuously deployed to a staging environment at [lmr.staging.cocaine.farm](https://lmr.staging.cocaine.farm).
+The master branch gets continuously deployed to a staging environment at [dash-stage.linuxmasterrace.org](https://dash-stage.linuxmasterrace.org/).
 To deploy to the production environment, release a new version by bumping all version tags and tagging the release. This should be done using the `bash2version` script in the project root.
 
 ```sh
