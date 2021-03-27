@@ -46,7 +46,7 @@ releases:
               paths:
                 - /
           tls:
-            - secretName: cocaine-farm-tls
+            - secretName: linuxmasterrace-org-tls
               hosts:
                 - {{ .Values.host }}
       - mariadb:
