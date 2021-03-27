@@ -146,7 +146,7 @@ build:frontend:
   variables:
     DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_SHORT_SHA}"
     BUILD_PATH: "frontend/"
-    BUILD_ARGS: "NEXT_PUBLIC_LMRD_EVENT_SOURCE=https://lmr.staging.cocaine.farm/api/test"
+    BUILD_ARGS: "NEXT_PUBLIC_LMRD_EVENT_SOURCE=https://dash-stage.linuxmasterrace.org/api/test"
 
 build:frontend:release:
   extends: .build
@@ -156,7 +156,7 @@ build:frontend:release:
   variables:
     DESTINATION: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:${CI_COMMIT_TAG} kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-frontend:latest"
     BUILD_PATH: "frontend/"
-    BUILD_ARGS: "NEXT_PUBLIC_LMRD_EVENT_SOURCE=https://lmr.cocaine.farm/api/test"
+    BUILD_ARGS: "NEXT_PUBLIC_LMRD_EVENT_SOURCE=https://dash.linuxmasterrace.org/api/test"
   only:
     refs:
       - tags
