@@ -209,7 +209,7 @@ deploy:production:
     - test:e2e
   environment:
     name: production
-    url: https://lmr.cocaine.farm
+    url: https://dash.linuxmasterrace.org
   before_script:
     - gpg --import "$COCAINEFARM_GPG_PRIVKEY"
   script:
@@ -227,7 +227,7 @@ deploy:staging:
     - test:e2e
   environment:
     name: staging
-    url: https://lmr.staging.cocaine.farm
+    url: https://dash-stage.linuxmasterrace.org
   before_script:
     - gpg --import "$COCAINEFARM_GPG_PRIVKEY"
   script:
