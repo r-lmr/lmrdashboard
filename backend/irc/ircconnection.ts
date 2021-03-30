@@ -38,7 +38,8 @@ scheduleDailyEvent(process.env.LMRD_DUCC_TIME || '09:00', () => {
   setTimeout(() => {
     ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.KILLERS);
   }, 5000);
-});
+}, process.env.LMRD_DUCC_DAY ? +process.env.LMRD_DUCC_DAY : 0); // Weekday on which to run it
+
 
 client.on('end', () => {
   console.log('disconnected from server');

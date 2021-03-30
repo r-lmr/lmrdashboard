@@ -49,6 +49,8 @@ LMRD_IRC_PORT=6697
 LMRD_IRC_CHANNEL=#aboftytest
 LMRD_IRC_USER=<testusernick>
 LMRD_IRC_PASS=<password>
+LMRD_DUCC_TIME=09:00
+LMRD_DUCC_DAY=0
 ```
 
 #### Database
