@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import eventSource from '../data/EventSource';
 import DuccStat, { IDuccStat } from './DuccStat';
+import { Tooltip } from 'reactstrap';
 
 export default function DuccStatsList(props: IProps) {
   const [fetchedStats, setFetchedStats] = useState<IDuccStat[]>([{ user: 'Loading...' }]);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
   useEffect(() => {
     eventSource.onmessage = (e) => {
@@ -16,10 +18,15 @@ export default function DuccStatsList(props: IProps) {
     });
   }, []);
 
+  const toggle = () => setTooltipOpen(!tooltipOpen);
+
   return (
     <div>
-      <div className={'duccstatslist-header'}>
-        Top Ducc {props.type === ScoreType.FRIENDS ? 'Friends' : 'Killers'}:{' '}
+      <div>
+        <p className={'duccstatslist-header'}>Top Ducc {props.type === ScoreType.FRIENDS ? 'Friends' : 'Killers'}: <span className={'duccstatslist-tooltip'} id="duccstatslist-tooltip">?</span></p>
+        <Tooltip placement="right" isOpen={tooltipOpen} target="duccstatslist-tooltip" toggle={toggle}>
+          Generated weekly
+        </Tooltip>
       </div>
       <div className={'duccstatslist-content'}>
         {fetchedStats.map((duccStat) => (
