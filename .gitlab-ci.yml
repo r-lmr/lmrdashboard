@@ -76,7 +76,8 @@ backend:test:
   script:
     - cd backend
     - yarn install
-    - yarn test:unit-ci
+    # - yarn test:unit-ci
+    - yarn run jest --forceExit
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     when: always

@@ -16,6 +16,7 @@ describe('cron scheduling daily events (only the first trigger is checked)', () 
     const mockCallback = jest.fn(() => console.log('callback called'));
 
     const date = new Date();
+    console.log('getTimeString(date)', getTimeString(date))
     scheduleDailyEvent(
       getTimeString(date),
       mockCallback,
