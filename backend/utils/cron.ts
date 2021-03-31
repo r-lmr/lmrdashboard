@@ -25,7 +25,6 @@ export function scheduleDailyEvent(time: string | undefined, triggerThis: () => 
 
   // get the interval in ms from now to the timepoint when to trigger the alarm
   const firstTriggerAfterMs = startTime.getTime() - now.getTime();
-  console.log('firstTriggerAfterMs', firstTriggerAfterMs)
 
   // trigger the function triggerThis() at the timepoint
   // create setInterval when the timepoint is reached to trigger it every day at this timepoint
