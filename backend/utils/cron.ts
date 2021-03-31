@@ -4,7 +4,7 @@
  * @param time Hour and minute in the format of hh:mm
  * @param triggerThis callback function
  */
-export function scheduleDailyEvent(time: string | undefined, triggerThis: () => void): void {
+export function scheduleDailyEvent(time: string | undefined, triggerThis: () => void, weekday?: number): void {
   if (time === undefined || !time.match(/^\d\d:\d\d$/)) {
     console.warn('Please specify a time string in the format of hh:mm');
     return;
@@ -29,7 +29,22 @@ export function scheduleDailyEvent(time: string | undefined, triggerThis: () => 
   // trigger the function triggerThis() at the timepoint
   // create setInterval when the timepoint is reached to trigger it every day at this timepoint
   setTimeout(function () {
-    triggerThis();
-    setInterval(triggerThis, 24 * 60 * 60 * 1000);
+    triggerFunctionIfWeekday(triggerThis, weekday);
+    setInterval(() => triggerFunctionIfWeekday(triggerThis, weekday), 24 * 60 * 60 * 1000);
   }, firstTriggerAfterMs);
+}
+
+function triggerFunctionIfWeekday(triggerThis: () => void, weekday?: number): void {
+  // Do on each day if weekday is undefined
+  if (!weekday) {
+    triggerThis();
+    return;
+  }
+
+  // Only do on a specific weekday
+  const currentDayNumber = new Date().getDay();
+  if (currentDayNumber !== weekday) {
+    return;
+  }
+  triggerThis();
 }

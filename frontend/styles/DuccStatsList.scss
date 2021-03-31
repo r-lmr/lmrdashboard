@@ -1,6 +1,12 @@
 .duccstatslist-header {
   font-weight: bold;
   text-align: center;
+  margin-bottom: 0;
+
+  .duccstatslist-tooltip {
+    font-weight: normal !important;
+    opacity: 50%;
+  }
 }
 .duccstatslist-content {
   text-align: center;

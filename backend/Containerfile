@@ -17,7 +17,8 @@ ENV LMRD_IRC_CHANNEL "#linuxmasterrace" \
     LMRD_DB_NAME "lmrd" \
     LMRD_DB_USER \
     LMRD_DB_PASS \
-    LMRD_DUCC_TIME "09:00"
+    LMRD_DUCC_TIME "09:00" \
+    LMRD_DUCC_DAY "0"
 
 EXPOSE 4000
 
