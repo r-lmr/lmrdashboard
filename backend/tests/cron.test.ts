@@ -1,12 +1,23 @@
 import { scheduleDailyEvent } from "../utils/cron";
 
 describe('cron scheduling daily events (only the first trigger is checked)', () => {
+  /**
+   * @returns a string in the format of hh:mm, as needed by scheduleDailyEvent
+   */
+  function getTimeString(date: Date): string {
+    const hours = date.getHours();
+    const hoursString = ('0' + hours).slice(-2);
+    const minutes = date.getMinutes();
+    const minutesString = ('0' + minutes).slice(-2);
+    return `${hoursString}:${minutesString}`
+  }
+
   test('trigger function is called at the specified time and day', async () => {
     const mockCallback = jest.fn(() => console.log('callback called'));
 
     const date = new Date();
     scheduleDailyEvent(
-      `${date.getHours()}:${date.getMinutes()}`,
+      getTimeString(date),
       mockCallback,
       date.getDay());
 
@@ -19,7 +30,7 @@ describe('cron scheduling daily events (only the first trigger is checked)', () 
 
     const date = new Date();
     scheduleDailyEvent(
-      `${date.getHours()}:${date.getMinutes()}`,
+      getTimeString(date),
       mockCallback,
       date.getDay() + 1);
 
