@@ -10,7 +10,7 @@ describe('cron scheduling daily events (only the first trigger is checked)', () 
       mockCallback,
       date.getDay());
 
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 5000));
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
@@ -23,7 +23,7 @@ describe('cron scheduling daily events (only the first trigger is checked)', () 
       mockCallback,
       date.getDay() + 1);
 
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 5000));
     expect(mockCallback.mock.calls.length).toBe(0);
   });
 });
