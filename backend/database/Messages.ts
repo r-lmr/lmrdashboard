@@ -133,7 +133,6 @@ class DatabaseMessageUtils {
   }
 
   static async calculateTopWords(): Promise<Map<string, number>> {
-    log.debug('Calculating top words');
     const messages: IMessage[] = await DatabaseMessageUtils.getLinesLastNDays(7);
     const wordCounts: Map<string, number> = new Map<string, number>();
 
@@ -156,7 +155,6 @@ class DatabaseMessageUtils {
     }
 
     const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
-    log.debug('Calculating top done');
     return sortedWordCounts;
   }
 }

@@ -9,7 +9,7 @@ const tracker = require('mock-knex').getTracker();
 
 let LAST_MESSAGES: { user: string; server: string; message: string; dateCreated: Date | string }[] = [];
 
-describe('test Sender with mocked database response', () => {
+describe('test getLinesLastNDays with mocked database response', () => {
   beforeAll((done) => {
     LAST_MESSAGES = last_messages;
     LAST_MESSAGES.forEach((lm, idx) => {
