@@ -1,6 +1,9 @@
 import dotenv from 'dotenv';
+import { LogWrapper } from '../utils/logging/LogWrapper';
 dotenv.config();
 import knex from './dbConn';
+
+const log = new LogWrapper(module.id);
 
 class DatabaseMessageUtils {
   static formatDate(date: Date): string {
@@ -95,7 +98,7 @@ class DatabaseMessageUtils {
       }
     }
 
-    console.log('Saving message to db.');
+    log.debug('Saving message to db.', {nick, userIsBot, message});
   }
 }
 

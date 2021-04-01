@@ -4,8 +4,11 @@ import { DatabaseDuccUtils } from '../database/DuccScores';
 import { DatabaseMessageUtils } from '../database/Messages';
 import { DatabaseUserUtils } from '../database/Users';
 import myEmitter from './utils/emitter';
+import { LogWrapper } from '../utils/logging/LogWrapper';
 
-/*
+const log = new LogWrapper(module.id);
+
+/**
  * Singleton that processes incoming IRC messages and relays related operations
  */
 class IrcMessageProcessor {
@@ -42,7 +45,7 @@ class IrcMessageProcessor {
   }
 
   public parseMessage(line: string): IrcMessage {
-    console.log(line);
+    log.info(`New line: ${line}`);
 
     // Create variables with default values
     let prefix = undefined;
@@ -107,7 +110,7 @@ class IrcMessageProcessor {
   private processNotice(ircMessage: IrcMessage): void {
     const param = ircMessage.params[1];
     if (param.includes('assword incorrect') || param.includes('is not registered')) {
-      console.log('PASSWORD IS NOT CORRECT. NICK WILL BE CHANGED.');
+      log.warn('PASSWORD IS NOT CORRECT. NICK WILL BE CHANGED.');
       this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
     }
   }
@@ -126,7 +129,7 @@ class IrcMessageProcessor {
       // we will let the NAMES parse handle the assignment of roles
       if (roleMode.length > 2) {
         DatabaseUserUtils.flushUserTable();
-        console.log('running names command');
+        log.debug('running names command');
         this.runNamesCommand();
         return;
       }
@@ -183,14 +186,14 @@ class IrcMessageProcessor {
     const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
     await DatabaseUserUtils.deleteUser(nick!);
     myEmitter.emit('part');
-    console.log('RUNNING PARTANDQUIT');
+    log.debug('RUNNING PARTANDQUIT');
   }
 
   private async processKick(ircMessage: IrcMessage) {
     const nick = ircMessage.params[1];
     await DatabaseUserUtils.deleteUser(nick!);
     myEmitter.emit('part');
-    console.log('RUNNING KICK');
+    log.debug('RUNNING KICK');
   }
 
   private async processPrivMsg(ircMessage: IrcMessage) {

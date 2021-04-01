@@ -13,5 +13,6 @@ const config: Config.InitialOptions = {
   collectCoverage: true,
   coverageDirectory: 'results/coverage',
   reporters: ['default', 'jest-junit'],
+  maxWorkers: 1 // Necessary so the tests don't run in parallel and interfere with files used for assertions
 };
 export default config;
