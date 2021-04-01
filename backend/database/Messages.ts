@@ -98,7 +98,29 @@ class DatabaseMessageUtils {
       }
     }
 
-    log.debug('Saving message to db.', {nick, userIsBot, message});
+    log.debug('Saving message to db.', { nick, userIsBot, message });
+  }
+
+  static async insertTopWords(wordMap: Map<string, number>): Promise<void> {
+    wordMap.forEach(async (count, word) => {
+      const wordExists = await knex('top_words').select().where({ word });
+      if (wordExists.length < 1) {
+        await knex('top_words').insert({ count, word });
+      } else {
+        await knex('top_words').where({ word }).update({ count });
+      }
+    });
+  }
+
+  static async getTopWords(): Promise<ITopWord[]> {
+    const topWords = await knex('top_words').select().orderBy('count', 'desc').limit(20);
+    const parsedTopWords = topWords.map((entry) => {
+      return {
+        word: entry['word'],
+        count: entry['count'],
+      };
+    });
+    return parsedTopWords;
   }
 }
 
@@ -108,6 +130,11 @@ interface ILineCount {
   date: string;
   lineCount: number;
   botLines: number;
+}
+
+interface ITopWord {
+  word: string;
+  count: number;
 }
 
 export interface IMessage {
