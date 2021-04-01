@@ -39,7 +39,7 @@ app.get('/test', async (req, res: Response<any, number>) => {
   await Sender.sendMessages(res);
   await Sender.sendLineCountsLastDays(res);
   await Sender.sendLineCountsHighScores(res);
-  await Sender.sendTopWords(res);
+  // await Sender.sendTopWords(res);
   await Sender.sendDuccScores(res);
 
   // Daily
