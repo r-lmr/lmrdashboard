@@ -1,4 +1,7 @@
+import { LogWrapper } from '../utils/logging/LogWrapper';
 import knex from './dbConn';
+
+const log = new LogWrapper(module.id);
 
 class InitDatabase {
   static MigrateDatabase() {
@@ -7,7 +10,7 @@ class InitDatabase {
         directory: __dirname + '/knex_migrations',
       })
       .then(() => {
-        console.log('Running database migrations of latest');
+        log.info('Running database migrations of latest');
       });
   }
 }

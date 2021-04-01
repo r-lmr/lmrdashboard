@@ -1,5 +1,8 @@
-import knex from './dbConn';
 import SortedSet from 'collections/sorted-set';
+import { LogWrapper } from '../utils/logging/LogWrapper';
+import knex from './dbConn';
+
+const log = new LogWrapper(module.id);
 
 class DatabaseUserUtils {
   static async getUsers(): Promise<string[]> {
@@ -19,20 +22,20 @@ class DatabaseUserUtils {
     await knex('online_users')
       .del()
       .where({ user: nick })
-      .catch((e) => console.log('ERROR IN Users.deleteUser', e));
-    console.log(`User ${nick} has parted.`);
+      .catch((e) => log.error('ERROR IN Users.deleteUser', e));
+    log.info(`User ${nick} has parted.`);
   }
 
   static async addUser(nick: string, role: string | null): Promise<void> {
-    console.log('ATTEMPTING TO ADD NEW USER ' + nick);
+    log.info('ATTEMPTING TO ADD NEW USER ' + nick);
     await knex('online_users')
       .insert({ user: nick, role })
       .catch((e) => {
         //ignore any duplicate users that may be in table
         //example: disconnecting from IRC
-        if (e.errno != 1062) console.log(e);
+        if (e.errno != 1062) log.error('ERROR in Users.addUser', e);
       });
-    console.log(`${nick} has come online.`);
+    log.info(`${nick} has come online.`);
   }
 
   static async updateUser(role: string | null, oldNick: string, newNick?: string): Promise<void> {
@@ -40,22 +43,22 @@ class DatabaseUserUtils {
       await knex('online_users')
         .where({ user: oldNick })
         .update({ user: newNick ?? oldNick });
-      console.log(`CHANGED NICK ${oldNick} TO ${newNick}`);
+      log.info(`CHANGED NICK ${oldNick} TO ${newNick}`);
     } else {
       await knex('online_users')
         .where({ user: oldNick })
         .update({ role, user: newNick ?? oldNick });
-      console.log('UPDATED USER ROLE FOR ' + oldNick);
+      log.info('UPDATED USER ROLE FOR ' + oldNick);
     }
   }
 
   static async flushUserTable(): Promise<void> {
     try {
-      console.log('ATTEMPTING TO CLEAR USER TABLE ON START');
+      log.info('ATTEMPTING TO CLEAR USER TABLE ON START');
       const deleted = await knex('online_users').del();
-      if (deleted) console.log('DELETED ALL USERS');
+      if (deleted) log.info('DELETED ALL USERS');
     } catch (e) {
-      console.log('UNABLE TO DELETE USERS');
+      log.warn('UNABLE TO DELETE USERS');
     }
   }
 
