@@ -23,9 +23,7 @@ export default function TopWords() {
       <Container fluid={'nogutters'}>
         <Row>
           <Col md={6}>
-            <TopWordsList
-              topWords={fetchedTopWords.slice(0, Math.floor(fetchedTopWords.length / 2))}
-            />
+            <TopWordsList topWords={fetchedTopWords.slice(0, Math.floor(fetchedTopWords.length / 2))} />
           </Col>
           <Col md={6}>
             <TopWordsList
@@ -38,4 +36,7 @@ export default function TopWords() {
   );
 }
 
-export type TTopWord = [string, number];
+export type TTopWord = {
+  word: string;
+  count: number;
+};

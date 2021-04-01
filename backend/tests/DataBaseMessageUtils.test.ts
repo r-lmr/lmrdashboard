@@ -1,7 +1,6 @@
 import mockDb from 'mock-knex';
 import last_messages from './resources/mock_db_data/last_messages.json';
 import { DatabaseMessageUtils } from '../database/Messages';
-import { Sender } from '../Sender';
 import knex from '../database/dbConn';
 import sw from 'stopword';
 import stopwordsEn from 'stopwords-en';
@@ -10,7 +9,7 @@ const tracker = require('mock-knex').getTracker();
 
 let LAST_MESSAGES: { user: string; server: string; message: string; dateCreated: Date | string }[] = [];
 
-describe('test Sender with mocked database response', () => {
+describe('test getLinesLastNDays with mocked database response', () => {
   beforeAll((done) => {
     LAST_MESSAGES = last_messages;
     LAST_MESSAGES.forEach((lm, idx) => {
@@ -51,7 +50,7 @@ describe('test Sender with mocked database response', () => {
       query.response(LAST_MESSAGES);
     });
 
-    const sortedWordCounts = await Sender.getTopWords();
+    const sortedWordCounts = await DatabaseMessageUtils.calculateTopWords();
     const expected: Map<string, number> = new Map();
     // Stop words are removed
     expected.set('linux', 3);

@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import { LogWrapper } from '../utils/logging/LogWrapper';
 dotenv.config();
 import knex from './dbConn';
+import sw from 'stopword';
+import stopwordsEn from 'stopwords-en';
 
 const log = new LogWrapper(module.id);
 
@@ -98,7 +100,62 @@ class DatabaseMessageUtils {
       }
     }
 
-    log.debug('Saving message to db.', {nick, userIsBot, message});
+    log.debug('Saving message to db.', { nick, userIsBot, message });
+  }
+
+  static async insertTopWords(wordMap: Map<string, number>): Promise<void> {
+    log.debug('Inserting top words into the database');
+    wordMap.forEach(async (count, word) => {
+      const wordExists = await knex('top_words').select().where({ word });
+      if (wordExists.length < 1) {
+        await knex('top_words').insert({ count, word });
+      } else {
+        await knex('top_words').where({ word }).update({ count });
+      }
+    });
+  }
+
+  static async getTopWords(): Promise<ITopWord[]> {
+    log.debug('Retrieving top words from the database');
+    const topWords = await knex('top_words').select().orderBy('count', 'desc').limit(20);
+    const parsedTopWords = topWords.map((entry) => {
+      return {
+        word: entry['word'],
+        count: entry['count'],
+      };
+    });
+    return parsedTopWords;
+  }
+
+  static async getTopWordsAndInsertIntoDatabase(): Promise<void> {
+    const sortedWordCounts: Map<string, number> = await DatabaseMessageUtils.calculateTopWords();
+    await DatabaseMessageUtils.insertTopWords(sortedWordCounts);
+  }
+
+  static async calculateTopWords(): Promise<Map<string, number>> {
+    const messages: IMessage[] = await DatabaseMessageUtils.getLinesLastNDays(7);
+    const wordCounts: Map<string, number> = new Map<string, number>();
+
+    for (const message of messages) {
+      const messageText: string = message.message.toLowerCase();
+
+      const splitAndCleanedWords: string[] = messageText
+        .split(/\s+/)
+        .map((word: string) => word.replace(/[^a-zA-Z0-9 ]/g, '').trim());
+
+      // More stop word sources are necessary to filter out all
+      const words = sw.removeStopwords(splitAndCleanedWords, [...sw.en, ...stopwordsEn]);
+
+      for (const word of words) {
+        if (word && !word.match(/^[0-9]*$/)) {
+          if (!wordCounts.has(word)) wordCounts.set(word, 1);
+          else wordCounts.set(word, wordCounts.get(word)! + 1);
+        }
+      }
+    }
+
+    const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
+    return sortedWordCounts;
   }
 }
 
@@ -108,6 +165,11 @@ interface ILineCount {
   date: string;
   lineCount: number;
   botLines: number;
+}
+
+interface ITopWord {
+  word: string;
+  count: number;
 }
 
 export interface IMessage {

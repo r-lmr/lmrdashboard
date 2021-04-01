@@ -35,14 +35,17 @@ rl.on('line', async (line: string) => {
 });
 
 // Daily at 01:00-03:00 CST is best according to aboft => 08:00-10:00 GMT+1 (Server time dependent)
-scheduleDailyEvent(process.env.LMRD_DUCC_TIME || '09:00', () => {
-  log.info(`Sending ducc message at ${new Date().toLocaleTimeString('en')}`);
-  ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.FRIENDS);
-  setTimeout(() => {
-    ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.KILLERS);
-  }, 5000);
-}, process.env.LMRD_DUCC_DAY ? +process.env.LMRD_DUCC_DAY : 0); // Weekday on which to run it
-
+scheduleDailyEvent(
+  process.env.LMRD_DUCC_TIME || '12:08',
+  () => {
+    log.info(`Sending ducc message at ${new Date().toLocaleTimeString('en')}`);
+    ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.FRIENDS);
+    setTimeout(() => {
+      ircMessageProcessor.sendDuccMessage(DuccMessageTriggerType.KILLERS);
+    }, 5000);
+  },
+  process.env.LMRD_DUCC_DAY ? +process.env.LMRD_DUCC_DAY : 0
+); // Weekday on which to run it
 
 client.on('end', () => {
   log.info('disconnected from server');

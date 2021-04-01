@@ -1,13 +1,14 @@
-import Express from 'express';
 import cors from 'cors';
-import './irc/ircconnection';
+import Express from 'express';
 import { Response } from 'express-serve-static-core';
-import { Sender } from './Sender';
-import { InitDatabase } from './database/InitDatabase';
-import { DatabaseUserUtils } from './database/Users';
-import { ResCollection } from './ResCollection';
 import { v4 as uuidv4 } from 'uuid';
+import { InitDatabase } from './database/InitDatabase';
+import { DatabaseMessageUtils } from './database/Messages';
+import { DatabaseUserUtils } from './database/Users';
+import './irc/ircconnection';
 import { Listener } from './Listener';
+import { ResCollection } from './ResCollection';
+import { Sender } from './Sender';
 import { LogWrapper } from './utils/logging/LogWrapper';
 
 const log = new LogWrapper('server.ts');
@@ -19,7 +20,7 @@ const resCollection = ResCollection.Instance;
 
 app.get('/healthz', async (req, res, next) => {
   log.info('Got request for /healthz endoint');
-  log.debug('From', {ip: req.ip});
+  log.debug('From', { ip: req.ip });
   ['/health', '/healthz'].indexOf(req.path.toLowerCase()) >= 0 && ['get', 'head'].indexOf(req.method.toLowerCase()) >= 0
     ? res.status(200).end()
     : next();
@@ -27,7 +28,7 @@ app.get('/healthz', async (req, res, next) => {
 
 app.get('/test', async (req, res: Response<any, number>) => {
   log.info('Got request for /test endoint');
-  log.debug('From', {ip: req.ip})
+  log.debug('From', { ip: req.ip });
   const resId = uuidv4();
   resCollection.addToCollection(resId, res);
 
@@ -46,23 +47,29 @@ app.get('/test', async (req, res: Response<any, number>) => {
   await Sender.sendMessages(res);
   await Sender.sendLineCountsLastDays(res);
   await Sender.sendLineCountsHighScores(res);
-  // await Sender.sendTopWords(res);
+  await Sender.sendTopWords(res);  // Retrieved from the database
   await Sender.sendDuccScores(res);
 
-  // Daily
+  // Daily we send the top words that are in the database
   setInterval(async () => {
     await Sender.sendTopWords(res);
   }, 24 * 60 * 60 * 1000);
 
   req.on('close', () => {
     log.info('connection CLOSED');
-    log.debug('Request IP', {ip: req.ip})
+    log.debug('Request IP', { ip: req.ip });
     resCollection.removeFromCollection(resId);
   });
 });
 
 // Send additional data when new data arrives from the irc connection
 Listener.addIrcListeners();
+
+// Every hour we do the top words calculation
+setInterval(() => {
+  log.info('Running top words calculation and inserting into DB');
+  DatabaseMessageUtils.getTopWordsAndInsertIntoDatabase();
+}, 1000 * 60 * 60);
 
 app.listen(4000, () => {
   log.info('listening on 4000');
