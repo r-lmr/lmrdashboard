@@ -1,7 +1,6 @@
 import mockDb from 'mock-knex';
 import last_messages from './resources/mock_db_data/last_messages.json';
 import { DatabaseMessageUtils } from '../database/Messages';
-import { Sender } from '../Sender';
 import knex from '../database/dbConn';
 import sw from 'stopword';
 import stopwordsEn from 'stopwords-en';
@@ -51,7 +50,7 @@ describe('test Sender with mocked database response', () => {
       query.response(LAST_MESSAGES);
     });
 
-    const sortedWordCounts = await Sender.getTopWords();
+    const sortedWordCounts = await DatabaseMessageUtils.calculateTopWords();
     const expected: Map<string, number> = new Map();
     // Stop words are removed
     expected.set('linux', 3);
