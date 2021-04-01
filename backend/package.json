@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "pretty": "prettier --write .",
-    "start": "ts-node server",
+    "start": "ts-node --transpile-only server",
     "test:unit-local": "JEST_JUNIT_OUTPUT_DIR=results yarn run jest --forceExit",
     "test:unit-ci": "yarn run jest --forceExit --silent --ci"
   },
