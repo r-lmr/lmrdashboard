@@ -45,7 +45,8 @@ class IrcMessageProcessor {
   }
 
   public parseMessage(line: string): IrcMessage {
-    log.info(`New line: ${line}`);
+    log.debug('Parsing new IRC message');
+    log.info(`New message: ${line}`);
 
     // Create variables with default values
     let prefix = undefined;

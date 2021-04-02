@@ -19,8 +19,7 @@ app.use(cors());
 const resCollection = ResCollection.Instance;
 
 app.get('/healthz', async (req, res, next) => {
-  log.info('Got request for /healthz endoint');
-  log.debug('From', { ip: req.ip });
+  log.debug('Got request for /healthz endoint');
   ['/health', '/healthz'].indexOf(req.path.toLowerCase()) >= 0 && ['get', 'head'].indexOf(req.method.toLowerCase()) >= 0
     ? res.status(200).end()
     : next();
@@ -28,8 +27,8 @@ app.get('/healthz', async (req, res, next) => {
 
 app.get('/test', async (req, res: Response<any, number>) => {
   log.info('Got request for /test endoint');
-  log.debug('From', { ip: req.ip });
   const resId = uuidv4();
+  log.debug('New request', { id: resId });
   resCollection.addToCollection(resId, res);
 
   res.writeHead(200, {
@@ -47,7 +46,7 @@ app.get('/test', async (req, res: Response<any, number>) => {
   await Sender.sendMessages(res);
   await Sender.sendLineCountsLastDays(res);
   await Sender.sendLineCountsHighScores(res);
-  await Sender.sendTopWords(res);  // Retrieved from the database
+  await Sender.sendTopWords(res); // Retrieved from the database
   await Sender.sendDuccScores(res);
 
   // Daily we send the top words that are in the database
@@ -57,7 +56,7 @@ app.get('/test', async (req, res: Response<any, number>) => {
 
   req.on('close', () => {
     log.info('connection CLOSED');
-    log.debug('Request IP', { ip: req.ip });
+    log.debug('Request', { id: resId });
     resCollection.removeFromCollection(resId);
   });
 });
