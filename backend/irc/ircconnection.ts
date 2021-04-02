@@ -31,6 +31,7 @@ const ircMessageProcessor = IrcMessageProcessor.Instance(client, joinConfig);
 
 rl.on('line', async (line: string) => {
   const ircMessage: IrcMessage = ircMessageProcessor.parseMessage(line);
+  log.debug('Parsed IRC message:', {ircMessage});
   ircMessageProcessor.processIrcMessage(ircMessage);
 });
 

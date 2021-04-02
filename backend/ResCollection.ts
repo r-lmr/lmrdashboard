@@ -30,13 +30,13 @@ class ResCollection {
   }
 
   public addToCollection(id: string, res: Response<any, number>) {
-    log.debug(`Adding res to collection of size ${this.collection.size}`);
+    log.debug(`Adding res to collection of size ${this.collection.size}`, { id: id });
     this.collection.set(id, res);
     log.debug('Addition successful');
   }
 
   public removeFromCollection(id: string): void {
-    log.debug(`Removing res from collection of size ${this.collection.size}`);
+    log.debug(`Removing res from collection of size ${this.collection.size}`, { id: id });
     if (!this.collection.has(id)) {
       console.warn('Response not found in Response collection when trying to delete');
     }
@@ -49,7 +49,9 @@ class ResCollection {
   }
 
   public doMultipleForAllResInCollection(functionsToExecute: ((arg: Response<any, number>) => void)[]) {
-    log.debug(`Calling ${functionsToExecute.length} function(s) for all res in collection of size ${this.getCollectionSize()}`)
+    log.debug(
+      `Calling ${functionsToExecute.length} function(s) for all res in collection of size ${this.getCollectionSize()}`
+    );
     this.collection.forEach((res: Response<string, number>) => {
       for (const functionToExecute of functionsToExecute) {
         functionToExecute(res);
