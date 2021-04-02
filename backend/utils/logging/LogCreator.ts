@@ -23,7 +23,7 @@ export class LogCreator {
       level: process.env.LMRD_LOG_LEVEL || LogLevel.DEBUG,
       format: format.combine(
         format.timestamp({
-          format: 'YYYY-MM-DD HH:mm:ss'
+          format: 'YYYY-MM-DD HH:mm:ss',
         }),
         format.errors({ stack: true }),
         format.splat(),
@@ -35,18 +35,18 @@ export class LogCreator {
         // - Write all logs error (and below) to `quick-start-error.log`.
         new transports.File({
           filename: path.join(this.getAndCreateLogDir('logs'), `${defaultServiceName}-error.log`),
-          level: LogLevel.ERROR
+          level: LogLevel.ERROR,
         }),
         new transports.File({
-          filename: path.join(this.getAndCreateLogDir('logs'), `${defaultServiceName}-combined.log`)
-        })
-      ]
+          filename: path.join(this.getAndCreateLogDir('logs'), `${defaultServiceName}-combined.log`),
+        }),
+      ],
     });
 
-    // If we're not in production then **ALSO** log to the `console`
-    // with colorized formatting and additional formatting to have neat stack traces
-    if (process.env.NODE_ENV !== "production") {
-      logger.add(new transports.Console({
+    // Enable console logging even if in production, could be disabled in theory
+    // if (process.env.NODE_ENV !== "production") {
+    logger.add(
+      new transports.Console({
         format: format.combine(
           format.colorize(),
           format.simple(),
@@ -68,10 +68,10 @@ export class LogCreator {
               rtn += JSON.stringify(info.additionalProperties) + ' ';
             }
             return rtn.trim();
-          }),
+          })
         ),
-      }));
-    }
+      })
+    );
 
     return new WinstonLogger(logger);
   }
@@ -85,5 +85,5 @@ export class LogCreator {
 }
 
 export enum LoggerType {
-  WINSTON
+  WINSTON,
 }
