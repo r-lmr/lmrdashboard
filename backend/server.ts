@@ -19,7 +19,6 @@ app.use(cors());
 const resCollection = ResCollection.Instance;
 
 app.get('/healthz', async (req, res, next) => {
-  log.debug('Got request for /healthz endoint');
   ['/health', '/healthz'].indexOf(req.path.toLowerCase()) >= 0 && ['get', 'head'].indexOf(req.method.toLowerCase()) >= 0
     ? res.status(200).end()
     : next();
