@@ -133,7 +133,12 @@ class DatabaseMessageUtils {
   }
 
   static async calculateTopWords(): Promise<Map<string, number>> {
-    const messages: IMessage[] = await DatabaseMessageUtils.getLinesLastNDays(7);
+    log.debug('Calculating top words');
+
+    const nDays = 7;
+    const messages: IMessage[] = await DatabaseMessageUtils.getLinesLastNDays(nDays);
+    log.debug(`messages in last N=${nDays} days: ${messages.length}`);
+
     const wordCounts: Map<string, number> = new Map<string, number>();
 
     for (const message of messages) {
@@ -155,6 +160,15 @@ class DatabaseMessageUtils {
     }
 
     const sortedWordCounts: Map<string, number> = new Map([...wordCounts.entries()].sort((a, b) => b[1] - a[1]));
+
+    // Some debug information
+    log.debug(`sortedWordCounts: ${sortedWordCounts.size}`);
+    const words: string[] = Array.from(sortedWordCounts.keys());
+    const longestWord = words.reduce((acc: string, w: string) => {
+      return acc.length > w.length ? acc : w;
+    });
+    log.debug(`Longest word (length: ${longestWord.length}) in the map: ${longestWord}`);
+
     return sortedWordCounts;
   }
 }
