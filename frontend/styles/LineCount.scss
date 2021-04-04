@@ -1,0 +1,10 @@
+.linecount-header {
+  font-weight: bold;
+  font-size: 1em;
+  margin-bottom: 0;
+
+  .linecount-tooltip {
+    font-weight: normal !important;
+    opacity: 50%;
+  }
+}

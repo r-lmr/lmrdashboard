@@ -28,8 +28,8 @@ export default function LineCountList(props: IProps) {
   return (
     <div>
       <div>
-        <p className={'messagelist-header'}>{getHeadingString()}: <span className={'messagelist-tooltip'} id="messagelist-tooltip">?</span></p>
-        <Tooltip placement="right" isOpen={tooltipOpen} target="messagelist-tooltip" toggle={toggle}>
+        <p className={'linecount-header'}>{getHeadingString()}: <span className={'linecount-tooltip'} id="linecount-tooltip">?</span></p>
+        <Tooltip placement="right" isOpen={tooltipOpen} target="linecount-tooltip" toggle={toggle}>
           Percentage = number of bot lines
         </Tooltip>
       </div>

@@ -8,7 +8,11 @@
   padding-top: 2em;
   padding-bottom: 2em;
   scrollbar-width: thin;
-  scrollbar-color: steelblue #343a40;
+  scrollbar-color: dark;
+
+  .dashboard-container-inner {
+    max-width: 85%;
+  }
 }
 
 .nick {

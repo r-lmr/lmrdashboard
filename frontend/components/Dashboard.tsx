@@ -17,7 +17,7 @@ export default function Dashboard() {
         irc - #linuxmasterrace
       </div>
       <div className={'dashboard-container'}>
-        <Container>
+        <Container className='dashboard-container-inner'>
           <Row>
             <Col md={3}>
               <UserList />

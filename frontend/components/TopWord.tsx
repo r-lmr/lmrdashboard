@@ -1,7 +1,9 @@
 export default function TopWord(props: ITopWord) {
   return (
-    <div>
-      {props.word}: {props.count}
+    <div className={'topword-wrapper'}>
+      <div className={'topword-word'} title={props.word}>{props.word}</div>
+      <div className={'topword-separator'}>:</div>
+      <div className={'topword-count'}>{props.count}</div>
     </div>
   );
 }
