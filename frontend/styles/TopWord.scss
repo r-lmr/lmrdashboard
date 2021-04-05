@@ -1,0 +1,18 @@
+.topword-wrapper {
+  display: flex;
+
+  .topword-word {
+    flex-grow: 1;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topword-separator {
+    flex-grow: 0;
+    display: none;
+  }
+
+  .topword-count {
+    flex-grow: 0;
+  }
+}
