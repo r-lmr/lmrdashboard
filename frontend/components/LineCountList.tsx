@@ -4,7 +4,7 @@ import { ILineCount } from './LineCount';
 import LineCount from './LineCount';
 import { Tooltip } from 'reactstrap';
 
-export default function LineCountList(props: IProps) {
+export default function LineCountList(props: IProps): JSX.Element {
   const [fetchedLines, setFetchedLines] = useState<ILineCount[]>([{ message: 'Loading...' }]);
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
