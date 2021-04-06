@@ -8,7 +8,7 @@
     "pretty": "prettier --write .",
     "start": "ts-node --transpile-only server",
     "test:unit-local": "JEST_JUNIT_OUTPUT_DIR=results yarn run jest --forceExit",
-    "test:unit-ci": "yarn run jest --forceExit --ci --testPathIgnorePatterns=logging.test.ts"
+    "test:unit-ci": "yarn run jest --forceExit --ci"
   },
   "dependencies": {
     "@types/collections": "^5.0.2",
