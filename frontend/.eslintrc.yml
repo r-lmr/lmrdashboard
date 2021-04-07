@@ -12,3 +12,5 @@ plugins:
   - '@typescript-eslint'
   - 'cypress'
 rules: {}
+ignorePatterns:
+  - 'cypress/plugins/index.js'

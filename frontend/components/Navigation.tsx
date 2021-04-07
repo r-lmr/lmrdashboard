@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, NavbarText } from 'reactstrap';
 
-const Navigation = (props: IProps) => {
+const Navigation = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -36,7 +36,3 @@ const Navigation = (props: IProps) => {
 };
 
 export default Navigation;
-
-interface IProps {
-  title?: string;
-}

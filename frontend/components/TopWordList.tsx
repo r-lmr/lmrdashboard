@@ -1,7 +1,7 @@
 import { TTopWord } from './TopWords';
 import TopWord from './TopWord';
 
-export default function TopWordsList(props: IProps) {
+export default function TopWordsList(props: IProps): JSX.Element {
   return (
     <>
       {props.topWords.map((topWord, index) => (

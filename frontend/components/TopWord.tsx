@@ -1,4 +1,4 @@
-export default function TopWord(props: ITopWord) {
+export default function TopWord(props: ITopWord): JSX.Element {
   return (
     <div className={'topword-wrapper'}>
       <div className={'topword-word'} title={props.word}>{props.word}</div>
