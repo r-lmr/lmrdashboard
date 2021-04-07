@@ -34,7 +34,7 @@ class Sender {
   static async sendLineCountsLastDays(res: Response<any, number>): Promise<void> {
     if (res) {
       log.debug('Sending line counts');
-      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(5, 'date');
+      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(10, 'date');
       res.write('event: lineCountsLastDays\n');
       res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
       res.write('\n\n');
@@ -44,7 +44,7 @@ class Sender {
   static async sendLineCountsHighScores(res: Response<any, number>): Promise<void> {
     if (res) {
       log.debug('Sending line count scores');
-      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(5, 'count');
+      const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(10, 'count');
       res.write('event: lineCountsHighScores\n');
       res.write(`data: ${JSON.stringify({ lineCounts: lineCounts })}`);
       res.write('\n\n');
