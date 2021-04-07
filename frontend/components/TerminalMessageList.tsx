@@ -5,7 +5,7 @@ import TerminalBar from './TerminalBar';
 export default function Terminal(): JSX.Element {
   return (
     <>
-      <TerminalBar title={'Last Messages'} />
+      <TerminalBar title={'Last Messages on #linuxmasterrace'} />
       <div className={'terminal-container'}>
         <Container className='terminal-container-inner'>
           <Row style={{ marginTop: '1em' }}>

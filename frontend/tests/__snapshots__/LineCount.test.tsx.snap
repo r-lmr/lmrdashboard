@@ -2,9 +2,8 @@
 
 exports[`LineCount Component has 50% bot messages 1`] = `
 <div>
-  [
   2021-01-01
-  ]: 
+  : 
   24
    (
   50%
@@ -15,9 +14,8 @@ exports[`LineCount Component has 50% bot messages 1`] = `
 
 exports[`LineCount Component has 100% bot messages 1`] = `
 <div>
-  [
   2021-01-01
-  ]: 
+  : 
   24
    (
   100%
