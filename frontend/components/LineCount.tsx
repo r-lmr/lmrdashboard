@@ -4,7 +4,7 @@ export default function LineCount(props: ILineCount) {
 
   function getBotLinePercentageString(): string {
     if (props.lineCount !== undefined && props.botLines !== undefined) {
-      const botLinePercentage: number = parseFloat(((props.botLines / props.lineCount) * 100).toPrecision(2));
+      const botLinePercentage: number = parseFloat(((props.botLines / props.lineCount) * 100).toPrecision(1));
       return `${botLinePercentage}%`;
     }
     return "0%";
