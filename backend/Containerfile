@@ -3,23 +3,23 @@ FROM node:15.1.0-alpine
 WORKDIR /lmrdashboard/backend
 COPY . .
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN yarn install --production
 RUN yarn cache clean
 
-ENV LMRD_IRC_CHANNEL "#linuxmasterrace" \
-    LMRD_IRC_HOST "irc.snoonet.org" \
-    LMRD_IRC_PORT "6697" \
-    LMRD_IRC_USER \
-    LMRD_IRC_PASS \
-    LMRD_DB_HOST \
-    LMRD_DB_PORT "3306" \
-    LMRD_DB_NAME "lmrd" \
-    LMRD_DB_USER \
-    LMRD_DB_PASS \
-    LMRD_DUCC_TIME "09:00" \
-    LMRD_DUCC_DAY "0" \
-    LMRD_LOG_LEVEL "debug"
+ENV LMRD_IRC_CHANNEL="#linuxmasterrace"
+ENV LMRD_IRC_HOST="irc.snoonet.org"
+ENV LMRD_IRC_PORT="6697"
+ENV LMRD_IRC_USER=
+ENV LMRD_IRC_PASS=
+ENV LMRD_DB_HOST=
+ENV LMRD_DB_PORT="3306"
+ENV LMRD_DB_NAME="lmrd"
+ENV LMRD_DB_USER=
+ENV LMRD_DB_PASS=
+ENV LMRD_DUCC_TIME="09:00"
+ENV LMRD_DUCC_DAY="0"
+ENV LMRD_LOG_LEVEL="debug"
 
 EXPOSE 4000
 
