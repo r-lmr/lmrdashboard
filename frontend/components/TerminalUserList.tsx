@@ -6,8 +6,8 @@ export default function Terminal(): JSX.Element {
   return (
     <>
       <TerminalBar title={'Online Users'} />
-      <div className={'dashboard-container'}>
-        <Container className="dashboard-container-inner">
+      <div className={'terminal-container'}>
+        <Container className='terminal-container-inner'>
           <Row>
             <Col md={12}>
               <UserList />

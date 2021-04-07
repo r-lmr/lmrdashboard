@@ -1,6 +1,6 @@
 @use 'Srcery';
 
-.dashboard-container {
+.terminal-container {
   font-family: Roboto, 'Fira Sans', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1.2em;
   color: Srcery.$white;
@@ -10,7 +10,7 @@
   scrollbar-width: thin;
   scrollbar-color: dark;
 
-  .dashboard-container-inner {
+  .terminal-container-inner {
     max-width: 85%;
   }
 }

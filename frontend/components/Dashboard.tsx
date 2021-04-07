@@ -7,7 +7,7 @@ import TerminalUserList from './TerminalUserList';
 
 export default function Dashboard(): JSX.Element {
   return (
-    <Container style={{ maxWidth: '100%' }}>
+    <Container className={'dashboard-container'}>
       <Row>
         <Col className={'dashboard-column-entry'}>
           <TerminalUserList />
@@ -20,10 +20,10 @@ export default function Dashboard(): JSX.Element {
         </Col>
       </Row>
       <Row>
-        <Col md={8} className={'dashboard-column-entry'} >
+        <Col md={8} className={'dashboard-column-entry'}>
           <TerminalMessageList />
         </Col>
-        <Col md={4} className={'dashboard-column-entry'} >
+        <Col md={4} className={'dashboard-column-entry'}>
           <TerminalDuccStats />
         </Col>
       </Row>

@@ -6,8 +6,8 @@ export default function Terminal(): JSX.Element {
   return (
     <>
       <TerminalBar title={'Last Messages'} />
-      <div className={'dashboard-container'}>
-        <Container className='dashboard-container-inner'>
+      <div className={'terminal-container'}>
+        <Container className='terminal-container-inner'>
           <Row style={{ marginTop: '1em' }}>
             <Col md={12}>
               <MessageList />

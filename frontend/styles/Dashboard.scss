@@ -1,3 +1,7 @@
-.dashboard-column-entry {
+.dashboard-container {
+  max-width: 100%;
+
+  .dashboard-column-entry {
     padding: 0.5em;
+  }
 }

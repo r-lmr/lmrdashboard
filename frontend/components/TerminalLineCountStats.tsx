@@ -6,8 +6,8 @@ export default function Terminal(): JSX.Element {
   return (
     <>
       <TerminalBar title={'Line Counts'} />
-      <div className={'dashboard-container'}>
-        <Container className='dashboard-container-inner' style={{maxWidth: '95%'}}>
+      <div className={'terminal-container'}>
+        <Container className='terminal-container-inner' style={{maxWidth: '95%'}}>
           <Row>
             <Col md={6}>
               <LineCountList type={LineCountListType.LAST_DAYS}/>
