@@ -11,29 +11,29 @@ export default function Dashboard(): JSX.Element {
     <Container className={'dashboard-container'}>
       <Row>
         <Col className={'dashboard-column-entry'}>
-          <Terminal>
+          <Terminal title={'Online Users'}>
             <TerminalUserList />
           </Terminal>
         </Col>
         <Col className={'dashboard-column-entry'}>
-          <Terminal containerStyle={{ maxWidth: '95%' }}>
+          <Terminal title={'Line Counts'} containerStyle={{ maxWidth: '95%' }}>
             <TerminalLineCountStats />
           </Terminal>
         </Col>
         <Col className={'dashboard-column-entry'}>
-          <Terminal>
+          <Terminal title={'Top Words'}>
             <TerminalTopWords />
           </Terminal>
         </Col>
       </Row>
       <Row>
         <Col md={8} className={'dashboard-column-entry'}>
-          <Terminal rowStyle={{ marginTop: '1em' }}>
+          <Terminal title={'Last Messages'} rowStyle={{ marginTop: '1em' }}>
             <TerminalMessageList />
           </Terminal>
         </Col>
         <Col md={4} className={'dashboard-column-entry'}>
-          <Terminal rowStyle={{ justifyContent: 'center', marginTop: '1em' }}>
+          <Terminal title={'Ducc Stats'} rowStyle={{ justifyContent: 'center', marginTop: '1em' }}>
             <TerminalDuccStats />
           </Terminal>
         </Col>

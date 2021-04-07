@@ -11,7 +11,7 @@ export default function Terminal(props: IProps): JSX.Element {
 
   return (
     <>
-      <TerminalBar title={'Online Users'} onButtonClick={onTerminalButtonClick} />
+      <TerminalBar title={props.title} onButtonClick={onTerminalButtonClick} />
       <div className={'terminal-container'} style={{ display: containerVisible ? '' : 'none' }}>
         <Container className="terminal-container-inner" style={props.containerStyle}>
           <Row style={props.rowStyle}>{props.children}</Row>
@@ -23,6 +23,7 @@ export default function Terminal(props: IProps): JSX.Element {
 
 interface IProps {
   children: React.ReactNode;
+  title: string;
   containerStyle?: React.CSSProperties;
   rowStyle?: React.CSSProperties;
 }
