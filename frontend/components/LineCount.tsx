@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function LineCount(props: ILineCount) {
+export default function LineCount(props: ILineCount): JSX.Element {
 
   function getBotLinePercentageString(): string {
     if (props.lineCount !== undefined && props.botLines !== undefined) {
