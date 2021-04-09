@@ -35,8 +35,8 @@ export function scheduleDailyEvent(time: string | undefined, triggerThis: () => 
 }
 
 function triggerFunctionIfWeekday(triggerThis: () => void, weekday?: number): void {
-  // Do on each day if weekday is undefined
-  if (!weekday) {
+  // Do on each day if weekday is not set
+  if (weekday == null) {
     triggerThis();
     return;
   }
