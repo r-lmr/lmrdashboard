@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import TopWordsList from './TopWordList';
 
-export default function TopWords() {
+export default function TopWords(): JSX.Element {
   const [fetchedTopWords, setFetchedTopWords] = useState<TTopWord[]>([]);
 
   useEffect(() => {

@@ -1,9 +1,9 @@
 import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import DashBoard from '../components/Dashboard';
 import Navigation from '../components/Navigation';
+import styles from '../styles/Home.module.css';
+import Dashboard from '../components/Dashboard';
 
-export default function Home() {
+export default function Home(): JSX.Element {
   return (
     <div className={styles.container}>
       <Head>
@@ -13,8 +13,8 @@ export default function Home() {
 
       <Navigation />
       <main className={styles.main}>
-        <div style={{ width: '90%', height: '95%' }}>
-          <DashBoard />
+        <div style={{ width: '100%', height: '100%' }}>
+          <Dashboard />
         </div>
       </main>
     </div>

@@ -3,7 +3,7 @@ import eventSource from '../data/EventSource';
 import DuccStat, { IDuccStat } from './DuccStat';
 import { Tooltip } from 'reactstrap';
 
-export default function DuccStatsList(props: IProps) {
+export default function DuccStatsList(props: IProps): JSX.Element {
   const [fetchedStats, setFetchedStats] = useState<IDuccStat[]>([{ user: 'Loading...' }]);
   const [tooltipOpen, setTooltipOpen] = useState(false);
 

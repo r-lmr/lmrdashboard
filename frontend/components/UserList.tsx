@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import User from './User';
 import eventSource from '../data/EventSource';
 
-export default function UserList() {
+export default function UserList(): JSX.Element {
   const [fetchedUsers, setFetchedUsers] = useState<string[]>(['Loading...']);
 
   useEffect(() => {

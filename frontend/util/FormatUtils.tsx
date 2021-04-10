@@ -1,4 +1,3 @@
-import { escapeSelector } from "cypress/types/jquery";
 import innerText from "react-innertext";
 import { StringUtils } from "./StringUtils";
 

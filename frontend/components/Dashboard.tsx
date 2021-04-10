@@ -1,52 +1,43 @@
-import UserList from '../components/UserList';
-import { Container, Row, Col } from 'reactstrap';
-import MessageList from './MessageList';
-import LineCountList, { LineCountListType } from './LineCountList';
-import TopWords from './TopWords';
-import DuccStatsList, { ScoreType } from './DuccStatsList';
+import { Col, Container, Row } from 'reactstrap';
+import TerminalDuccStats from './TerminalDuccStats';
+import TerminalLineCountStats from './TerminalLineCountStats';
+import TerminalMessageList from './TerminalMessageList';
+import TerminalTopWords from './TerminalTopWords';
+import TerminalUserList from './TerminalUserList';
+import Terminal from './Terminal';
 
-export default function Dashboard() {
+export default function Dashboard(): JSX.Element {
   return (
-    <>
-      <div className={'terminal-bar'}>
-        <div className={'terminal-buttons'}>
-          <div className={'terminal-button exit'}></div>
-          <div className={'terminal-button maximize'}></div>
-          <div className={'terminal-button minimize'}></div>
-        </div>
-        irc - #linuxmasterrace
-      </div>
-      <div className={'dashboard-container'}>
-        <Container className='dashboard-container-inner'>
-          <Row>
-            <Col md={3}>
-              <UserList />
-            </Col>
-            <Col md={3}>
-              <LineCountList type={LineCountListType.LAST_DAYS}/>
-            </Col>
-            <Col md={3}>
-              <LineCountList type={LineCountListType.HIGH_SCORE}/>
-            </Col>
-            <Col md={3}>
-              <TopWords />
-            </Col>
-          </Row>
-          <Row style={{ justifyContent: 'center', marginTop: '1em' }}>
-            <Col md={4}>
-              <DuccStatsList type={ScoreType.FRIENDS} />
-            </Col>
-            <Col md={4}>
-              <DuccStatsList type={ScoreType.KILLERS} />
-            </Col>
-          </Row>
-          <Row style={{ marginTop: '1em' }}>
-            <Col md={12}>
-              <MessageList />
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    </>
+    <Container className={'dashboard-container'}>
+      <Row>
+        <Col className={'dashboard-column-entry'}>
+          <Terminal title={'Online Users'}>
+            <TerminalUserList />
+          </Terminal>
+        </Col>
+        <Col className={'dashboard-column-entry'}>
+          <Terminal title={'Line Counts'} containerStyle={{ maxWidth: '95%' }}>
+            <TerminalLineCountStats />
+          </Terminal>
+        </Col>
+        <Col className={'dashboard-column-entry'}>
+          <Terminal title={'Top Words'}>
+            <TerminalTopWords />
+          </Terminal>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={8} className={'dashboard-column-entry'}>
+          <Terminal title={'Last Messages'} rowStyle={{ marginTop: '1em' }}>
+            <TerminalMessageList />
+          </Terminal>
+        </Col>
+        <Col md={4} className={'dashboard-column-entry'}>
+          <Terminal title={'Ducc Stats'} rowStyle={{ justifyContent: 'center', marginTop: '1em' }}>
+            <TerminalDuccStats />
+          </Terminal>
+        </Col>
+      </Row>
+    </Container>
   );
 }
