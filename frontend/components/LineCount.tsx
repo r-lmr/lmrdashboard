@@ -3,7 +3,7 @@ import React from 'react';
 export default function LineCount(props: ILineCount): JSX.Element {
   function getBotLinePercentageString(): string {
     if (props.lineCount !== undefined && props.botLines !== undefined) {
-      const botLinePercentage: number = parseFloat(((props.botLines / props.lineCount) * 100).toPrecision(1));
+      const botLinePercentage: number = parseFloat(((props.botLines / props.lineCount) * 100).toPrecision(2));
       const botLinePerentageString = `${botLinePercentage}%`;
       return botLinePerentageString.startsWith('0') && botLinePerentageString.includes('.')
         ? botLinePerentageString.slice(1)
