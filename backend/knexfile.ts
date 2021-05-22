@@ -28,7 +28,7 @@ export default {
     },
     pool: {
       min: 2,
-      max: 10,
+      max: 20,
     },
     migrations: {
       directory: __dirname + '/database/knex_migrations',
