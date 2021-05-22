@@ -30,6 +30,7 @@ export default {
       min: 2,
       max: 20,
     },
+    acquireConnectionTimeout: 120000, // default 60000
     migrations: {
       directory: __dirname + '/database/knex_migrations',
     },
