@@ -1,5 +1,18 @@
 @use 'Srcery';
 
+@mixin nav-link {
+  color: Srcery.$brightblack;
+  -o-transition: 0.5s;
+  -ms-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+@mixin nav-link-hover {
+  color: Srcery.$white;
+}
+
 .navigation {
   width: 100%;
 
@@ -14,20 +27,26 @@
 
     .navbar-nav {
       .nav-link {
-        color: Srcery.$brightblack;
-        -o-transition: 0.5s;
-        -ms-transition: 0.5s;
-        -moz-transition: 0.5s;
-        -webkit-transition: 0.5s;
-        transition: 0.5s;
+        @include nav-link;
       }
+
       .nav-link:hover {
-        color: Srcery.$white;
+        @include nav-link-hover;
       }
     }
 
     .navbar-text {
       color: Srcery.$brightblack;
     }
+  }
+
+  // Need those outside as well due to version number being outside the actual
+  // navigation
+  .nav-link {
+    @include nav-link;
+  }
+
+  .nav-link:hover {
+    @include nav-link-hover;
   }
 }
