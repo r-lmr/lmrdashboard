@@ -44,6 +44,30 @@ class DatabaseFightUtils {
         });
   }
 
+  static async insertOrUpdateFightScoresRelations(fightResult: FightMsgParseResult): Promise<void> {
+    if (!fightResult.valid) {
+      log.error('Invalid fight result passed to insertOrUpdateFightScores');
+      return;
+    }
+
+    const tableName = 'fight_scores_relations';
+
+    // Insert or update relation
+    await knex(tableName)
+        .select()
+        .where({winner : fightResult.winner, loser: fightResult.loser})
+        .then(async (rows) => {
+          if (rows.length === 0) {
+            await knex(tableName).insert(
+                {winner : fightResult.winner, loser : fightResult.loser, times : 1});
+          } else {
+            await knex(tableName)
+                .where({winner : fightResult.winner, loser: fightResult.loser})
+                .increment('times', 1);
+          }
+        });
+  }
+
   static async retrieveTopFightScores(): Promise<TopWinnerAndLosers> {
     const topWinnersDb = await knex('fight_scores').select().orderBy('wins', 'desc').limit(10);
     const topLosersDb = await knex('fight_scores').select().orderBy('losses', 'desc').limit(10);

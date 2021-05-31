@@ -235,6 +235,7 @@ class IrcMessageProcessor {
         const fightMsgParseResult = IrcMessageProcessor.matchesFightMsg(msg);
         if (fightMsgParseResult.valid) {
           await DatabaseFightUtils.insertOrUpdateFightScores(fightMsgParseResult);
+          await DatabaseFightUtils.insertOrUpdateFightScoresRelations(fightMsgParseResult);
           log.debug("Fight parse result", {fightMsgParseResult});
           myEmitter.emit('fightScore');
         }
