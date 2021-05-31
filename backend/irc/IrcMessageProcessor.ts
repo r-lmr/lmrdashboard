@@ -5,6 +5,7 @@ import { DatabaseMessageUtils } from '../database/Messages';
 import { DatabaseUserUtils } from '../database/Users';
 import myEmitter from './utils/emitter';
 import { LogWrapper } from '../utils/logging/LogWrapper';
+import { DatabaseFightUtils } from '../database/Fights';
 
 const log = new LogWrapper(module.id);
 
@@ -233,10 +234,9 @@ class IrcMessageProcessor {
         // Process fight messages
         const fightMsgParseResult = IrcMessageProcessor.matchesFightMsg(msg);
         if (fightMsgParseResult.valid) {
-          // TODO
-          console.log("TODO");
-          console.log(fightMsgParseResult.winner);
-          console.log(fightMsgParseResult.loser);
+          await DatabaseFightUtils.insertOrUpdateFightScores(fightMsgParseResult);
+          log.debug("Fight parse result", {fightMsgParseResult});
+          // TODO: Send to frontend
         }
       }
     }
@@ -247,8 +247,8 @@ class IrcMessageProcessor {
   }
 
   public static matchesFightMsg(s: string): FightMsgParseResult {
-    // Thanks audron for the beautiful regex
-    const match = /(?:\w+! ){3}(?<winner>\w+) (?:\w+ ){1,2}over (?<loser>\w+) with (?:\w+[ .]){1,4}/.exec(s);
+    // Thanks audron for the beautiful initial regex
+    const match = /(?:\w+! ){3}(?<winner>\w+) (?:\w+ ){1,3}over (?<loser>\w+) with (?:\w+[ .]){1,4}/.exec(s);
     if (match == null) {
       return {valid : false};
     }
