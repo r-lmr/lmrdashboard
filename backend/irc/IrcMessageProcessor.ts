@@ -213,7 +213,7 @@ class IrcMessageProcessor {
       myEmitter.emit('line');
       // Process bot messages
       // Process ducc stats
-      if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
+      if (nick === 'gonzobot' && IrcMessageProcessor.matchesDuccMsg(msg)) {
         const duccMsg = ircMessage.params[1];
         const splitMsgByBullet = duccMsg.split('\u2022');
 
@@ -229,7 +229,28 @@ class IrcMessageProcessor {
           myEmitter.emit('killedScore');
         }
       }
+      // Process fight messages
+      const fightMsgParseResult = IrcMessageProcessor.matchesFightMsg(msg);
+      if (nick === 'gonzobot' && fightMsgParseResult.valid) {
+        // TODO
+        console.log("TODO");
+        console.log(fightMsgParseResult.winner);
+        console.log(fightMsgParseResult.loser);
+      }
     }
+  }
+
+  private static matchesDuccMsg(s: string): boolean {
+    return /Duck \w{6} scores in #/i.test(s);
+  }
+
+  public static matchesFightMsg(s: string): FightMsgParseResult {
+    // Thanks audron for the beautiful regex
+    const match = /(?:\w+! ){3}(?<winner>\w+) (?:\w+ ){1,2}over (?<loser>\w+) with (?:\w+[ .]){1,4}/.exec(s);
+    if (match == null) {
+      return {valid : false};
+    }
+    return {valid : true, winner : match.groups!.winner, loser : match.groups!.loser};
   }
 
   private sendPrivMessage(message: string) {
@@ -265,12 +286,20 @@ type PossibleIrcCommand =
   | 'NICK'
   | '900'
   | 'NOTICE';
+
 type DuccMessageTrigger =
   | DuccMessageTriggerType.FRIENDS
   | DuccMessageTriggerType.KILLERS
   | DuccMessageTriggerType.REMINDER;
+
 export enum DuccMessageTriggerType {
   FRIENDS = 'fr',
   KILLERS = 'kille',
   REMINDER = 'reminder',
+}
+
+export interface FightMsgParseResult {
+  valid: boolean;
+  winner?: string;
+  loser?: string;
 }
