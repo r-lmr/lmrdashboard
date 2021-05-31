@@ -5,9 +5,9 @@ export default function FightStatsList(props: IProps): JSX.Element {
   return (
     <div>
       <div>
-        <p className={'duccstatslist-header'}>Top {props.type}:</p>
+        <p className={'fightstatslist-header'}>Top {props.type}:</p>
       </div>
-      <div className={'duccstatslist-content'}>
+      <div className={'fightstatslist-content'}>
         {props.type === ScoreType.WINS ?
           props.topWinners != null ? props.topWinners.map((fightScore) => (
             <FightStat key={fightScore.user} user={fightScore.user} wins={fightScore.wins} />
