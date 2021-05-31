@@ -3,5 +3,13 @@
 
   .dashboard-column-entry {
     padding: 0.5em;
+
+    .dashboard-column-inner-top {
+      padding-bottom: 0.5em;
+    }
+
+    .dashboard-column-inner-bottom {
+      padding-top: 0.5em;
+    }
   }
 }
