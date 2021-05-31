@@ -3,6 +3,7 @@ import { DatabaseMessageUtils } from './database/Messages';
 import { DatabaseUserUtils } from './database/Users';
 import { DatabaseDuccUtils } from './database/DuccScores';
 import { LogWrapper } from './utils/logging/LogWrapper';
+import { DatabaseFightUtils } from './database/Fights';
 
 const log = new LogWrapper(module.id);
 
@@ -66,6 +67,15 @@ class Sender {
       const duccScores = await DatabaseDuccUtils.retrieveAllDuccScores();
       res.write('event: duccScore\n');
       res.write(`data: ${JSON.stringify({ duccScores })}`);
+      res.write('\n\n');
+    }
+  }
+  static async sendFightScores(res: Response<any, number>): Promise<void> {
+    if (res) {
+      log.debug('Sending fight scores');
+      const topWinnersAndLosers = await DatabaseFightUtils.retrieveTopFightScores();
+      res.write('event: topWinnersAndLosers\n');
+      res.write(`data: ${JSON.stringify({ topWinnersAndLosers })}`);
       res.write('\n\n');
     }
   }

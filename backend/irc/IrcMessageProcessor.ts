@@ -236,7 +236,7 @@ class IrcMessageProcessor {
         if (fightMsgParseResult.valid) {
           await DatabaseFightUtils.insertOrUpdateFightScores(fightMsgParseResult);
           log.debug("Fight parse result", {fightMsgParseResult});
-          // TODO: Send to frontend
+          myEmitter.emit('fightScore');
         }
       }
     }

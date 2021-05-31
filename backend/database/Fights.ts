@@ -43,6 +43,31 @@ class DatabaseFightUtils {
           }
         });
   }
+
+  static async retrieveTopFightScores(): Promise<TopWinnerAndLosers> {
+    const topWinnersDb = await knex('fight_scores').select().orderBy('wins', 'desc').limit(10);
+    const topLosersDb = await knex('fight_scores').select().orderBy('losses', 'desc').limit(10);
+
+    const topWinners = topWinnersDb.map((entry) => {
+      return { user: entry['user'], wins: entry['wins'], losses: entry['losses'] };
+    });
+    const topLosers = topLosersDb.map((entry) => {
+      return { user: entry['user'], wins: entry['wins'], losses: entry['losses'] };
+    });
+
+    return { topWinners, topLosers };
+  }
+}
+
+interface FightScore {
+  user: string;
+  wins: number;
+  losses: number;
+}
+
+interface TopWinnerAndLosers {
+  topWinners: FightScore[];
+  topLosers: FightScore[];
 }
 
 export { DatabaseFightUtils };
