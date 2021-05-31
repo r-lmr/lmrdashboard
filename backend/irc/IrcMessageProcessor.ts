@@ -213,29 +213,31 @@ class IrcMessageProcessor {
       myEmitter.emit('line');
       // Process bot messages
       // Process ducc stats
-      if (nick === 'gonzobot' && IrcMessageProcessor.matchesDuccMsg(msg)) {
-        const duccMsg = ircMessage.params[1];
-        const splitMsgByBullet = duccMsg.split('\u2022');
+      if (nick === 'gonzobot') {
+        if (IrcMessageProcessor.matchesDuccMsg(msg)) {
+          const duccMsg = ircMessage.params[1];
+          const splitMsgByBullet = duccMsg.split('\u2022');
 
-        // fix the first split by removing the 'Duck ... scores in #channel'
-        const correctFirstScore = splitMsgByBullet[0].split(':');
-        splitMsgByBullet[0] = `${correctFirstScore[1]}: ${correctFirstScore[2].trim()}`;
+          // fix the first split by removing the 'Duck ... scores in #channel'
+          const correctFirstScore = splitMsgByBullet[0].split(':');
+          splitMsgByBullet[0] = `${correctFirstScore[1]}: ${correctFirstScore[2].trim()}`;
 
-        if (correctFirstScore[0].includes('friend')) {
-          await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'friend');
-          myEmitter.emit('friendScore');
-        } else if (correctFirstScore[0].includes('killer')) {
-          await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'killer');
-          myEmitter.emit('killedScore');
+          if (correctFirstScore[0].includes('friend')) {
+            await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'friend');
+            myEmitter.emit('friendScore');
+          } else if (correctFirstScore[0].includes('killer')) {
+            await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'killer');
+            myEmitter.emit('killedScore');
+          }
         }
-      }
-      // Process fight messages
-      const fightMsgParseResult = IrcMessageProcessor.matchesFightMsg(msg);
-      if (nick === 'gonzobot' && fightMsgParseResult.valid) {
-        // TODO
-        console.log("TODO");
-        console.log(fightMsgParseResult.winner);
-        console.log(fightMsgParseResult.loser);
+        // Process fight messages
+        const fightMsgParseResult = IrcMessageProcessor.matchesFightMsg(msg);
+        if (fightMsgParseResult.valid) {
+          // TODO
+          console.log("TODO");
+          console.log(fightMsgParseResult.winner);
+          console.log(fightMsgParseResult.loser);
+        }
       }
     }
   }
