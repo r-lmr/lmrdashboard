@@ -8,14 +8,15 @@ export default function FightStatsList(props: IProps): JSX.Element {
         <p className={'fightstatslist-header'}>Top {props.type}:</p>
       </div>
       <div className={'fightstatslist-content'}>
-        {props.type === ScoreType.WINS ?
-          props.topWinners != null ? props.topWinners.map((fightScore) => (
-            <FightStat key={fightScore.user} user={fightScore.user} wins={fightScore.wins} />
-          )) : <p>Loading...</p> : 
-          props.topLosers != null ? props.topLosers.map((fightScore) => (
-            <FightStat key={fightScore.user} user={fightScore.user} losses={fightScore.losses} />
-          )) : <p>Loading...</p>
-        }
+        {props.type === ScoreType.WINS
+          ? props.topWinners &&
+            props.topWinners.map((fightScore) => (
+              <FightStat key={fightScore.user} user={fightScore.user} wins={fightScore.wins} />
+            ))
+          : props.topLosers &&
+            props.topLosers.map((fightScore) => (
+              <FightStat key={fightScore.user} user={fightScore.user} losses={fightScore.losses} />
+            ))}
       </div>
     </div>
   );

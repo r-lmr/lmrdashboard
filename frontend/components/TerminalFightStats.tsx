@@ -5,7 +5,10 @@ import eventSource from '../data/EventSource';
 import { IFightScore } from './FightStat';
 
 export default function Terminal(): JSX.Element {
-  const [fetchedTopWinnersAndLosers, setFetchedTopWinnersAndLosers] = useState<TopWinnersAndLosers>([{ user: 'Loading...' }]);
+  const [fetchedTopWinnersAndLosers, setFetchedTopWinnersAndLosers] = useState<TopWinnersAndLosers>({
+    topWinners: [{ user: 'Loading...' }],
+    topLosers: [{ user: 'Loading...' }],
+  });
 
   useEffect(() => {
     eventSource.onmessage = (e) => {
@@ -13,7 +16,6 @@ export default function Terminal(): JSX.Element {
     };
     eventSource.addEventListener('topWinnersAndLosers', (e: any) => {
       const data = JSON.parse(e.data);
-      console.log(data.duccScores);
       setFetchedTopWinnersAndLosers(data.topWinnersAndLosers);
     });
   }, []);
@@ -34,4 +36,3 @@ interface TopWinnersAndLosers {
   topWinners: IFightScore[];
   topLosers: IFightScore[];
 }
-
