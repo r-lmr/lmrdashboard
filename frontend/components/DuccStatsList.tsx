@@ -13,7 +13,6 @@ export default function DuccStatsList(props: IProps): JSX.Element {
     };
     eventSource.addEventListener('duccScore', (e: any) => {
       const data = JSON.parse(e.data);
-      console.log(data.duccScores);
       setFetchedStats(data.duccScores[props.type]);
     });
   }, []);

@@ -11,7 +11,6 @@ export default function UserList(): JSX.Element {
     };
     eventSource.addEventListener('users', (e: any) => {
       const data = JSON.parse(e.data);
-      console.log(e);
       setFetchedUsers(data.users);
     });
   }, []);

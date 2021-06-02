@@ -5,6 +5,7 @@ import { DatabaseMessageUtils } from '../database/Messages';
 import { DatabaseUserUtils } from '../database/Users';
 import myEmitter from './utils/emitter';
 import { LogWrapper } from '../utils/logging/LogWrapper';
+import { DatabaseFightUtils } from '../database/Fights';
 
 const log = new LogWrapper(module.id);
 
@@ -213,23 +214,46 @@ class IrcMessageProcessor {
       myEmitter.emit('line');
       // Process bot messages
       // Process ducc stats
-      if (msg.match(/Duck \w{6} scores in #/i) && nick === 'gonzobot') {
-        const duccMsg = ircMessage.params[1];
-        const splitMsgByBullet = duccMsg.split('\u2022');
+      if (nick === 'gonzobot') {
+        if (IrcMessageProcessor.matchesDuccMsg(msg)) {
+          const duccMsg = ircMessage.params[1];
+          const splitMsgByBullet = duccMsg.split('\u2022');
 
-        // fix the first split by removing the 'Duck ... scores in #channel'
-        const correctFirstScore = splitMsgByBullet[0].split(':');
-        splitMsgByBullet[0] = `${correctFirstScore[1]}: ${correctFirstScore[2].trim()}`;
+          // fix the first split by removing the 'Duck ... scores in #channel'
+          const correctFirstScore = splitMsgByBullet[0].split(':');
+          splitMsgByBullet[0] = `${correctFirstScore[1]}: ${correctFirstScore[2].trim()}`;
 
-        if (correctFirstScore[0].includes('friend')) {
-          await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'friend');
-          myEmitter.emit('friendScore');
-        } else if (correctFirstScore[0].includes('killer')) {
-          await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'killer');
-          myEmitter.emit('killedScore');
+          if (correctFirstScore[0].includes('friend')) {
+            await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'friend');
+            myEmitter.emit('friendScore');
+          } else if (correctFirstScore[0].includes('killer')) {
+            await DatabaseDuccUtils.insertOrUpdateDuccScores(splitMsgByBullet, 'killer');
+            myEmitter.emit('killedScore');
+          }
+        }
+        // Process fight messages
+        const fightMsgParseResult = IrcMessageProcessor.matchesFightMsg(msg);
+        if (fightMsgParseResult.valid) {
+          await DatabaseFightUtils.insertOrUpdateFightScores(fightMsgParseResult);
+          await DatabaseFightUtils.insertOrUpdateFightScoresRelations(fightMsgParseResult);
+          log.debug("Fight parse result", {fightMsgParseResult});
+          myEmitter.emit('fightScore');
         }
       }
     }
+  }
+
+  private static matchesDuccMsg(s: string): boolean {
+    return /Duck \w{6} scores in #/i.test(s);
+  }
+
+  public static matchesFightMsg(s: string): FightMsgParseResult {
+    // Thanks audron for the beautiful initial regex
+    const match = /(?:\w+! ){3}(?<winner>\w+) (?:\w+ ){1,3}over (?<loser>\w+) with (?:\w+[ .]){1,4}/.exec(s);
+    if (match == null) {
+      return {valid : false};
+    }
+    return {valid : true, winner : match.groups!.winner, loser : match.groups!.loser};
   }
 
   private sendPrivMessage(message: string) {
@@ -265,12 +289,20 @@ type PossibleIrcCommand =
   | 'NICK'
   | '900'
   | 'NOTICE';
+
 type DuccMessageTrigger =
   | DuccMessageTriggerType.FRIENDS
   | DuccMessageTriggerType.KILLERS
   | DuccMessageTriggerType.REMINDER;
+
 export enum DuccMessageTriggerType {
   FRIENDS = 'fr',
   KILLERS = 'kille',
   REMINDER = 'reminder',
+}
+
+export interface FightMsgParseResult {
+  valid: boolean;
+  winner?: string;
+  loser?: string;
 }

@@ -33,6 +33,10 @@ class Listener {
       log.debug('Received killedScore from emitter, sending ducc scores');
       resCollection.doForAllResInCollection(Sender.sendDuccScores);
     });
+    myEmitter.on('fightScore', async () => {
+      log.debug('Received fightScore from emitter, sending fight scores');
+      resCollection.doForAllResInCollection(Sender.sendFightScores);
+    });
   }
 }
 

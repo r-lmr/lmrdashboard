@@ -47,6 +47,7 @@ app.get('/test', async (req, res: Response<any, number>) => {
   await Sender.sendLineCountsHighScores(res);
   await Sender.sendTopWords(res); // Retrieved from the database
   await Sender.sendDuccScores(res);
+  await Sender.sendFightScores(res);
 
   // Daily we send the top words that are in the database
   setInterval(async () => {
