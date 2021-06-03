@@ -14,5 +14,5 @@ function userHash(str: string): number {
  * @returns a string in the format of nick-[0-15]
  */
 export function getNickCSSClass(nick: string): string {
-  return `nick-${userHash(nick) % 16}`;
+  return `nick-${userHash(nick.replace(/[^a-zA-Z0-9]/g, '')) % 16}`;
 }

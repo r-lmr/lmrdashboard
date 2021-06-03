@@ -3,6 +3,7 @@ import { Col } from 'reactstrap';
 import FightStatsList, { ScoreType } from './FightStatsList';
 import eventSource from '../data/EventSource';
 import { IFightScore } from './FightStat';
+import FightRelationPicker from './FightRelationPicker';
 
 export default function Terminal(): JSX.Element {
   const [fetchedTopWinnersAndLosers, setFetchedTopWinnersAndLosers] = useState<TopWinnersAndLosers>({
@@ -28,6 +29,7 @@ export default function Terminal(): JSX.Element {
       <Col md={6}>
         <FightStatsList type={ScoreType.LOSSES} topLosers={fetchedTopWinnersAndLosers.topLosers} />
       </Col>
+      <FightRelationPicker/>
     </>
   );
 }

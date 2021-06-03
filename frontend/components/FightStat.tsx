@@ -3,7 +3,7 @@ import {getNickCSSClass} from '../data/UserHash';
 export default function FightStat(props: IFightScore): JSX.Element {
   return (
     <div>
-      <span className={getNickCSSClass(props.user.replace(/[^a-zA-Z0-9]/g, ''))}>{props.user}</span>:{' '}
+      <span className={getNickCSSClass(props.user)}>{props.user}</span>:{' '}
       {props.wins && props.wins}
       {props.losses && props.losses}
     </div>

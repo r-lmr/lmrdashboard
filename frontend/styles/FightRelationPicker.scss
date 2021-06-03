@@ -1,0 +1,34 @@
+@use 'Srcery';
+
+.fight-relation-picker-container {
+  margin-top: 1em;
+
+  .input-nick1,
+  .input-nick2 {
+    background-color: Srcery.$hard_black;
+    color: Srcery.$white;
+    border-color: Srcery.$brightblack;
+  }
+
+  .input-nick1::placeholder,
+  .input-nick2::placeholder {
+    color: Srcery.$brightblack;
+  }
+
+  .fight-relation-picker-button {
+    background-color: Srcery.$brightblack;
+    border-color: Srcery.$brightblack;
+
+    .fight-relation-picker-button-icon {
+      color: Srcery.$brightwhite;
+    }
+  }
+
+  .fight-relation-error,
+  .fight-relation-results {
+    margin-top: 0.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
