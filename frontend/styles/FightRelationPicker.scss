@@ -1,6 +1,16 @@
 .fight-relation-picker-container {
   margin-top: 1em;
 
+  .input-nick1 {
+    background-color: black;
+    color: white;
+  }
+
+  .input-nick2 {
+    background-color: black;
+    color: white;
+  }
+
   .fight-relation-results {
     margin-top: 0.5em;
     display: flex;

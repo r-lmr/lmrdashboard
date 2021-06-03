@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { InputGroup, InputGroupAddon, Input, Button } from 'reactstrap';
 import { getEventSourceBaseUrl } from '../data/EventSource';
 import { FaSearch } from 'react-icons/fa';
@@ -11,6 +11,10 @@ export default function FightRelationPicker(): JSX.Element {
   const [nick2Wins, setNick2Wins] = useState<number>(-1);
   const [displayError, setDisplayError] = useState<boolean>(false);
   const [resultsAvailable, setResultsAvailable] = useState<boolean>(false);
+
+  useEffect(() => {
+    setResultsAvailable(false);
+  }, [nick1, nick2]);
 
   const handleSearchRequest = () => {
     if (nick1.length === 0 || nick2.length === 0) {
@@ -46,12 +50,14 @@ export default function FightRelationPicker(): JSX.Element {
     <div className={'fight-relation-picker-container'}>
       <InputGroup>
         <Input
+          className={'input-nick1'}
           placeholder={'Nick 1'}
           onChange={(x) => {
             setNick1(x.target.value);
           }}
         />
         <Input
+          className={'input-nick2'}
           placeholder={'Nick 2'}
           onChange={(x) => {
             setNick2(x.target.value);
