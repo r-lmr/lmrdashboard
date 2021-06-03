@@ -2,6 +2,7 @@ import cors from 'cors';
 import Express from 'express';
 import { Request , Response, ParamsDictionary } from 'express-serve-static-core';
 import { v4 as uuidv4 } from 'uuid';
+import { DatabaseFightUtils } from './database/Fights';
 import { InitDatabase } from './database/InitDatabase';
 import { DatabaseMessageUtils } from './database/Messages';
 import { DatabaseUserUtils } from './database/Users';
@@ -24,14 +25,16 @@ app.get('/healthz', async (req, res, next) => {
     : next();
 });
 
-app.get('/fightRelation',
-        async (req: Request<ParamsDictionary, any, any, any>,
-               res: Response<any, number>) => {
+app.get('/fightRelation', async (req: Request<ParamsDictionary, any, any, any>,
+                                 res: Response<any, number>) => {
   const nick1 = req.query.nick1;
   const nick2 = req.query.nick2;
-  log.debug(nick1);
-  log.debug(nick2);
-  res.send({ok: "ok"});
+  const fightRelation = await DatabaseFightUtils.retrieveFightRelation(nick1, nick2);
+  if (fightRelation == null) {
+    res.sendStatus(404);
+  } else {
+    res.send(fightRelation);
+  }
 });
 
 app.get('/test', async (req, res: Response<any, number>) => {

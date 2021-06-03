@@ -81,6 +81,28 @@ class DatabaseFightUtils {
 
     return { topWinners, topLosers };
   }
+
+  static async retrieveFightRelation(nick1: string,
+                                     nick2: string): Promise<FightRelation | undefined> {
+    const winnerIsNick1 = await knex('fight_scores_relations').select().where({
+      winner : nick1,
+      loser : nick2
+    });
+    const winnerIsNick2 = await knex('fight_scores_relations').select().where({
+      winner : nick2,
+      loser : nick1
+    });
+
+    if (winnerIsNick1.length === 0 || winnerIsNick2.length === 0) {
+      log.warn(`No fight relation for nicks ${nick1} and ${nick2} found.`);
+      return;
+    }
+
+    const nick1Wins = winnerIsNick1.map((entry) => entry['times'])[0];
+    const nick2Wins = winnerIsNick2.map((entry) => entry['times'])[0];
+
+    return { nick1Wins, nick2Wins }
+  }
 }
 
 interface FightScore {
@@ -92,6 +114,11 @@ interface FightScore {
 interface TopWinnerAndLosers {
   topWinners: FightScore[];
   topLosers: FightScore[];
+}
+
+export interface FightRelation {
+  nick1Wins: number;
+  nick2Wins: number;
 }
 
 export { DatabaseFightUtils };
