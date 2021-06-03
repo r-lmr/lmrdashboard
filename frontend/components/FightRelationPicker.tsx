@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import { InputGroup, InputGroupAddon, Input, Button } from 'reactstrap';
+import { useEffect, useRef, useState, KeyboardEvent, ChangeEvent } from 'react';
+import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { getEventSourceBaseUrl } from '../data/EventSource';
 import { FaSearch } from 'react-icons/fa';
 import { getNickCSSClass } from '../data/UserHash';
+import FightRelationPickerInputField from './FightRelationPickerInputField';
 
 export default function FightRelationPicker(): JSX.Element {
   const [nick1, setNick1] = useState<string>('');
@@ -47,32 +48,26 @@ export default function FightRelationPicker(): JSX.Element {
       });
   };
 
+  const handleOnKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      (buttonRef.current?.children[0] as HTMLButtonElement).click();
+    }
+  }
+
   return (
     <div className={'fight-relation-picker-container'}>
       <InputGroup>
-        <Input
-          className={'input-nick1'}
-          placeholder={'Nick 1'}
-          onChange={(x) => {
-            setNick1(x.target.value);
-          }}
-          onKeyDown={(x) => {
-            if (x.key === 'Enter') {
-              (buttonRef.current?.children[0] as HTMLButtonElement).click();
-            }
-          }}
+        <FightRelationPickerInputField
+          className={"input-nick1"}
+          placeHolder={'Nick 1'}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setNick1(e.target.value)}
+          onKeyDown={handleOnKeyDown}
         />
-        <Input
-          className={'input-nick2'}
-          placeholder={'Nick 2'}
-          onChange={(x) => {
-            setNick2(x.target.value);
-          }}
-          onKeyDown={(x) => {
-            if (x.key === 'Enter') {
-              (buttonRef.current?.children[0] as HTMLButtonElement).click();
-            }
-          }}
+        <FightRelationPickerInputField
+          className={"input-nick2"}
+          placeHolder={'Nick 2'}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setNick2(e.target.value)}
+          onKeyDown={handleOnKeyDown}
         />
         <InputGroupAddon addonType="append">
           <div ref={buttonRef}>
