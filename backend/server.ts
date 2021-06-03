@@ -1,6 +1,6 @@
 import cors from 'cors';
 import Express from 'express';
-import { Response } from 'express-serve-static-core';
+import { Request , Response, ParamsDictionary } from 'express-serve-static-core';
 import { v4 as uuidv4 } from 'uuid';
 import { InitDatabase } from './database/InitDatabase';
 import { DatabaseMessageUtils } from './database/Messages';
@@ -22,6 +22,16 @@ app.get('/healthz', async (req, res, next) => {
   ['/health', '/healthz'].indexOf(req.path.toLowerCase()) >= 0 && ['get', 'head'].indexOf(req.method.toLowerCase()) >= 0
     ? res.status(200).end()
     : next();
+});
+
+app.get('/fightRelation',
+        async (req: Request<ParamsDictionary, any, any, any>,
+               res: Response<any, number>) => {
+  const nick1 = req.query.nick1;
+  const nick2 = req.query.nick2;
+  log.debug(nick1);
+  log.debug(nick2);
+  res.send({ok: "ok"});
 });
 
 app.get('/test', async (req, res: Response<any, number>) => {
