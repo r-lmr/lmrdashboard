@@ -69,17 +69,17 @@ export default function FightRelationPicker(): JSX.Element {
           </Button>
         </InputGroupAddon>
       </InputGroup>
-      {displayError && <div>No match found.</div>}
+      {displayError && <div className={'fight-relation-error'}>No match found.</div>}
       {resultsAvailable && (
         <div className={'fight-relation-results'}>
           <div>
             {/*TODO: Move these replaces into the getNickCSSClass function itself*/}
-            <span className={getNickCSSClass(nick1.replace(/[^a-zA-Z0-9]/g, ''))}>{nick1}'s</span> wins vs{' '}
-            <span className={getNickCSSClass(nick2.replace(/[^a-zA-Z0-9]/g, ''))}>{nick2}</span>: <b>{nick1Wins}</b>
+            <span className={getNickCSSClass(nick1)}>{nick1}'s</span> wins vs{' '}
+            <span className={getNickCSSClass(nick2)}>{nick2}</span>: <b>{nick1Wins}</b>
           </div>
           <div>
-            <span className={getNickCSSClass(nick2.replace(/[^a-zA-Z0-9]/g, ''))}>{nick2}'s</span> wins vs{' '}
-            <span className={getNickCSSClass(nick1.replace(/[^a-zA-Z0-9]/g, ''))}>{nick1}</span>: <b>{nick2Wins}</b>
+            <span className={getNickCSSClass(nick2)}>{nick2}'s</span> wins vs{' '}
+            <span className={getNickCSSClass(nick1)}>{nick1}</span>: <b>{nick2Wins}</b>
           </div>
         </div>
       )}
