@@ -56,6 +56,11 @@ export default function FightRelationPicker(): JSX.Element {
           onChange={(x) => {
             setNick1(x.target.value);
           }}
+          onKeyDown={(x) => {
+            if (x.key === 'Enter') {
+              (buttonRef.current?.children[0] as HTMLButtonElement).click();
+            }
+          }}
         />
         <Input
           className={'input-nick2'}
