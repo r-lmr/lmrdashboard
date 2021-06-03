@@ -58,21 +58,24 @@ export default function FightRelationPicker(): JSX.Element {
     <div className={'fight-relation-picker-container'}>
       <InputGroup>
         <FightRelationPickerInputField
-          className={"input-nick1"}
+          className={'input-nick1'}
           placeHolder={'Nick 1'}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setNick1(e.target.value)}
           onKeyDown={handleOnKeyDown}
         />
         <FightRelationPickerInputField
-          className={"input-nick2"}
+          className={'input-nick2'}
           placeHolder={'Nick 2'}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setNick2(e.target.value)}
           onKeyDown={handleOnKeyDown}
         />
-        <InputGroupAddon addonType="append">
+        <InputGroupAddon addonType={'append'}>
           <div ref={buttonRef}>
-            <Button onClick={handleSearchRequest}>
-            <FaSearch />
+            <Button
+              className={'fight-relation-picker-button'}
+              onClick={handleSearchRequest}
+            >
+            <FaSearch className={'fight-relation-picker-button-icon'}/>
             </Button>
           </div>
         </InputGroupAddon>
