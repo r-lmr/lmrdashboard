@@ -2,8 +2,8 @@ import { useEffect, useRef, useState, KeyboardEvent, ChangeEvent } from 'react';
 import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { getEventSourceBaseUrl } from '../data/EventSource';
 import { FaSearch } from 'react-icons/fa';
-import { getNickCSSClass } from '../data/UserHash';
 import FightRelationPickerInputField from './FightRelationPickerInputField';
+import FightRelationPickerResults from './FightRelationPickerResults';
 
 export default function FightRelationPicker(): JSX.Element {
   const [nick1, setNick1] = useState<string>('');
@@ -79,17 +79,12 @@ export default function FightRelationPicker(): JSX.Element {
       </InputGroup>
       {displayError && <div className={'fight-relation-error'}>No match found.</div>}
       {resultsAvailable && (
-        <div className={'fight-relation-results'}>
-          <div>
-            {/*TODO: Move these replaces into the getNickCSSClass function itself*/}
-            <span className={getNickCSSClass(nick1)}>{nick1}'s</span> wins vs{' '}
-            <span className={getNickCSSClass(nick2)}>{nick2}</span>: <b>{nick1Wins}</b>
-          </div>
-          <div>
-            <span className={getNickCSSClass(nick2)}>{nick2}'s</span> wins vs{' '}
-            <span className={getNickCSSClass(nick1)}>{nick1}</span>: <b>{nick2Wins}</b>
-          </div>
-        </div>
+        <FightRelationPickerResults
+          nick1={nick1}
+          nick2={nick2}
+          nick1Wins={nick1Wins}
+          nick2Wins={nick2Wins}
+        />
       )}
     </div>
   );
