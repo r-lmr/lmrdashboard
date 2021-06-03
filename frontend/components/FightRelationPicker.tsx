@@ -44,7 +44,7 @@ export default function FightRelationPicker(): JSX.Element {
         setDisplayError(true);
         setTimeout(() => {
           setDisplayError(false);
-        }, 10_000);
+        }, 5_000);
       });
   };
 
