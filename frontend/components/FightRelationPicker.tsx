@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { InputGroup, InputGroupAddon, Input, Button } from 'reactstrap';
 import { getEventSourceBaseUrl } from '../data/EventSource';
 import { FaSearch } from 'react-icons/fa';
@@ -11,12 +11,13 @@ export default function FightRelationPicker(): JSX.Element {
   const [nick2Wins, setNick2Wins] = useState<number>(-1);
   const [displayError, setDisplayError] = useState<boolean>(false);
   const [resultsAvailable, setResultsAvailable] = useState<boolean>(false);
+  const buttonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setResultsAvailable(false);
   }, [nick1, nick2]);
 
-  const handleSearchRequest = () => {
+  const handleSearchRequest = (): void => {
     if (nick1.length === 0 || nick2.length === 0) {
       return;
     }
@@ -62,11 +63,18 @@ export default function FightRelationPicker(): JSX.Element {
           onChange={(x) => {
             setNick2(x.target.value);
           }}
+          onKeyDown={(x) => {
+            if (x.key === 'Enter') {
+              (buttonRef.current?.children[0] as HTMLButtonElement).click();
+            }
+          }}
         />
         <InputGroupAddon addonType="append">
-          <Button onClick={handleSearchRequest}>
+          <div ref={buttonRef}>
+            <Button onClick={handleSearchRequest}>
             <FaSearch />
-          </Button>
+            </Button>
+          </div>
         </InputGroupAddon>
       </InputGroup>
       {displayError && <div className={'fight-relation-error'}>No match found.</div>}
