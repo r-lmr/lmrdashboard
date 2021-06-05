@@ -4,11 +4,11 @@
   </a>
 </p>
 <p align="center">
-  <a href="https://dash.linuxmasterrace.org/" alt="Pipelines">
+  <a href="https://dash.linuxmasterrace.org/" alt="Website">
     <img src="https://img.shields.io/website?url=https%3A%2F%2Fdash.linuxmasterrace.org%2F"/>
   </a>
-  <a href="https://gitlab.com/cocainefarm/lmrdashboard/-/pipelines" alt="Pipelines">
-    <img src="https://gitlab.com/cocainefarm/lmrdashboard/badges/lmrdashboard/pipeline.svg"/>
+  <a href="https://gitlab.com/cocainefarm/lmr/lmrdashboard/-/pipelines" alt="Pipelines">
+    <img src="https://gitlab.com/cocainefarm/lmr/lmrdashboard/badges/lmrdashboard/pipeline.svg"/>
   </a>
   <a href="https://github.com/r-lmr/lmrdashboard/blob/lmrdashboard/LICENSE" alt="License">
     <img src="https://img.shields.io/github/license/r-lmr/lmrdashboard"/>
