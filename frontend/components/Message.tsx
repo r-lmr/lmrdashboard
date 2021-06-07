@@ -1,3 +1,4 @@
+import React from 'react';
 import { getNickCSSClass } from '../data/UserHash';
 import { FormatUtils } from '../util/FormatUtils';
 import innerText from 'react-innertext';
@@ -20,25 +21,24 @@ export default function Message(props: IMessage): JSX.Element {
 
   const boldEscapeChar = '\u0002';
 
-  /** 
+  /**
    * If a message contains URLs or (/)r/<subreddit> those parts will be linked.
    * Link formatting has precedence over aesthetic formatting
    */
   function enrichMessageContentFormattingPerPart(message: string): JSX.Element[] {
-    return message.split(' ')
-      .map((messagePart: string) => {
-        if (messagePart.startsWith('r/')) {
-          return FormatUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
-        } else if (messagePart.startsWith('/r/')) {
-          return FormatUtils.formatLink('https://reddit.com' + messagePart, messagePart);
-        } else if (linkRegex.test(messagePart)) {
-          return FormatUtils.formatLink(messagePart, messagePart);
-        } else if (asterisksRegex.test(messagePart)) {
-          return FormatUtils.formatBoldViaAsterisks(messagePart);
-        } else {
-          return <> {messagePart}</>
-        }
-      });
+    return message.split(' ').map((messagePart: string) => {
+      if (messagePart.startsWith('r/')) {
+        return FormatUtils.formatLink('https://reddit.com/' + messagePart, messagePart);
+      } else if (messagePart.startsWith('/r/')) {
+        return FormatUtils.formatLink('https://reddit.com' + messagePart, messagePart);
+      } else if (linkRegex.test(messagePart)) {
+        return FormatUtils.formatLink(messagePart, messagePart);
+      } else if (asterisksRegex.test(messagePart)) {
+        return FormatUtils.formatBoldViaAsterisks(messagePart);
+      } else {
+        return <> {messagePart}</>;
+      }
+    });
   }
 
   function enrichMessageContentFormattingViaEscapeCodes(message: JSX.Element[]): JSX.Element[] {
@@ -47,8 +47,9 @@ export default function Message(props: IMessage): JSX.Element {
     // i.e. the whole message content is in the first element
     // => Split it into parts as if previous formatting has been done
     if (message.length === 1) {
-      preparedMessage = innerText(message[0]).split(' ')
-        .map(it => <> {it}</>);
+      preparedMessage = innerText(message[0])
+        .split(' ')
+        .map((it) => <> {it}</>);
     }
     return FormatUtils.formatBoldViaEscapeCharacter(preparedMessage);
   }
@@ -68,28 +69,28 @@ export default function Message(props: IMessage): JSX.Element {
    * Returns a message formatted in the way irssi formats it for /me.
    */
   function getFormattedActionMessage(): JSX.Element {
-    return (<>
-      [{props.dateCreated}] * <span className={getNickCSSClass(props.nick)}>{props.nick}</span>{props.message.replace('ACTION', '')}
-    </>)
+    return (
+      <>
+        [{props.dateCreated}] * <span className={getNickCSSClass(props.nick)}>{props.nick}</span>
+        {props.message.replace('ACTION', '')}
+      </>
+    );
   }
 
   /**
    * Returns a message formatted in a normal <nick>: <message> format.
    */
   function getFormattedNormalMessage(): JSX.Element {
-    return (<>
-      [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>: {
-        enrichMessageContentFormattingIfNeeded(props.message)
-      }
-    </>)
+    return (
+      <>
+        [{props.dateCreated}] <span className={getNickCSSClass(props.nick)}>{props.nick}</span>:{' '}
+        {enrichMessageContentFormattingIfNeeded(props.message)}
+      </>
+    );
   }
 
   return (
-    <div>
-      {props.message.slice(1).startsWith('ACTION') ?
-        getFormattedActionMessage() :
-        getFormattedNormalMessage()}
-    </div>
+    <div>{props.message.slice(1).startsWith('ACTION') ? getFormattedActionMessage() : getFormattedNormalMessage()}</div>
   );
 }
 

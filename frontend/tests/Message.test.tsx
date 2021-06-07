@@ -15,11 +15,7 @@ describe('no formatting', () => {
     const boldSpy = jest.spyOn(FormatUtils, 'formatBoldViaAsterisks');
 
     const component = renderer.create(
-      <Message
-        nick={'Linus'}
-        message={'This is a message without links.'}
-        dateCreated={'2021-01-01'}
-      />
+      <Message nick={'Linus'} message={'This is a message without links.'} dateCreated={'2021-01-01'} />
     );
 
     const tree = component.toJSON();
@@ -215,4 +211,4 @@ describe('bold formatting', () => {
     expect(linkSpy).toHaveBeenCalled();
     expect(tree).toMatchSnapshot();
   });
-})
+});

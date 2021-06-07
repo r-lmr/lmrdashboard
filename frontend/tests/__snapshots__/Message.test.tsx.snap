@@ -10,7 +10,8 @@ exports[`bold formatting message with asterisks and bold escape code has bold fo
   >
     BoldMoveCotton
   </span>
-  : 
+  :
+   
    
   This
    
@@ -50,7 +51,8 @@ exports[`bold formatting message with asterisks and links has both formatting 1`
   >
     BoldMoveCotton
   </span>
-  : 
+  :
+   
    
   This
    
@@ -94,7 +96,8 @@ exports[`bold formatting message with asterisks has bold formatting 1`] = `
   >
     BoldMoveCotton
   </span>
-  : 
+  :
+   
    
   This
    
@@ -138,7 +141,8 @@ exports[`bold formatting message with asterisks, bold escape code and links has 
   >
     BoldMoveCotton
   </span>
-  : 
+  :
+   
    
   This
    
@@ -188,7 +192,8 @@ exports[`bold formatting message with bold escape code has bold formatting 1`] =
   >
     BoldMoveCotton
   </span>
-  : 
+  :
+   
    
   This
    
@@ -220,7 +225,8 @@ exports[`bold formatting message with bold escape code(s) can be unescaped 1`] =
   >
     BoldMoveCotton
   </span>
-  : 
+  :
+   
   <b>
      
     bold
@@ -250,7 +256,8 @@ exports[`bold formatting message with bold escape code(s) escaping multiple word
   >
     BoldMoveCotton
   </span>
-  : 
+  :
+   
    
   notbold
   <b>
@@ -286,7 +293,8 @@ exports[`link formatting message that contains an "r" but no links does not trig
   >
     Linus
   </span>
-  : 
+  :
+   
   This is a message without links, but it has an r.
 </div>
 `;
@@ -301,7 +309,8 @@ exports[`link formatting message with URLs has links rendered 1`] = `
   >
     RMS
   </span>
-  : 
+  :
+   
    
   This
    
@@ -340,7 +349,8 @@ exports[`link formatting message with mixed link types has them rendered 1`] = `
   >
     Gnu
   </span>
-  : 
+  :
+   
    
   This
    
@@ -384,7 +394,8 @@ exports[`link formatting message with subreddits has them rendered as links 1`] 
   >
     Gnu
   </span>
-  : 
+  :
+   
    
   This
    
@@ -423,7 +434,8 @@ exports[`no formatting message without links does not have special formatting 1`
   >
     Linus
   </span>
-  : 
+  :
+   
   This is a message without links.
 </div>
 `;

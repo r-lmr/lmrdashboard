@@ -22,7 +22,12 @@ export default function DuccStatsList(props: IProps): JSX.Element {
   return (
     <div>
       <div>
-        <p className={'duccstatslist-header'}>Top Ducc {props.type === ScoreType.FRIENDS ? 'Friends' : 'Killers'}: <span className={'duccstatslist-tooltip'} id="duccstatslist-tooltip">?</span></p>
+        <p className={'duccstatslist-header'}>
+          Top Ducc {props.type === ScoreType.FRIENDS ? 'Friends' : 'Killers'}:{' '}
+          <span className={'duccstatslist-tooltip'} id="duccstatslist-tooltip">
+            ?
+          </span>
+        </p>
         <Tooltip placement="right" isOpen={tooltipOpen} target="duccstatslist-tooltip" toggle={toggle}>
           Generated weekly
         </Tooltip>

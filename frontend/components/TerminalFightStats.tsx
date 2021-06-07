@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col } from 'reactstrap';
 import FightStatsList, { ScoreType } from './FightStatsList';
 import eventSource from '../data/EventSource';
@@ -29,7 +29,7 @@ export default function Terminal(): JSX.Element {
       <Col md={6}>
         <FightStatsList type={ScoreType.LOSSES} topLosers={fetchedTopWinnersAndLosers.topLosers} />
       </Col>
-      <FightRelationPicker/>
+      <FightRelationPicker />
     </>
   );
 }

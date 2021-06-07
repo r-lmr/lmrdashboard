@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Container, Row } from 'reactstrap';
 import TerminalBar from './TerminalBar';
 

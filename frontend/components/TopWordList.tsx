@@ -1,3 +1,4 @@
+import React from 'react';
 import { TTopWord } from './TopWords';
 import TopWord from './TopWord';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
-import packageJson from "../package.json";
+import packageJson from '../package.json';
 
 const Navigation = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +29,7 @@ const Navigation = (): JSX.Element => {
               <NavLink href=" http://linuxmasterrace.org">linuxmasterrace.org</NavLink>
             </NavItem>
           </Nav>
-          <NavLink href={"https://github.com/r-lmr/lmrdashboard/releases/tag/" + packageJson.version}>
+          <NavLink href={'https://github.com/r-lmr/lmrdashboard/releases/tag/' + packageJson.version}>
             v{packageJson.version}
           </NavLink>
         </Collapse>
