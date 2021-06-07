@@ -1,3 +1,4 @@
+import React from 'react';
 import { Col } from 'reactstrap';
 import LineCountList, { LineCountListType } from './LineCountList';
 

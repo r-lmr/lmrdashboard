@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent } from 'react';
+import React, { ChangeEvent, KeyboardEvent } from 'react';
 import { Input } from 'reactstrap';
 
 export default function FightRelationPickerInputField(props: IFightRelationPickerInputField): JSX.Element {

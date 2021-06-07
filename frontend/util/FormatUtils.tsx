@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+import React from 'react';
 import innerText from "react-innertext";
 import { StringUtils } from "./StringUtils";
 

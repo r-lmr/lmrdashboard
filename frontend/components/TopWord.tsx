@@ -1,3 +1,5 @@
+import React from 'react';
+ 
 export default function TopWord(props: ITopWord): JSX.Element {
   return (
     <div className={'topword-wrapper'}>

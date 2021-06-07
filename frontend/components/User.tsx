@@ -1,3 +1,4 @@
+import React from 'react';
 import { getNickCSSClass } from '../data/UserHash';
 
 export default function User(props: IUser): JSX.Element {

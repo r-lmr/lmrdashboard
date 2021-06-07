@@ -1,3 +1,4 @@
+import React from 'react';
 import { getNickCSSClass } from '../data/UserHash';
 import { FormatUtils } from '../util/FormatUtils';
 import innerText from 'react-innertext';

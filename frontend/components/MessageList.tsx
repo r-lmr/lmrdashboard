@@ -1,5 +1,5 @@
 import Message from './Message';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import eventSource from '../data/EventSource';
 import { IMessage } from './Message';
 

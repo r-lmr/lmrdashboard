@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function TerminalBar(props: IProps): JSX.Element {
   return (
       <div className={'terminal-bar'}>

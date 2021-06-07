@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col } from 'reactstrap';
 import FightStatsList, { ScoreType } from './FightStatsList';
 import eventSource from '../data/EventSource';

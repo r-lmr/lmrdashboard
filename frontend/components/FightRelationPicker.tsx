@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useRef, useState, KeyboardEvent, ChangeEvent } from 'react';
 import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { getEventSourceBaseUrl } from '../data/EventSource';
