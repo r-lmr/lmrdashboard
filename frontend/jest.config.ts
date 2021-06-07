@@ -13,7 +13,7 @@ const config: Config.InitialOptions = {
   collectCoverage: true,
   coverageDirectory: 'results/coverage',
   reporters: ['default', 'jest-junit'],
-  testPathIgnorePatterns: ["cypress"],
+  testPathIgnorePatterns: ['cypress'],
   transform: {
     '^.+\\.tsx?$': 'babel-jest',
   },

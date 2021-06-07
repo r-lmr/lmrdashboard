@@ -21,7 +21,8 @@ export default function MessageList(): JSX.Element {
   return (
     <div>
       <div className={'messagelist-header'}>
-        Last {fetchedMessages.length} Messages ({fetchedMessages[0] && new Date(fetchedMessages[0].dateCreated).toISOString().split('T')[0]}):
+        Last {fetchedMessages.length} Messages (
+        {fetchedMessages[0] && new Date(fetchedMessages[0].dateCreated).toISOString().split('T')[0]}):
       </div>
       {fetchedMessages.map((message, index) => (
         <Message

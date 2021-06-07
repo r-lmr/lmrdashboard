@@ -29,7 +29,7 @@ export default function Terminal(): JSX.Element {
       <Col md={6}>
         <FightStatsList type={ScoreType.LOSSES} topLosers={fetchedTopWinnersAndLosers.topLosers} />
       </Col>
-      <FightRelationPicker/>
+      <FightRelationPicker />
     </>
   );
 }

@@ -53,7 +53,7 @@ export default function FightRelationPicker(): JSX.Element {
     if (e.key === 'Enter') {
       (buttonRef.current?.children[0] as HTMLButtonElement).click();
     }
-  }
+  };
 
   return (
     <div className={'fight-relation-picker-container'}>
@@ -72,23 +72,15 @@ export default function FightRelationPicker(): JSX.Element {
         />
         <InputGroupAddon addonType={'append'}>
           <div ref={buttonRef}>
-            <Button
-              className={'fight-relation-picker-button'}
-              onClick={handleSearchRequest}
-            >
-            <FaSearch className={'fight-relation-picker-button-icon'}/>
+            <Button className={'fight-relation-picker-button'} onClick={handleSearchRequest}>
+              <FaSearch className={'fight-relation-picker-button-icon'} />
             </Button>
           </div>
         </InputGroupAddon>
       </InputGroup>
       {displayError && <div className={'fight-relation-error'}>No match found.</div>}
       {resultsAvailable && (
-        <FightRelationPickerResults
-          nick1={nick1}
-          nick2={nick2}
-          nick1Wins={nick1Wins}
-          nick2Wins={nick2Wins}
-        />
+        <FightRelationPickerResults nick1={nick1} nick2={nick2} nick1Wins={nick1Wins} nick2Wins={nick2Wins} />
       )}
     </div>
   );

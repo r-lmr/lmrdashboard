@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-import innerText from "react-innertext";
-import { StringUtils } from "./StringUtils";
+import innerText from 'react-innertext';
+import { StringUtils } from './StringUtils';
 
 export const FormatUtils = {
   /**
@@ -12,7 +12,14 @@ export const FormatUtils = {
     const previousText = text.substring(0, text.indexOf('*'));
     const toMakeBold = text.substring(text.indexOf('*'), text.lastIndexOf('*') + 1);
     const restOfTheText = text.substring(text.lastIndexOf('*') + 1);
-    return <> {previousText}<b>{toMakeBold}</b>{restOfTheText}</>;
+    return (
+      <>
+        {' '}
+        {previousText}
+        <b>{toMakeBold}</b>
+        {restOfTheText}
+      </>
+    );
   },
 
   /**
@@ -54,7 +61,6 @@ export const FormatUtils = {
     });
 
     return formattedMessage;
-
   },
 
   /**
@@ -65,8 +71,19 @@ export const FormatUtils = {
     if (StringUtils.hasTrailingChar(clickable) || StringUtils.hasTrailingChar(href)) {
       const [clickableWithoutEndChar, endChar] = StringUtils.splitToTextWithoutTrailingAndTrailing(clickable);
       const hrefWithoutEndChar = StringUtils.splitToTextWithoutTrailingAndTrailing(href)[0];
-      return <> <a href={hrefWithoutEndChar}>{clickableWithoutEndChar}</a>{endChar}</>;
+      return (
+        <>
+          {' '}
+          <a href={hrefWithoutEndChar}>{clickableWithoutEndChar}</a>
+          {endChar}
+        </>
+      );
     }
-    return <> <a href={href}>{clickable}</a></>;
-  }
-}
+    return (
+      <>
+        {' '}
+        <a href={href}>{clickable}</a>
+      </>
+    );
+  },
+};

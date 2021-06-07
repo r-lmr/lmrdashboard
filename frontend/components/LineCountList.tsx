@@ -21,14 +21,18 @@ export default function LineCountList(props: IProps): JSX.Element {
   const toggle = () => setTooltipOpen(!tooltipOpen);
 
   function getHeadingString(): string {
-    return (props.type === LineCountListType.LAST_DAYS ?
-      "Line Counts" : "Lines Scoreboard");
+    return props.type === LineCountListType.LAST_DAYS ? 'Line Counts' : 'Lines Scoreboard';
   }
 
   return (
     <div>
       <div>
-        <p className={'linecount-header'}>{getHeadingString()}: <span className={'linecount-tooltip'} id="linecount-tooltip">?</span></p>
+        <p className={'linecount-header'}>
+          {getHeadingString()}:{' '}
+          <span className={'linecount-tooltip'} id="linecount-tooltip">
+            ?
+          </span>
+        </p>
         <Tooltip placement="right" isOpen={tooltipOpen} target="linecount-tooltip" toggle={toggle}>
           Percentage = number of bot lines
         </Tooltip>
@@ -52,5 +56,5 @@ interface IProps {
 
 export enum LineCountListType {
   LAST_DAYS = 'lineCountsLastDays',
-  HIGH_SCORE = 'lineCountsHighScores'
+  HIGH_SCORE = 'lineCountsHighScores',
 }
