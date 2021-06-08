@@ -15,6 +15,12 @@ describe('parsing a fight result', () => {
     expect(result).toStrictEqual({valid: true, winner: 'someone', loser: 'anyone'});
   });
 
+  test('works for correct message (returns match with winner and loser) 3', async () => {
+    const msg = 'POW! WHACK! KAPOW! Flexyjerkov triumphs over pb with a devastating headbutt.';
+    const result = IrcMessageProcessor.matchesFightMsg(msg);
+    expect(result).toStrictEqual({valid: true, winner: 'Flexyjerkov', loser: 'pb'});
+  });
+
   test('works for incorrect message (returns no match)', async () => {
     const msg = 'some other message by gonzobot';
     const result = IrcMessageProcessor.matchesFightMsg(msg);

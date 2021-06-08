@@ -93,13 +93,13 @@ class DatabaseFightUtils {
       loser : nick1
     });
 
-    if (winnerIsNick1.length === 0 || winnerIsNick2.length === 0) {
+    if (winnerIsNick1.length === 0 && winnerIsNick2.length === 0) {
       log.warn(`No fight relation for nicks ${nick1} and ${nick2} found.`);
       return;
     }
 
-    const nick1Wins = winnerIsNick1.map((entry) => entry['times'])[0];
-    const nick2Wins = winnerIsNick2.map((entry) => entry['times'])[0];
+    const nick1Wins = winnerIsNick1.map((entry) => entry['times'])[0] || 0;
+    const nick2Wins = winnerIsNick2.map((entry) => entry['times'])[0] || 0;
 
     return { nick1Wins, nick2Wins }
   }
