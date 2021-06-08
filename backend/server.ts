@@ -30,6 +30,7 @@ app.get('/fightRelation', async (req: Request<ParamsDictionary, any, any, any>,
   const nick1 = req.query.nick1;
   const nick2 = req.query.nick2;
   const fightRelation = await DatabaseFightUtils.retrieveFightRelation(nick1, nick2);
+  log.debug('Found fightRelation', {fightRelation});
   if (fightRelation == null) {
     res.sendStatus(404);
   } else {

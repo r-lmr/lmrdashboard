@@ -66,6 +66,9 @@ class DatabaseFightUtils {
                 .increment('times', 1);
           }
         });
+
+    // Could also insert the inverse fight relation on a (first) loss with 0.
+    // However, this is solved by defaulting to 0 in retrieveTopFightScores
   }
 
   static async retrieveTopFightScores(): Promise<TopWinnerAndLosers> {
@@ -82,26 +85,38 @@ class DatabaseFightUtils {
     return { topWinners, topLosers };
   }
 
-  static async retrieveFightRelation(nick1: string,
-                                     nick2: string): Promise<FightRelation | undefined> {
-    const winnerIsNick1 = await knex('fight_scores_relations').select().where({
-      winner : nick1,
-      loser : nick2
-    });
-    const winnerIsNick2 = await knex('fight_scores_relations').select().where({
-      winner : nick2,
-      loser : nick1
-    });
+  static async retrieveFightRelation(nick1: string, nick2: string):
+      Promise<FightRelation|undefined> {
+    const winnerIsNick1 =
+        await knex('fight_scores_relations')
+            .where('winner', 'like', `%${nick1.toLowerCase()}%`)
+            .andWhere('loser', 'like', `%${nick2.toLowerCase()}%`)
+            .select();
+    const winnerIsNick2 =
+        await knex('fight_scores_relations')
+            .where('winner', 'like', `%${nick2.toLowerCase()}%`)
+            .andWhere('loser', 'like', `%${nick1.toLowerCase()}%`)
+            .select();
 
     if (winnerIsNick1.length === 0 && winnerIsNick2.length === 0) {
       log.warn(`No fight relation for nicks ${nick1} and ${nick2} found.`);
       return;
     }
 
+    const pair1Nick1 = winnerIsNick1.map((entry) => entry['winner'])[0];
+    const pair1Nick2 = winnerIsNick1.map((entry) => entry['loser'])[0];
     const nick1Wins = winnerIsNick1.map((entry) => entry['times'])[0] || 0;
+
+    const pair2Nick1 = winnerIsNick2.map((entry) => entry['winner'])[0];
+    const pair2Nick2 = winnerIsNick2.map((entry) => entry['loser'])[0];
     const nick2Wins = winnerIsNick2.map((entry) => entry['times'])[0] || 0;
 
-    return { nick1Wins, nick2Wins }
+    // On one of the pairs the nick might not exist,
+    // therefore pick it from where it does
+    const nick1Full = pair1Nick1 || pair2Nick1;
+    const nick2Full = pair1Nick2 || pair2Nick2;
+
+    return {nick1Full, nick1Wins, nick2Full, nick2Wins};
   }
 }
 
@@ -117,7 +132,9 @@ interface TopWinnerAndLosers {
 }
 
 export interface FightRelation {
+  nick1Full: string;
   nick1Wins: number;
+  nick2Full: string;
   nick2Wins: number;
 }
 

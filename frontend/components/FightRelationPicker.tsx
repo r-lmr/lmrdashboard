@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useRef, useState, KeyboardEvent, ChangeEvent } from 'react';
+import { useRef, useState, KeyboardEvent, ChangeEvent } from 'react';
 import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { getEventSourceBaseUrl } from '../data/EventSource';
 import { FaSearch } from 'react-icons/fa';
@@ -14,10 +14,8 @@ export default function FightRelationPicker(): JSX.Element {
   const [displayError, setDisplayError] = useState<boolean>(false);
   const [resultsAvailable, setResultsAvailable] = useState<boolean>(false);
   const buttonRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setResultsAvailable(false);
-  }, [nick1, nick2]);
+  const [resultNick1, setResultNick1] = useState<string>('');
+  const [resultNick2, setResultNick2] = useState<string>('');
 
   const handleSearchRequest = (): void => {
     if (nick1.length === 0 || nick2.length === 0) {
@@ -37,6 +35,8 @@ export default function FightRelationPicker(): JSX.Element {
       .then((data) => {
         setNick1Wins(data.nick1Wins);
         setNick2Wins(data.nick2Wins);
+        setResultNick1(data.nick1Full);
+        setResultNick2(data.nick2Full);
         setResultsAvailable(true);
       })
       .catch((e) => {
@@ -80,7 +80,12 @@ export default function FightRelationPicker(): JSX.Element {
       </InputGroup>
       {displayError && <div className={'fight-relation-error'}>No match found.</div>}
       {resultsAvailable && (
-        <FightRelationPickerResults nick1={nick1} nick2={nick2} nick1Wins={nick1Wins} nick2Wins={nick2Wins} />
+        <FightRelationPickerResults
+          nick1={resultNick1}
+          nick2={resultNick2}
+          nick1Wins={nick1Wins}
+          nick2Wins={nick2Wins}
+        />
       )}
     </div>
   );
