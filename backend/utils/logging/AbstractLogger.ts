@@ -2,7 +2,9 @@
  * Stores a framework logger in the logger member variable
  */
 export abstract class AbstractLogger {
-  abstract log(moduleString: string, level: LogLevel, msg: string, error?: Error, additionalProperties?: AdditionalLogProperties): void;
+  abstract log(moduleString: string, level: LogLevel, msg: string,
+               error?: Error,
+               additionalProperties?: AdditionalLogProperties): void;
 }
 
 export enum LogLevel {

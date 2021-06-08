@@ -20,7 +20,7 @@ export class LogCreator {
    */
   private static instantiateWinstonLogger(defaultServiceName: string): WinstonLogger {
     const logger: winston.Logger = createLogger({
-      level: process.env.LMRD_LOG_LEVEL || LogLevel.DEBUG,
+      level: process.env.LMRD_LOG_LEVEL || LogLevel.SILLY,
       format: format.combine(
         format.timestamp({
           format: 'YYYY-MM-DD HH:mm:ss',

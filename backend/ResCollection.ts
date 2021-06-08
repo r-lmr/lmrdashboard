@@ -30,13 +30,13 @@ class ResCollection {
   }
 
   public addToCollection(id: string, res: Response<any, number>) {
-    log.debug(`Adding res to collection of size ${this.collection.size}`, { id: id });
+    log.verbose(`Adding res to collection of size ${this.collection.size}`, { id: id });
     this.collection.set(id, res);
     log.debug('Addition successful');
   }
 
   public removeFromCollection(id: string): void {
-    log.debug(`Removing res from collection of size ${this.collection.size}`, { id: id });
+    log.verbose(`Removing res from collection of size ${this.collection.size}`, { id: id });
     if (!this.collection.has(id)) {
       console.warn('Response not found in Response collection when trying to delete');
     }

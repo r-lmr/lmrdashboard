@@ -37,7 +37,15 @@ export class LogWrapper {
     this.log(LogLevel.INFO, msg, undefined, additionalProperties);
   }
 
+  public verbose(msg: string, additionalProperties?: AdditionalLogProperties): void {
+    this.log(LogLevel.VERBOSE, msg, undefined, additionalProperties);
+  }
+
   public debug(msg: string, additionalProperties?: AdditionalLogProperties): void {
     this.log(LogLevel.DEBUG, msg, undefined, additionalProperties);
+  }
+
+  public silly(msg: string, additionalProperties?: AdditionalLogProperties): void {
+    this.log(LogLevel.SILLY, msg, undefined, additionalProperties);
   }
 }
