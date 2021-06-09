@@ -41,7 +41,7 @@ app.get('/fightRelation', async (req: Request<ParamsDictionary, any, any, any>,
 app.get('/test', async (req, res: Response<any, number>) => {
   log.info('Got request for /test endoint');
   const resId = uuidv4();
-  log.debug('New request', { id: resId });
+  log.verbose('New request', { id: resId });
   resCollection.addToCollection(resId, res);
 
   res.writeHead(200, {
@@ -70,7 +70,7 @@ app.get('/test', async (req, res: Response<any, number>) => {
 
   req.on('close', () => {
     log.info('connection CLOSED');
-    log.debug('Request', { id: resId });
+    log.verbose('Request', { id: resId });
     resCollection.removeFromCollection(resId);
   });
 });

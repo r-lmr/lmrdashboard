@@ -51,7 +51,7 @@ LMRD_IRC_USER=<testusernick>
 LMRD_IRC_PASS=<password>
 LMRD_DUCC_TIME=09:00
 LMRD_DUCC_DAY=0
-LMRD_LOG_LEVEL=debug
+LMRD_LOG_LEVEL=verbose
 ```
 
 #### Database

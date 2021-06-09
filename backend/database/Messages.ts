@@ -100,7 +100,7 @@ class DatabaseMessageUtils {
       }
     }
 
-    log.debug('Saving message to db.', { nick, userIsBot, message });
+    log.verbose('Saving message to db.', { nick, userIsBot, message });
   }
 
   static async insertTopWords(wordMap: Map<string, number>): Promise<void> {
