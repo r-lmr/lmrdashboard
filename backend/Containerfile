@@ -1,4 +1,4 @@
-FROM node:15.1.0-alpine
+FROM docker.io/node:15.1.0-alpine
 
 WORKDIR /lmrdashboard/backend
 COPY . .
