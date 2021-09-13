@@ -6,8 +6,8 @@ stages:
   - deploy
 
 include:
-  - project: 'cocainefarm/templates/ci'
-    file: '/container.base.yaml'
+  - project: "cocainefarm/templates/ci"
+    file: "/container.base.yaml"
 
 default:
   tags:
@@ -104,7 +104,6 @@ frontend:test:
       junit:
         - ${CI_PROJECT_DIR}/frontend/results/junit.xml
 
-
 ##################################################
 # BUILD
 #
@@ -112,7 +111,6 @@ frontend:test:
 .build:
   extends: .container:base
   stage: build
-  <<: *cache_backend
 
 build:backend:
   extends: .build
@@ -137,7 +135,6 @@ build:backend:release:
     refs:
       - tags
 
-
 build:frontend:
   extends: .build
   needs:
@@ -161,7 +158,6 @@ build:frontend:release:
     refs:
       - tags
 
-
 ##################################################
 # E2E TEST
 test:e2e:
@@ -170,7 +166,7 @@ test:e2e:
   needs:
     - build:backend
     - build:frontend
-  services: 
+  services:
     - name: "kube.cat/${CI_KUBECAT_NAMESPACE}/${CI_PROJECT_NAME}-backend:${CI_COMMIT_SHORT_SHA}"
       alias: backend
     - name: mariadb:latest
@@ -184,7 +180,7 @@ test:e2e:
     LMRD_DB_NAME: "lmrd"
     LMRD_IRC_CHANNEL: "#aboftytest"
     NEXT_PUBLIC_LMRD_EVENT_SOURCE: "http://backend:4000"
-  script: 
+  script:
     - cd frontend
     - yarn install
     - yarn test:e2e-ci
@@ -195,7 +191,6 @@ test:e2e:
     reports:
       junit:
         - ${CI_PROJECT_DIR}/frontend/results/test-output-*.xml
-
 
 ##################################################
 # DEPLOY
