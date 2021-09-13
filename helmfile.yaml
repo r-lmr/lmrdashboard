@@ -73,7 +73,11 @@ releases:
               collation-server=utf8mb4_unicode_ci
               init_connect='SET NAMES utf8mb4'
               sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
-
+              peformance_schema=ON
+              performance-schema-instrument='stage/%=ON'
+              performance-schema-consumer-events-stages-current=ON
+              performance-schema-consumer-events-stages-history=ON
+              performance-schema-consumer-events-stages-history-long=ON
 
               [client]
               port=3306
