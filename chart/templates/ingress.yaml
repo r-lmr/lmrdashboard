@@ -28,12 +28,14 @@ spec:
         paths:
         {{- range .paths }}
           - path: {{ . }}(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}-frontend
                 port:
                   name: frontend
           - path: {{ . }}api/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}-backend
