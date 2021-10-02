@@ -34,6 +34,7 @@ class IrcMessageProcessor {
     this.parseCommands.set('NICK', this.processNick.bind(this));
     this.parseCommands.set('900', this.process900Command.bind(this));
     this.parseCommands.set('NOTICE', this.processNotice.bind(this));
+    this.parseCommands.set('ERROR', this.processError.bind(this));
   }
 
   public static Instance(client: TLSSocket, joinConfig: JoinConfig) {
@@ -114,6 +115,14 @@ class IrcMessageProcessor {
     if (param.includes('assword incorrect') || param.includes('is not registered')) {
       log.warn('PASSWORD IS NOT CORRECT. NICK WILL BE CHANGED.');
       this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
+    }
+  }
+
+  private processError(ircMessage: IrcMessage): void {
+    // If IRC connection has been lost, kill process so it is restarted by Kubernetes
+    if (ircMessage.params.find((it) => it.toLowerCase().includes('closing link')) != null) {
+      log.warn('Stopping process.');
+      process.exit(1);
     }
   }
 
@@ -236,7 +245,7 @@ class IrcMessageProcessor {
         if (fightMsgParseResult.valid) {
           await DatabaseFightUtils.insertOrUpdateFightScores(fightMsgParseResult);
           await DatabaseFightUtils.insertOrUpdateFightScoresRelations(fightMsgParseResult);
-          log.debug("Fight parse result", {fightMsgParseResult});
+          log.debug('Fight parse result', { fightMsgParseResult });
           myEmitter.emit('fightScore');
         }
       }
@@ -251,9 +260,9 @@ class IrcMessageProcessor {
     // Thanks audron for the beautiful initial regex
     const match = /(?:\w+! ){3}(?<winner>\w+) (?:\w+ ){1,3}over (?<loser>\w+) with (?:\w+[ .]){1,4}/.exec(s);
     if (match == null) {
-      return {valid : false};
+      return { valid: false };
     }
-    return {valid : true, winner : match.groups!.winner, loser : match.groups!.loser};
+    return { valid: true, winner: match.groups!.winner, loser: match.groups!.loser };
   }
 
   private sendPrivMessage(message: string) {
@@ -288,7 +297,8 @@ type PossibleIrcCommand =
   | 'PRIVMSG'
   | 'NICK'
   | '900'
-  | 'NOTICE';
+  | 'NOTICE'
+  | 'ERROR';
 
 type DuccMessageTrigger =
   | DuccMessageTriggerType.FRIENDS
