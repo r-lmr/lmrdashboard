@@ -153,8 +153,8 @@ class DatabaseMessageUtils {
 
       for (const word of words) {
         if (word && !word.match(/^[0-9]*$/)) {
-          if (!wordCounts.has(word)) wordCounts.set(word, 1);
-          else wordCounts.set(word, wordCounts.get(word)! + 1);
+          const count = wordCounts.get(word) || 0;
+          wordCounts.set(word, count + 1);
         }
       }
     }

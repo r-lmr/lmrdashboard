@@ -25,6 +25,7 @@ test('warning is printed if number of users differs', () => {
 test('insert and delete nick on join/part', async () => {
   const mockJoin = ':Nick!Nick@user/Nick JOIN #aboftytest';
   const mockPart = ':Nick!Nick@user/Nick PART #aboftytest';
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const ircMessageProcessor = await IrcMessageProcessor.Instance(null!, mockJoinConfig);
   const message1 = await ircMessageProcessor.parseMessage(mockJoin);
   const message2 = await ircMessageProcessor.parseMessage(mockPart);

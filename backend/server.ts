@@ -1,6 +1,5 @@
 import cors from 'cors';
 import Express from 'express';
-import { Request , Response, ParamsDictionary } from 'express-serve-static-core';
 import { v4 as uuidv4 } from 'uuid';
 import { DatabaseFightUtils } from './database/Fights';
 import { InitDatabase } from './database/InitDatabase';
@@ -25,10 +24,13 @@ app.get('/healthz', async (req, res, next) => {
     : next();
 });
 
-app.get('/fightRelation', async (req: Request<ParamsDictionary, any, any, any>,
-                                 res: Response<any, number>) => {
-  const nick1 = req.query.nick1;
-  const nick2 = req.query.nick2;
+app.get('/fightRelation', async (req, res) => {
+  const {nick1, nick2} = req.query;
+  if (typeof nick1 !== 'string' || typeof nick2 !== 'string') {
+    res.sendStatus(400);
+    return;
+  }
+
   const fightRelation = await DatabaseFightUtils.retrieveFightRelation(nick1, nick2);
   log.debug('Found fightRelation', {fightRelation});
   if (fightRelation == null) {
@@ -38,7 +40,7 @@ app.get('/fightRelation', async (req: Request<ParamsDictionary, any, any, any>,
   }
 });
 
-app.get('/test', async (req, res: Response<any, number>) => {
+app.get('/test', async (req, res) => {
   log.info('Got request for /test endoint');
   const resId = uuidv4();
   log.verbose('New request', { id: resId });

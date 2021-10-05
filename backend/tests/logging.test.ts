@@ -11,7 +11,7 @@ describe('logging examples', () => {
    */
   let nonce: string;
 
-  const getLogAsJson = (logName: string): any[] => {
+  const getLogAsJson = (logName: string) => {
     return fs
       .readFileSync(path.join('logs', `lmrd-${logName}.log`), 'utf8')
       .split('\n')
@@ -19,7 +19,7 @@ describe('logging examples', () => {
       .map((it) => JSON.parse(it));
   };
 
-  const findByAttribute = (array: any[], value: string, attr?: string) => {
+  const findByAttribute = (array: Record<string, unknown>[], value: string, attr?: string) => {
     const attribute = attr || 'message';
     for (let i = 0; i < array.length; i += 1) {
       if (array[i][attribute] === value) {
