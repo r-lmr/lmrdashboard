@@ -26,7 +26,7 @@ class DatabaseUserUtils {
     log.info(`User ${nick} has parted.`);
   }
 
-  static async addUser(nick: string, role: string | null): Promise<void> {
+  static async addUser(nick: string, role: Role | null): Promise<void> {
     log.info('ATTEMPTING TO ADD NEW USER ' + nick);
     await knex('online_users')
       .insert({ user: nick, role })
@@ -38,8 +38,8 @@ class DatabaseUserUtils {
     log.info(`${nick} has come online.`);
   }
 
-  static async updateUser(role: string | null, oldNick: string, newNick?: string): Promise<void> {
-    if (role && role === 'KEEP') {
+  static async updateUser(role: 'KEEP' | Role | null, oldNick: string, newNick?: string): Promise<void> {
+    if (role === 'KEEP') {
       await knex('online_users')
         .where({ user: oldNick })
         .update({ user: newNick ?? oldNick });
@@ -62,32 +62,28 @@ class DatabaseUserUtils {
     }
   }
 
-  private static getUserRole(nickWithRole: string): UserRole {
-    if (
-      !(
-        nickWithRole.startsWith(UserRole.OP) ||
-        nickWithRole.startsWith(UserRole.HOP) ||
-        nickWithRole.startsWith(UserRole.VOICE)
-      )
-    ) {
-      return UserRole.NONE;
+  private static getUserRole(nickWithRole: string): Role {
+    const first = nickWithRole[0];
+    if (first === OP || first === HOP || first === VOICE) {
+      return first;
     }
-    return nickWithRole.slice(0, 1) as UserRole;
+    return NONE;
   }
 
-  private static getSortedUserMapWithRoles(nicksWithRoles: string[]): RolesNickMap {
-    const rolesNickMap: RolesNickMap = new Map<UserRole, SortedSet<string>>();
-    rolesNickMap.set(UserRole.OP, new SortedSet<string>());
-    rolesNickMap.set(UserRole.HOP, new SortedSet<string>());
-    rolesNickMap.set(UserRole.VOICE, new SortedSet<string>());
-    rolesNickMap.set(UserRole.NONE, new SortedSet<string>());
+  private static getNickRoles(nicksWithRoles: string[]): NickRoles {
+    const nickRoles = {
+      [OP]: new SortedSet<string>(),
+      [HOP]: new SortedSet<string>(),
+      [VOICE]: new SortedSet<string>(),
+      [NONE]: new SortedSet<string>(),
+    };
 
     for (const nickWithRole of nicksWithRoles) {
-      const role: UserRole = this.getUserRole(nickWithRole);
-      rolesNickMap.get(role)!.push(nickWithRole);
+      const role = this.getUserRole(nickWithRole);
+      nickRoles[role].push(nickWithRole);
     }
 
-    return rolesNickMap;
+    return nickRoles;
   }
 
   /**
@@ -97,8 +93,8 @@ class DatabaseUserUtils {
    * @returns list of strings of nicks prepended with their role but sorted
    */
   static getSortedUsersByRoleAndAlphabetically(nicksWithRoles: string[]): string[] {
-    const rolesNickMap: RolesNickMap = DatabaseUserUtils.getSortedUserMapWithRoles(nicksWithRoles);
-    const sortedUsers: string[] = Array.from(rolesNickMap).flatMap(([_, value]) => value.toArray());
+    const nickRoles = DatabaseUserUtils.getNickRoles(nicksWithRoles);
+    const sortedUsers = Object.values(nickRoles).flatMap(nicks => nicks.toArray());
 
     if (nicksWithRoles.length !== sortedUsers.length)
       console.warn('Sorting users resulted in different number of users');
@@ -109,11 +105,10 @@ class DatabaseUserUtils {
 
 export { DatabaseUserUtils };
 
-export type RolesNickMap = Map<UserRole, SortedSet<string>>;
+export type Role = '@' | '%' | '+' | 'NOROLE';
+export type NickRoles = Record<Role, SortedSet<string>>;
 
-export enum UserRole {
-  OP = '@',
-  HOP = '%',
-  VOICE = '+',
-  NONE = 'NOROLE',
-}
+const OP = '@';
+const HOP = '%';
+const VOICE = '+';
+const NONE = 'NOROLE';

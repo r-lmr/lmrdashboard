@@ -2,7 +2,7 @@ import { TLSSocket } from 'tls';
 import { JoinConfig } from './ircconnection';
 import { DatabaseDuccUtils } from '../database/DuccScores';
 import { DatabaseMessageUtils } from '../database/Messages';
-import { DatabaseUserUtils } from '../database/Users';
+import { DatabaseUserUtils, Role } from '../database/Users';
 import myEmitter from './utils/emitter';
 import { LogWrapper } from '../utils/logging/LogWrapper';
 import { DatabaseFightUtils } from '../database/Fights';
@@ -17,24 +17,25 @@ class IrcMessageProcessor {
   private modeState = false;
   private readonly client: TLSSocket;
   private readonly joinConfig: JoinConfig;
-  private readonly parseCommands: Map<PossibleIrcCommand, (ircMessage: IrcMessage) => void>;
+  private readonly parseCommands: Record<PossibleIrcCommand, (ircMessage: IrcMessage) => void>;
 
   private constructor(client: TLSSocket, joinConfig: JoinConfig) {
     this.client = client;
     this.joinConfig = joinConfig;
-    this.parseCommands = new Map<PossibleIrcCommand, (ircMessage: IrcMessage) => void>();
-    this.parseCommands.set('PING', this.processPing.bind(this));
-    this.parseCommands.set('MODE', this.processMode.bind(this));
-    this.parseCommands.set('JOIN', this.processJoin.bind(this));
-    this.parseCommands.set('353', this.process353.bind(this));
-    this.parseCommands.set('PART', this.processPartAndQuit.bind(this));
-    this.parseCommands.set('KICK', this.processKick.bind(this));
-    this.parseCommands.set('QUIT', this.processPartAndQuit.bind(this));
-    this.parseCommands.set('PRIVMSG', this.processPrivMsg.bind(this));
-    this.parseCommands.set('NICK', this.processNick.bind(this));
-    this.parseCommands.set('900', this.process900Command.bind(this));
-    this.parseCommands.set('NOTICE', this.processNotice.bind(this));
-    this.parseCommands.set('ERROR', this.processError.bind(this));
+    this.parseCommands = {
+      PING: this.processPing.bind(this),
+      MODE: this.processMode.bind(this),
+      JOIN: this.processJoin.bind(this),
+      353: this.process353.bind(this),
+      PART: this.processPartAndQuit.bind(this),
+      KICK: this.processKick.bind(this),
+      QUIT: this.processPartAndQuit.bind(this),
+      PRIVMSG: this.processPrivMsg.bind(this),
+      NICK: this.processNick.bind(this),
+      900: this.process900Command.bind(this),
+      NOTICE: this.processNotice.bind(this),
+      ERROR: this.processError.bind(this),
+    }
   }
 
   public static Instance(client: TLSSocket, joinConfig: JoinConfig) {
@@ -42,8 +43,14 @@ class IrcMessageProcessor {
   }
 
   public processIrcMessage(ircMessage: IrcMessage) {
-    if (this.parseCommands.has(ircMessage.command as PossibleIrcCommand))
-      this.parseCommands.get(ircMessage.command as PossibleIrcCommand)!(ircMessage);
+    // Can be nicer after https://github.com/microsoft/TypeScript/issues/44253
+    const hasCommand = (command: string): command is PossibleIrcCommand =>
+      Object.prototype.hasOwnProperty.call(this.parseCommands, command);
+
+    const { command } = ircMessage;
+
+    if (hasCommand(command))
+      this.parseCommands[command](ircMessage);
   }
 
   public parseMessage(line: string): IrcMessage {
@@ -96,6 +103,14 @@ class IrcMessageProcessor {
     };
   }
 
+  private getNick(ircMessage: IrcMessage): string {
+    const nick = ircMessage.prefix?.split('!')[0];
+
+    if (typeof nick === "undefined") throw new TypeError(`Missing nick: ${ircMessage.prefix}`);
+
+    return nick;
+  }
+
   private processPing(ircMessage: IrcMessage): void {
     this.client.write('PONG ' + ircMessage.params[0] + '\r\n');
   }
@@ -106,7 +121,7 @@ class IrcMessageProcessor {
     this.client.write(`NAMES ${this.joinConfig.channel}\r\n`);
   }
 
-  private process900Command(ircMessage: IrcMessage): void {
+  private process900Command(): void {
     this.client.write(`JOIN ${this.joinConfig.channel}\r\n`);
   }
 
@@ -135,7 +150,7 @@ class IrcMessageProcessor {
       this.modeState = true;
     } else if (ircMessage.params[1].match(/[o|h|v]/)) {
       // update joining user with role
-      const [server, roleMode, user] = ircMessage.params;
+      const [, roleMode, user] = ircMessage.params;
       // anything that has more than just one promotion parameter
       // we will let the NAMES parse handle the assignment of roles
       if (roleMode.length > 2) {
@@ -144,7 +159,7 @@ class IrcMessageProcessor {
         this.runNamesCommand();
         return;
       }
-      let role = null;
+      let role: Role | null = null;
       switch (roleMode) {
         case '+o':
           role = '@';
@@ -165,18 +180,18 @@ class IrcMessageProcessor {
   }
 
   private async processNick(ircMessage: IrcMessage): Promise<void> {
-    const oldNick = ircMessage.prefix?.split('!')[0];
+    const oldNick = this.getNick(ircMessage);
     const newNick = ircMessage.params[0];
-    await DatabaseUserUtils.updateUser('KEEP', oldNick!, newNick);
+    await DatabaseUserUtils.updateUser('KEEP', oldNick, newNick);
     myEmitter.emit('join');
   }
 
   private async processJoin(ircMessage: IrcMessage): Promise<void> {
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
+    const nick = this.getNick(ircMessage);
     if (nick != this.joinConfig.user) {
-      nick!.match(/^[@|%|+]/)
-        ? await DatabaseUserUtils.addUser(nick!.slice(1), nick![0])
-        : await DatabaseUserUtils.addUser(nick!, null);
+      nick.match(/^[@|%|+]/)
+        ? await DatabaseUserUtils.addUser(nick.slice(1), nick[0] as Role)
+        : await DatabaseUserUtils.addUser(nick, null);
       myEmitter.emit('join');
     }
   }
@@ -186,7 +201,7 @@ class IrcMessageProcessor {
       if (name.length > 0) {
         // add second column to host the role to join with nick later
         name.match(/^[@|%|+]/)
-          ? await DatabaseUserUtils.addUser(name.slice(1), name[0])
+          ? await DatabaseUserUtils.addUser(name.slice(1), name[0] as Role)
           : await DatabaseUserUtils.addUser(name, null);
         myEmitter.emit('join');
       }
@@ -194,15 +209,15 @@ class IrcMessageProcessor {
   }
 
   private async processPartAndQuit(ircMessage: IrcMessage) {
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
-    await DatabaseUserUtils.deleteUser(nick!);
+    const nick = this.getNick(ircMessage);
+    await DatabaseUserUtils.deleteUser(nick);
     myEmitter.emit('part');
     log.debug('RUNNING PARTANDQUIT');
   }
 
   private async processKick(ircMessage: IrcMessage) {
     const nick = ircMessage.params[1];
-    await DatabaseUserUtils.deleteUser(nick!);
+    await DatabaseUserUtils.deleteUser(nick);
     myEmitter.emit('part');
     log.debug('RUNNING KICK');
   }
@@ -211,15 +226,15 @@ class IrcMessageProcessor {
     if (Date.now() - this.joinConfig.bufferTime.getTime() < 5000) return;
 
     const msg = ircMessage.params[1];
-    const nick = ircMessage.prefix && ircMessage.prefix.split('!')[0];
+    const nick = this.getNick(ircMessage);
     const server = ircMessage.params[0];
 
     // Process non bot messages
     if (!ircMessage.prefix?.toLowerCase().split('@')[1].includes('/bot/')) {
-      await DatabaseMessageUtils.saveLine(nick!, server, msg, false);
+      await DatabaseMessageUtils.saveLine(nick, server, msg, false);
       myEmitter.emit('line');
     } else {
-      await DatabaseMessageUtils.saveLine(nick!, server, msg, true);
+      await DatabaseMessageUtils.saveLine(nick, server, msg, true);
       myEmitter.emit('line');
       // Process bot messages
       // Process ducc stats
@@ -259,10 +274,10 @@ class IrcMessageProcessor {
   public static matchesFightMsg(s: string): FightMsgParseResult {
     // Thanks audron for the beautiful initial regex
     const match = /(?:\w+! ){3}(?<winner>\w+) (?:\w+ ){1,3}over (?<loser>\w+) with (?:\w+[ .]){1,4}/.exec(s);
-    if (match == null) {
+    if (!match?.groups) {
       return { valid: false };
     }
-    return { valid: true, winner: match.groups!.winner, loser: match.groups!.loser };
+    return { valid: true, winner: match.groups.winner, loser: match.groups.loser };
   }
 
   private sendPrivMessage(message: string) {

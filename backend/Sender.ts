@@ -8,7 +8,7 @@ import { DatabaseFightUtils } from './database/Fights';
 const log = new LogWrapper(module.id);
 
 class Sender {
-  static async sendUsers(res: Response<any, number>): Promise<void> {
+  static async sendUsers(res: Response): Promise<void> {
     if (res) {
       log.debug('Sending users');
       const users = await DatabaseUserUtils.getUsers();
@@ -22,7 +22,7 @@ class Sender {
     }
   }
 
-  static async sendMessages(res: Response<any, number>): Promise<void> {
+  static async sendMessages(res: Response): Promise<void> {
     if (res) {
       log.debug('Sending messages');
       const messages = await DatabaseMessageUtils.getLines(process.env.LMRD_IRC_CHANNEL || '#linuxmasterrace', 15);
@@ -32,7 +32,7 @@ class Sender {
     }
   }
 
-  static async sendLineCountsLastDays(res: Response<any, number>): Promise<void> {
+  static async sendLineCountsLastDays(res: Response): Promise<void> {
     if (res) {
       log.debug('Sending line counts');
       const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(10, 'date');
@@ -42,7 +42,7 @@ class Sender {
     }
   }
 
-  static async sendLineCountsHighScores(res: Response<any, number>): Promise<void> {
+  static async sendLineCountsHighScores(res: Response): Promise<void> {
     if (res) {
       log.debug('Sending line count scores');
       const lineCounts = await DatabaseMessageUtils.getLineCountLastNDaysOrMax(10, 'count');
@@ -52,7 +52,7 @@ class Sender {
     }
   }
 
-  static async sendTopWords(res: Response<any, number>): Promise<void> {
+  static async sendTopWords(res: Response): Promise<void> {
     if (res) {
       log.debug('Sending top words');
       const sortedWordCounts = await DatabaseMessageUtils.getTopWords();
@@ -61,7 +61,7 @@ class Sender {
       res.write('\n\n');
     }
   }
-  static async sendDuccScores(res: Response<any, number>): Promise<void> {
+  static async sendDuccScores(res: Response): Promise<void> {
     if (res) {
       log.debug('Sending ducc scores');
       const duccScores = await DatabaseDuccUtils.retrieveAllDuccScores();
@@ -70,7 +70,7 @@ class Sender {
       res.write('\n\n');
     }
   }
-  static async sendFightScores(res: Response<any, number>): Promise<void> {
+  static async sendFightScores(res: Response): Promise<void> {
     if (res) {
       log.debug('Sending fight scores');
       const topWinnersAndLosers = await DatabaseFightUtils.retrieveTopFightScores();

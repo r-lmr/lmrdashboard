@@ -16,6 +16,7 @@ const mockJoinConfig: JoinConfig = {
 };
 
 test('raw IRC message line is parsed to correct IrcMessage object', () => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const ircMessageProcessor = IrcMessageProcessor.Instance(null!, mockJoinConfig);
   const ircMessage: IrcMessage = ircMessageProcessor.parseMessage(mockLine);
   expect(ircMessage).toEqual(mockIrcMessage);

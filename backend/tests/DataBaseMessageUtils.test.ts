@@ -37,7 +37,7 @@ describe('test getLinesLastNDays with mocked database response', () => {
   });
 
   test('getLinesLastNDays returns the correct mock data', async () => {
-    tracker.on('query', (query: { response: (arg0: any) => void }) => {
+    tracker.on('query', (query: { response: (arg0: unknown) => void }) => {
       query.response(LAST_MESSAGES);
     });
 
@@ -46,7 +46,7 @@ describe('test getLinesLastNDays with mocked database response', () => {
   }, 5000);
 
   test('getTopWords calculates the correct word count map', async () => {
-    tracker.on('query', (query: { response: (arg0: any) => void }) => {
+    tracker.on('query', (query: { response: (arg0: unknown) => void }) => {
       query.response(LAST_MESSAGES);
     });
 
