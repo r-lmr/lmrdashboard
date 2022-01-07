@@ -27,7 +27,10 @@ services:
       LMRD_DB_USER: "root"
       LMRD_DB_PASS: "root"
       LMRD_DB_NAME: "lmrd"
+      LMRD_IRC_HOST: "irc.snoonet.org"
       LMRD_IRC_CHANNEL: "#aboftytest"
+      LMRD_IRC_USER: :enter user:
+      LMRD_IRC_PASS: :enter password:
     ports:
       - 4000:4000
 
