@@ -36,6 +36,7 @@ default:
 
 variables:
   BASE_IMAGE: node:15.1.0-alpine
+  KUBE_CONTEXT: "cocainefarm/agent:vapor-systems"
 
 .lint:
   image: $BASE_IMAGE
@@ -208,6 +209,7 @@ deploy:production:
   before_script:
     - gpg --import "$COCAINEFARM_GPG_PRIVKEY"
   script:
+    - kubectl config use-context "${KUBE_CONTEXT}"
     - helmfile -e production apply
   only:
     refs:
@@ -226,6 +228,7 @@ deploy:staging:
   before_script:
     - gpg --import "$COCAINEFARM_GPG_PRIVKEY"
   script:
+    - kubectl config use-context "${KUBE_CONTEXT}"
     - helmfile -e staging apply
   only:
     refs:
