@@ -129,3 +129,11 @@ Secrets for irc and mariadb users are injected using sops encrypted files in `./
 sops updatekeys secrets/irc_user.yaml
 sops updatekeys secrets/mariadb.yaml
 ```
+
+## Screenshot
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/r-lmr/lmrdashboard/lmrdashboard/resources/screenshot.png" alt="">
+    <img width="500px" src="https://raw.githubusercontent.com/r-lmr/lmrdashboard/lmrdashboard/resources/screenshot.png"/>
+  </a>
+</p>
